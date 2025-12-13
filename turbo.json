@@ -4,7 +4,7 @@
 	"globalDependencies": [".env"],
 	"tasks": {
 		"build": {
-			"dependsOn": ["^build"],
+			"dependsOn": ["^build", "^db:generate"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"]
 		},
@@ -15,6 +15,7 @@
 			"dependsOn": ["^check-types"]
 		},
 		"dev": {
+			"dependsOn": ["^db:generate"],
 			"cache": false,
 			"persistent": true
 		},

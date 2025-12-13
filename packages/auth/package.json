@@ -9,9 +9,7 @@
 		}
 	},
 	"type": "module",
-	"scripts": {
-		"postinstall": "npx prisma generate"
-	},
+
 	"devDependencies": {
 		"typescript": "^5",
 		"@zanadeal/config": "*"
