@@ -1,18 +1,19 @@
 import "dotenv/config";
-import Fastify from "fastify";
+
+import { createServer } from "node:http";
 import fastifyCors from "@fastify/cors";
 
 import { OpenAPIHandler } from "@orpc/openapi/node";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
-import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/node";
 import { CORSPlugin } from "@orpc/server/plugins";
-import { onError } from "@orpc/server";
-import { appRouter } from "@zanadeal/api/routers/index";
-import { createServer } from "node:http";
+import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { createContext } from "@zanadeal/api/context";
+import { appRouter } from "@zanadeal/api/routers/index";
 
 import { auth } from "@zanadeal/auth";
+import Fastify from "fastify";
 
 const baseCorsConfig = {
 	origin: process.env.CORS_ORIGIN || "",
