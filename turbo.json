@@ -19,6 +19,7 @@
 			"persistent": true
 		},
 		"start": {
+			"passThroughEnv": ["PORT"],
 			"cache": false,
 			"persistent": true
 		},
