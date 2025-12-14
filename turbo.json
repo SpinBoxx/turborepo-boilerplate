@@ -21,7 +21,9 @@
 		"start": {
 			"passThroughEnv": ["PORT"],
 			"cache": false,
-			"persistent": true
+			"inputs": ["$TURBO_DEFAULT$"],
+			"persistent": true,
+			"outputs": ["dist/**"]
 		},
 		"db:push": {
 			"cache": false,
