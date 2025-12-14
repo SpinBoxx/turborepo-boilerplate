@@ -120,5 +120,7 @@ fastify.listen({ port: Number(process.env.PORT) || 8080 }, (err) => {
 		fastify.log.error(err);
 		process.exit(1);
 	}
-	console.log(`Server running on port ${Number(process.env.PORT) || 8080}`);
+	console.log(
+		`Server running on port ${process.env.PORT} ${Number(process.env.PORT) || 8080}`,
+	);
 });
