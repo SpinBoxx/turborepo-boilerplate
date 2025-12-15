@@ -19,7 +19,7 @@
 			"persistent": true
 		},
 		"start": {
-			"passThroughEnv": ["PORT"],
+			"passThroughEnv": ["PORT", "CORS_ORIGIN"],
 			"cache": false,
 			"inputs": ["$TURBO_DEFAULT$"],
 			"persistent": true,
