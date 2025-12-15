@@ -7,7 +7,7 @@ import fastifyCors from "@fastify/cors";
 import Fastify from "fastify";
 
 const baseCorsConfig = {
-	origin: process.env.CORS_ORIGIN || "",
+	origin: process.env.CORS_ORIGIN || "*",
 	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 	allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 	credentials: true,
