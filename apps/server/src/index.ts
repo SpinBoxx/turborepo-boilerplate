@@ -106,12 +106,18 @@ fastify.get("/", async () => {
 	return "OK";
 });
 
-fastify.listen({ port: Number(process.env.PORT) || 8080 }, (err) => {
-	if (err) {
-		fastify.log.error(err);
-		process.exit(1);
-	}
-	console.log(
-		`Server running on port ${process.env.PORT} ${Number(process.env.PORT) || 8080}`,
-	);
-});
+fastify.listen(
+	{
+		port: Number(process.env.PORT) || 8080,
+		host: process.env.HOST || "0.0.0.0",
+	},
+	(err) => {
+		if (err) {
+			fastify.log.error(err);
+			process.exit(1);
+		}
+		console.log(
+			`Server running on port ${process.env.PORT} ${Number(process.env.PORT) || 8080}`,
+		);
+	},
+);
