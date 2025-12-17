@@ -2,7 +2,14 @@ import "dotenv/config";
 
 import { createServer } from "node:http";
 import fastifyCors from "@fastify/cors";
-
+import { OpenAPIHandler } from "@orpc/openapi/node";
+import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
+import { onError } from "@orpc/server";
+import { RPCHandler } from "@orpc/server/node";
+import { CORSPlugin } from "@orpc/server/plugins";
+import { ZodToJsonSchemaConverter } from "@orpc/zod";
+import { createContext } from "@zanadeal/api/context";
+import { appRouter } from "@zanadeal/api/routers/index";
 import { auth } from "@zanadeal/auth";
 import Fastify from "fastify";
 
@@ -14,55 +21,55 @@ const baseCorsConfig = {
 	maxAge: 86400,
 };
 
-// const rpcHandler = new RPCHandler(appRouter, {
-// 	plugins: [
-// 		new CORSPlugin({
-// 			origin: process.env.CORS_ORIGIN,
-// 			credentials: true,
-// 			allowHeaders: ["Content-Type", "Authorization"],
-// 		}),
-// 	],
-// 	interceptors: [
-// 		onError((error) => {
-// 			console.error(error);
-// 		}),
-// 	],
-// });
+const rpcHandler = new RPCHandler(appRouter, {
+	plugins: [
+		new CORSPlugin({
+			origin: process.env.CORS_ORIGIN,
+			credentials: true,
+			allowHeaders: ["Content-Type", "Authorization"],
+		}),
+	],
+	interceptors: [
+		onError((error) => {
+			console.error(error);
+		}),
+	],
+});
 
-// const apiHandler = new OpenAPIHandler(appRouter, {
-// 	plugins: [
-// 		new OpenAPIReferencePlugin({
-// 			schemaConverters: [new ZodToJsonSchemaConverter()],
-// 		}),
-// 	],
-// 	interceptors: [
-// 		onError((error) => {
-// 			console.error(error);
-// 		}),
-// 	],
-// });
+const apiHandler = new OpenAPIHandler(appRouter, {
+	plugins: [
+		new OpenAPIReferencePlugin({
+			schemaConverters: [new ZodToJsonSchemaConverter()],
+		}),
+	],
+	interceptors: [
+		onError((error) => {
+			console.error(error);
+		}),
+	],
+});
 
 const fastify = Fastify({
 	logger: true,
 	serverFactory: (fastifyHandler) => {
 		const server = createServer(async (req, res) => {
-			// const { matched } = await rpcHandler.handle(req, res, {
-			// 	context: await createContext(req.headers),
-			// 	prefix: "/rpc",
-			// });
+			const { matched } = await rpcHandler.handle(req, res, {
+				context: await createContext(req.headers),
+				prefix: "/rpc",
+			});
 
-			// if (matched) {
-			// 	return;
-			// }
+			if (matched) {
+				return;
+			}
 
-			// const apiResult = await apiHandler.handle(req, res, {
-			// 	context: await createContext(req.headers),
-			// 	prefix: "/api-reference",
-			// });
+			const apiResult = await apiHandler.handle(req, res, {
+				context: await createContext(req.headers),
+				prefix: "/api-reference",
+			});
 
-			// if (apiResult.matched) {
-			// 	return;
-			// }
+			if (apiResult.matched) {
+				return;
+			}
 
 			fastifyHandler(req, res);
 		});
@@ -90,7 +97,9 @@ fastify.route({
 			});
 			const response = await auth.handler(req);
 			reply.status(response.status);
-			response.headers.forEach((value, key) => reply.header(key, value));
+			response.headers.forEach((value, key) => {
+				reply.header(key, value);
+			});
 			reply.send(response.body ? await response.text() : null);
 		} catch (error) {
 			fastify.log.error({ err: error }, "Authentication Error:");
