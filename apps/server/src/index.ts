@@ -36,7 +36,18 @@ const rpcHandler = new RPCHandler(appRouter, {
 	],
 });
 
-const apiHandler = new OpenAPIHandler(appRouter, {
+// Expose OpenAPI-compatible HTTP routes (GET/POST/...) defined via `.route({ method, path })`.
+// Example: hotel routes are reachable at `/api/hotels`.
+const apiRoutesHandler = new OpenAPIHandler(appRouter, {
+	interceptors: [
+		onError((error) => {
+			console.error(error);
+		}),
+	],
+});
+
+// Expose OpenAPI reference UI/spec under a dedicated prefix.
+const apiReferenceHandler = new OpenAPIHandler(appRouter, {
 	plugins: [
 		new OpenAPIReferencePlugin({
 			schemaConverters: [new ZodToJsonSchemaConverter()],
@@ -62,12 +73,21 @@ const fastify = Fastify({
 				return;
 			}
 
-			const apiResult = await apiHandler.handle(req, res, {
+			const apiRoutesResult = await apiRoutesHandler.handle(req, res, {
+				context: await createContext(req.headers),
+				prefix: "/api",
+			});
+
+			if (apiRoutesResult.matched) {
+				return;
+			}
+
+			const apiReferenceResult = await apiReferenceHandler.handle(req, res, {
 				context: await createContext(req.headers),
 				prefix: "/api-reference",
 			});
 
-			if (apiResult.matched) {
+			if (apiReferenceResult.matched) {
 				return;
 			}
 
@@ -114,6 +134,11 @@ fastify.route({
 fastify.get("/", async () => {
 	return "OK";
 });
+
+fastify.get("/rpc", async () => {
+	return appRouter.healthCheck
+});
+
 
 fastify.listen(
 	{
