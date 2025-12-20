@@ -5,8 +5,9 @@
 	"scripts": {
 		"dev": "vite dev --port 3000",
 		"build": "vite build",
+		"preview": "vite preview --port 3000 --host",
 		"check-types": "tsc --noEmit",
-		"start": "node .output/server/index.mjs",
+		"start": "vite preview --port 3000 --host",
 		"lint": "eslint .",
 		"format": "prettier --write .",
 		"ui": "pnpm dlx shadcn@latest"
