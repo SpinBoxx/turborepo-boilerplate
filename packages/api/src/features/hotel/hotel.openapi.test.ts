@@ -1,5 +1,5 @@
-import { OpenAPIHandler } from "@orpc/openapi/node";
 import { createServer } from "node:http";
+import { OpenAPIHandler } from "@orpc/openapi/node";
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { appRouter } from "../../routers/index";
 import { resetHotelStore } from "./hotel.store";

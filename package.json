@@ -12,7 +12,7 @@
 		"build": "turbo build",
 		"check-types": "turbo check-types",
 		"dev:native": "turbo -F native dev",
-		"dev:web": "turbo -F web dev",
+		"dev:admin": "turbo -F admin dev",
 		"dev:server": "turbo -F server dev",
 		"start:server": "turbo -F server start",
 		"db:push": "turbo -F @zanadeal/db db:push",
@@ -28,7 +28,8 @@
 		"turbo": "^2.5.4",
 		"@biomejs/biome": "^2.2.0",
 		"typescript": "^5",
-		"@types/node": "^22.13.11"
+		"@types/node": "^22.13.11",
+		"vite": "^6.4.1"
 	},
 	"packageManager": "npm@11.0.0"
 }
