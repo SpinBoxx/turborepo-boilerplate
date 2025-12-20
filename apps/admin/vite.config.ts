@@ -27,10 +27,24 @@ export default defineConfig(async ({ command }) => {
 
 	if (command === "serve") {
 		const { devtools } = await import("@tanstack/devtools-vite");
-		plugins.splice(1, 0, devtools());
+		plugins.splice(
+			1,
+			0,
+			devtools({
+				eventBusConfig: {
+					enabled: false,
+				},
+			}),
+		);
 	}
 
 	return {
+		server: {
+			host: "0.0.0.0",
+		},
+		preview: {
+			host: "0.0.0.0",
+		},
 		plugins,
 	};
 });
