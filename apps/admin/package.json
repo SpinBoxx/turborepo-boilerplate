@@ -20,6 +20,7 @@
 		"@zanadeal/api": "file:../../packages/api",
 		"@zanadeal/auth": "file:../../packages/auth",
 		"@zanadeal/db": "file:../../packages/db",
+		"@zanadeal/ui": "file:../../packages/ui",
 		"date-fns": "^4.1.0",
 		"drizzle-orm": "^0.45.1",
 		"lucide-react": "^0.562.0",

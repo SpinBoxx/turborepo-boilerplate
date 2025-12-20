@@ -1,0 +1,12 @@
+{
+	"extends": "@zanadeal/config/tsconfig.base.json",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@zanadeal/ui/*": ["./*"]
+		},
+		"jsx": "react-jsx"
+	},
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules"]
+}

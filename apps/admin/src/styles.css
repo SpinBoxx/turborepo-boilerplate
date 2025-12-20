@@ -1,1 +1,168 @@
-@import "tailwindcss";
+@import "@zanadeal/ui/styles/globals.css";
+
+@source "../../../packages/ui";
+/* ======================
+   Lufga Font Faces
+   ====================== */
+
+/* 100 - Thin */
+@font-face {
+	font-family: "Lufga";
+	src: url("../fonts/Lufga/LufgaThin.woff2") format("woff2");
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("../fonts/Lufga/LufgaThinItalic.woff2") format("woff2");
+	font-weight: 100;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 200 - ExtraLight */
+@font-face {
+	font-family: "Lufga";
+	src: url("../fonts/Lufga/LufgaExtraLight.woff2") format("woff2");
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("../fonts/Lufga/LufgaExtraLightItalic.woff2") format("woff2");
+	font-weight: 200;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 300 - Light */
+@font-face {
+	font-family: "Lufga";
+	src: url("../fonts/Lufga/LufgaLight.woff2") format("woff2");
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("/srcssets/fonts/LufgaLightItalic.woff2") format("woff2");
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 400 - Regular */
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaRegular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaItalic.woff2") format("woff2");
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 500 - Medium */
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaMedium.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaMediumItalic.woff2") format("woff2");
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 600 - SemiBold */
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaSemiBold.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaSemiBoldItalic.woff2") format("woff2");
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 700 - Bold */
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaBold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaBoldItalic.woff2") format("woff2");
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 800 - ExtraBold */
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaExtraBold.woff2") format("woff2");
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaExtraBoldItalic.woff2") format("woff2");
+	font-weight: 800;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* 900 - Black */
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaBlack.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Lufga";
+	src: url("./fonts/Lufga/LufgaBlackItalic.woff2") format("woff2");
+	font-weight: 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* ======================
+   Tailwind Theme Extension
+   ====================== */
+
+/* ======================
+   Apply Globally
+   ====================== */
+@layer base {
+	body {
+		font-family: var(--font-lufga);
+	}
+}
+
+@theme {
+	--font-lufga: "Lufga", sans-serif;
+}

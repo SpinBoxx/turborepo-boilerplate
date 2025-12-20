@@ -12,8 +12,7 @@ export class HttpError extends Error {
 
 function getApiBaseUrl() {
 	return (
-		import.meta.env.VITE_API_URL?.toString() ??
-		"http://localhost:8080" // apps/server default
+		import.meta.env.VITE_API_URL?.toString() ?? "http://localhost:8080" // apps/server default
 	);
 }
 

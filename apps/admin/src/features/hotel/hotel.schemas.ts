@@ -1,8 +1,6 @@
+export type { CreateHotelInput, Hotel } from "@zanadeal/api/contracts";
 export {
-	HotelSchema,
 	CreateHotelInputSchema,
 	GetHotelInputSchema,
+	HotelSchema,
 } from "@zanadeal/api/contracts";
-
-export type { Hotel, CreateHotelInput } from "@zanadeal/api/contracts";
-

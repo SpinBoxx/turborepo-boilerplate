@@ -1,7 +1,6 @@
+export type { CreateHotelInput, Hotel } from "./features/hotel/hotel.schemas";
 export {
-	HotelSchema,
-	GetHotelInputSchema,
 	CreateHotelInputSchema,
+	GetHotelInputSchema,
+	HotelSchema,
 } from "./features/hotel/hotel.schemas";
-
-export type { Hotel, CreateHotelInput } from "./features/hotel/hotel.schemas";
