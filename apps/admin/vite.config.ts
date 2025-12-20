@@ -27,15 +27,7 @@ export default defineConfig(async ({ command }) => {
 
 	if (command === "serve") {
 		const { devtools } = await import("@tanstack/devtools-vite");
-		plugins.splice(
-			1,
-			0,
-			devtools({
-				eventBusConfig: {
-					enabled: false,
-				},
-			}),
-		);
+		plugins.splice(1, 0, devtools());
 	}
 
 	return {
@@ -43,6 +35,7 @@ export default defineConfig(async ({ command }) => {
 			host: "0.0.0.0",
 		},
 		preview: {
+			allowedHosts: "valiant-charisma-production.up.railway.app",
 			host: "0.0.0.0",
 		},
 		plugins,
