@@ -13,3 +13,5 @@ export const GetHotelInputSchema = z.object({
 });
 
 export const CreateHotelInputSchema = HotelSchema.omit({ id: true });
+
+export type CreateHotelInput = z.infer<typeof CreateHotelInputSchema>;

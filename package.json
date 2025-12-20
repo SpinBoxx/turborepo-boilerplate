@@ -15,6 +15,7 @@
 		"dev:admin": "turbo -F admin dev",
 		"dev:server": "turbo -F server dev",
 		"start:server": "turbo -F server start",
+		"start:admin": "turbo -F admin start",
 		"db:push": "turbo -F @zanadeal/db db:push",
 		"db:studio": "turbo -F @zanadeal/db db:studio",
 		"db:generate": "turbo -F @zanadeal/db db:generate",

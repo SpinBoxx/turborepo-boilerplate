@@ -4,6 +4,12 @@
 		".": {
 			"default": "./src/index.ts"
 		},
+		"./router": {
+			"default": "./src/router.ts"
+		},
+		"./contracts": {
+			"default": "./src/contracts.ts"
+		},
 		"./*": {
 			"default": "./src/*.ts"
 		}
