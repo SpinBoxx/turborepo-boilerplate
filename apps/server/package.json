@@ -10,23 +10,26 @@
 		"start": "node dist/index.mjs"
 	},
 	"dependencies": {
-		"fastify": "^5.3.3",
 		"@fastify/cors": "^11.0.1",
-		"@orpc/server": "^1.12.2",
+		"@fastify/helmet": "^13.0.2",
+		"@fastify/rate-limit": "^10.3.0",
+		"@fastify/under-pressure": "^9.0.3",
 		"@orpc/openapi": "^1.12.2",
+		"@orpc/server": "^1.12.2",
 		"@orpc/zod": "^1.12.2",
-		"better-auth": "1.4.5",
-		"dotenv": "^17.2.2",
-		"zod": "^4.1.13",
 		"@zanadeal/api": "*",
 		"@zanadeal/auth": "*",
-		"@zanadeal/db": "*"
+		"@zanadeal/db": "*",
+		"better-auth": "1.4.5",
+		"dotenv": "^17.2.2",
+		"fastify": "^5.3.3",
+		"zod": "^4.1.13"
 	},
 	"devDependencies": {
-		"tsx": "^4.19.2",
 		"@types/node": "^22.13.11",
-		"typescript": "^5",
+		"@zanadeal/config": "*",
 		"tsdown": "^0.16.5",
-		"@zanadeal/config": "*"
+		"tsx": "^4.19.2",
+		"typescript": "^5"
 	}
 }

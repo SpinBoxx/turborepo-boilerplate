@@ -8,10 +8,14 @@ import {
 import { createHotelInStore, getHotelById } from "./hotel.store";
 
 export const getHotel = publicProcedure
-	.route({ method: "GET", path: "/hotels/{id}" })
+	.route({
+		method: "GET",
+		path: "/hotels/{id}",
+		summary: "Get a hotel by ID",
+		tags: ["Hotel"],
+	})
 	.input(GetHotelInputSchema)
 	.output(HotelSchema)
-
 	.handler(({ input }) => {
 		const hotel = getHotelById(input.id);
 		if (!hotel) {
@@ -21,7 +25,12 @@ export const getHotel = publicProcedure
 	});
 
 export const createHotel = protectedProcedure
-	.route({ method: "POST", path: "/hotels" })
+	.route({
+		method: "POST",
+		path: "/hotels",
+		summary: "Create a new hotel",
+		tags: ["Hotel"],
+	})
 	.input(CreateHotelInputSchema)
 	.output(HotelSchema)
 	.handler(({ input }) => {
