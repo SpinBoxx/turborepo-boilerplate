@@ -7,6 +7,8 @@ import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import type { Context } from "@zanadeal/api/context";
 import type { AppRouter } from "@zanadeal/api/routers/index";
 
+import { logOrpcError } from "./error-logging";
+
 export type OrpcHandlers = {
 	rpc: RPCHandler<Context>;
 	apiRoutes: OpenAPIHandler<Context>;
@@ -26,9 +28,14 @@ export function createOrpcHandlers(
 			}),
 		],
 		interceptors: [
-			onError((error, options) => {
-				options.context.logger?.error({ err: error }, "oRPC RPC error");
-			}),
+			onError((error, interceptorOptions) =>
+				logOrpcError({
+					kind: "rpc",
+					error,
+					options: interceptorOptions,
+					message: "oRPC RPC error",
+				}),
+			),
 		],
 	});
 
@@ -36,12 +43,14 @@ export function createOrpcHandlers(
 	// Example: hotel routes are reachable at `/api/hotels`.
 	const apiRoutes = new OpenAPIHandler(appRouter, {
 		interceptors: [
-			onError((error, options) => {
-				options.context.logger?.error(
-					{ err: error },
-					"oRPC OpenAPI route error",
-				);
-			}),
+			onError((error, interceptorOptions) =>
+				logOrpcError({
+					kind: "openapi-route",
+					error,
+					options: interceptorOptions,
+					message: "oRPC OpenAPI route error",
+				}),
+			),
 		],
 	});
 
@@ -54,12 +63,14 @@ export function createOrpcHandlers(
 			}),
 		],
 		interceptors: [
-			onError((error, options) => {
-				options.context.logger?.error(
-					{ err: error },
-					"oRPC OpenAPI reference error",
-				);
-			}),
+			onError((error, interceptorOptions) =>
+				logOrpcError({
+					kind: "openapi-reference",
+					error,
+					options: interceptorOptions,
+					message: "oRPC OpenAPI reference error",
+				}),
+			),
 		],
 	});
 
