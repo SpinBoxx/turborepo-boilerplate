@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { CreateHotelInput } from "@zanadeal/api/contracts";
 import { createHotel, getHotelById } from "./hotel.api";
-import type { CreateHotelInput } from "./hotel.schemas";
 
 export function hotelKeys() {
 	return {
@@ -14,7 +14,7 @@ export function useHotel(id: number | null) {
 		queryKey: id ? hotelKeys().byId(id) : ["hotel", "byId", "null"],
 		queryFn: () => {
 			if (id == null) throw new Error("Missing hotel id");
-			return getHotelById(id);
+			return getHotelById({ id });
 		},
 		enabled: id != null,
 	});

@@ -88,7 +88,9 @@ function MonHotelPage() {
 					</label>
 					<button
 						className="rounded border px-3 py-2"
-						onClick={() => createHotelMutation.mutate({ name, city })}
+						onClick={async () =>
+							await createHotelMutation.mutateAsync({ name, city })
+						}
 						disabled={createHotelMutation.isPending}
 						type="button"
 					>
