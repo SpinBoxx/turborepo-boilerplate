@@ -52,7 +52,7 @@ export async function createApp() {
 	fastify.all("/rpc/*", async (request, reply) => {
 		reply.hijack();
 		const result = await orpc.rpc.handle(request.raw, reply.raw, {
-			context: await createContext(request.headers),
+			context: await createContext(request.headers, request.log),
 			prefix: "/rpc",
 		});
 		if (!result.matched) {
@@ -64,7 +64,7 @@ export async function createApp() {
 	fastify.all("/api/*", async (request, reply) => {
 		reply.hijack();
 		const result = await orpc.apiRoutes.handle(request.raw, reply.raw, {
-			context: await createContext(request.headers),
+			context: await createContext(request.headers, request.log),
 			prefix: "/api",
 		});
 		if (!result.matched) {
@@ -77,7 +77,7 @@ export async function createApp() {
 		fastify.all("/api-reference/*", async (request, reply) => {
 			reply.hijack();
 			const result = await orpc.apiReference.handle(request.raw, reply.raw, {
-				context: await createContext(request.headers),
+				context: await createContext(request.headers, request.log),
 				prefix: "/api-reference",
 			});
 			if (!result.matched) {

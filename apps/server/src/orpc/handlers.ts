@@ -26,8 +26,8 @@ export function createOrpcHandlers(
 			}),
 		],
 		interceptors: [
-			onError((error) => {
-				console.error(error);
+			onError((error, options) => {
+				options.context.logger?.error({ err: error }, "oRPC RPC error");
 			}),
 		],
 	});
@@ -36,8 +36,11 @@ export function createOrpcHandlers(
 	// Example: hotel routes are reachable at `/api/hotels`.
 	const apiRoutes = new OpenAPIHandler(appRouter, {
 		interceptors: [
-			onError((error) => {
-				console.error(error);
+			onError((error, options) => {
+				options.context.logger?.error(
+					{ err: error },
+					"oRPC OpenAPI route error",
+				);
 			}),
 		],
 	});
@@ -51,8 +54,11 @@ export function createOrpcHandlers(
 			}),
 		],
 		interceptors: [
-			onError((error) => {
-				console.error(error);
+			onError((error, options) => {
+				options.context.logger?.error(
+					{ err: error },
+					"oRPC OpenAPI reference error",
+				);
 			}),
 		],
 	});
