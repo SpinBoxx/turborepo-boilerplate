@@ -21,7 +21,8 @@
 	"devDependencies": {
 		"vitest": "^2.1.9",
 		"typescript": "^5",
-		"@zanadeal/config": "*"
+		"@zanadeal/config": "*",
+		"@zanadeal/mailer": "*"
 	},
 	"dependencies": {
 		"@orpc/server": "^1.12.2",
