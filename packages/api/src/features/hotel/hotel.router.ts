@@ -16,11 +16,12 @@ export const getHotel = publicProcedure
 	})
 	.input(GetHotelInputSchema)
 	.output(HotelSchema)
-	.handler(({ input }) => {
-		const hotel = getHotelById(input.id);
+	.handler(async ({ input }) => {
+		const hotel = getHotelById(Number(input.id));
 		if (!hotel) {
 			throw new ORPCError("NOT_FOUND");
 		}
+
 		return hotel;
 	});
 

@@ -1,0 +1,23 @@
+{
+	"name": "@zanadeal/mailer",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {},
+	"devDependencies": {
+		"@types/pg": "^8.15.6",
+		"@zanadeal/config": "*",
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"dotenv": "^17.2.2",
+		"resend": "^6.6.0",
+		"zod": "^4.1.13"
+	}
+}

@@ -21,7 +21,8 @@
 				"EXPOSE_API_REFERENCE",
 				"DATABASE_URL",
 				"BETTER_AUTH_SECRET",
-				"BETTER_AUTH_URL"
+				"BETTER_AUTH_URL",
+				"RESEND_API_KEY"
 			]
 		},
 		"dev": {
@@ -44,7 +45,8 @@
 				"EXPOSE_API_REFERENCE",
 				"DATABASE_URL",
 				"BETTER_AUTH_SECRET",
-				"BETTER_AUTH_URL"
+				"BETTER_AUTH_URL",
+				"RESEND_API_KEY"
 			]
 		},
 		"start": {
@@ -67,7 +69,8 @@
 				"EXPOSE_API_REFERENCE",
 				"DATABASE_URL",
 				"BETTER_AUTH_SECRET",
-				"BETTER_AUTH_URL"
+				"BETTER_AUTH_URL",
+				"RESEND_API_KEY"
 			]
 		}
 	}
