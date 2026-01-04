@@ -1,13 +1,22 @@
 model User {
   id            String    @id
-  name          String
+  firstName     String
+  lastName      String
   email         String
   emailVerified Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  kyc_session_id  String?
+  kyc_verified    Boolean  @default(false)
+
   sessions      Session[]
   accounts      Account[]
+  favorites     Favorite[]
+  roles         Role[]   @default([USER, ADMIN])
+  bookings      Booking[]
+  reviews       Review[]
+
 
   @@unique([email])
   @@map("user")
@@ -59,4 +68,9 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum Role {
+  USER
+  ADMIN
 }

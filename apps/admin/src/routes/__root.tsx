@@ -1,5 +1,11 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+	createRootRouteWithContext,
+	Link,
+	Outlet,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import type { AuthUser } from "@/auth/providers/AuthProvider";
+import { ModeToggle } from "@/components/ThemeToggle";
 
 const RootLayout = () => (
 	<>
@@ -10,6 +16,7 @@ const RootLayout = () => (
 			<Link to="/mon-hotel" className="[&.active]:font-bold">
 				Mon hôtel
 			</Link>{" "}
+			<ModeToggle />
 		</div>
 		<hr />
 		<Outlet />
@@ -17,4 +24,14 @@ const RootLayout = () => (
 	</>
 );
 
-export const Route = createRootRoute({ component: RootLayout });
+interface MyRouterContext {
+	user: AuthUser | null;
+	auth: {
+		getUser: () => AuthUser | null;
+		loadSession: () => Promise<AuthUser | null>;
+	};
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+	component: RootLayout,
+});

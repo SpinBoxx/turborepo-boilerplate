@@ -1,4 +1,4 @@
-import z from "zod";
+import * as z from "zod";
 
 export const ForgotPasswordInputSchema = z.object({
 	to: z.email(),

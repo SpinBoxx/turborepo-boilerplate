@@ -1,0 +1,17 @@
+{
+	"name": "@zanadeal/utils",
+	"type": "module",
+	"private": true,
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"devDependencies": {
+		"typescript": "^5",
+		"@zanadeal/config": "*"
+	}
+}

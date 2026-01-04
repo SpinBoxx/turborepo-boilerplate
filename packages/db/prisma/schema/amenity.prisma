@@ -1,0 +1,10 @@
+model Amenity {
+  id     String  @id @default(cuid())
+  name   String  @unique // ex: "Piscine", "Parking", "Spa", "WiFi gratuit"
+  icon   String // URL ou nom de l'icône
+  hotels Hotel[] 
+  rooms  Room[]  
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}

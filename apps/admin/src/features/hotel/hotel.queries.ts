@@ -5,11 +5,11 @@ import { createHotel, getHotelById } from "./hotel.api";
 export function hotelKeys() {
 	return {
 		all: ["hotel"] as const,
-		byId: (id: number) => ["hotel", "byId", id] as const,
+		byId: (id: string) => ["hotel", "byId", id] as const,
 	};
 }
 
-export function useHotel(id: number | null) {
+export function useHotel(id: string | null) {
 	return useQuery({
 		queryKey: id ? hotelKeys().byId(id) : ["hotel", "byId", "null"],
 		queryFn: () => {
