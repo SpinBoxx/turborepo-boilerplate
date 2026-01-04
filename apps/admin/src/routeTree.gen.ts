@@ -10,17 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MonHotelRouteImport } from './routes/mon-hotel'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as LoginRouteRouteImport } from './routes/login/route'
+import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
 
 const MonHotelRoute = MonHotelRouteImport.update({
   id: '/mon-hotel',
   path: '/mon-hotel',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const LoginRouteRoute = LoginRouteRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRouteRoute = DashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,34 +35,45 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginIndexRoute = LoginIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LoginRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRouteRoute
+  '/login': typeof LoginRouteRouteWithChildren
   '/mon-hotel': typeof MonHotelRoute
+  '/login/': typeof LoginIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRouteRoute
   '/mon-hotel': typeof MonHotelRoute
+  '/login': typeof LoginIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRouteRoute
+  '/login': typeof LoginRouteRouteWithChildren
   '/mon-hotel': typeof MonHotelRoute
+  '/login/': typeof LoginIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/mon-hotel'
+  fullPaths: '/' | '/dashboard' | '/login' | '/mon-hotel' | '/login/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/mon-hotel'
-  id: '__root__' | '/' | '/about' | '/mon-hotel'
+  to: '/' | '/dashboard' | '/mon-hotel' | '/login'
+  id: '__root__' | '/' | '/dashboard' | '/login' | '/mon-hotel' | '/login/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
+  DashboardRouteRoute: typeof DashboardRouteRoute
+  LoginRouteRoute: typeof LoginRouteRouteWithChildren
   MonHotelRoute: typeof MonHotelRoute
 }
 
@@ -68,11 +86,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MonHotelRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -82,12 +107,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login/': {
+      id: '/login/'
+      path: '/'
+      fullPath: '/login/'
+      preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof LoginRouteRoute
+    }
   }
 }
 
+interface LoginRouteRouteChildren {
+  LoginIndexRoute: typeof LoginIndexRoute
+}
+
+const LoginRouteRouteChildren: LoginRouteRouteChildren = {
+  LoginIndexRoute: LoginIndexRoute,
+}
+
+const LoginRouteRouteWithChildren = LoginRouteRoute._addFileChildren(
+  LoginRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
+  DashboardRouteRoute: DashboardRouteRoute,
+  LoginRouteRoute: LoginRouteRouteWithChildren,
   MonHotelRoute: MonHotelRoute,
 }
 export const routeTree = rootRouteImport

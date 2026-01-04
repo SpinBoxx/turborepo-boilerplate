@@ -50,39 +50,33 @@ export async function createApp() {
 	});
 
 	fastify.all("/rpc/*", async (request, reply) => {
-		reply.hijack();
-		const result = await orpc.rpc.handle(request.raw, reply.raw, {
+		const result = await orpc.rpc.handle(request, reply, {
 			context: await createContext(request.headers, request.log),
 			prefix: "/rpc",
 		});
 		if (!result.matched) {
-			reply.raw.statusCode = 404;
-			reply.raw.end("Not Found");
+			reply.code(404).send("Not Found");
 		}
 	});
 
 	fastify.all("/api/*", async (request, reply) => {
-		reply.hijack();
-		const result = await orpc.apiRoutes.handle(request.raw, reply.raw, {
+		const result = await orpc.apiRoutes.handle(request, reply, {
 			context: await createContext(request.headers, request.log),
 			prefix: "/api",
 		});
 		if (!result.matched) {
-			reply.raw.statusCode = 404;
-			reply.raw.end("Not Found");
+			reply.code(404).send("Not Found");
 		}
 	});
 
 	if (!env.isProd || env.exposeApiReference) {
 		fastify.all("/api-reference/*", async (request, reply) => {
-			reply.hijack();
-			const result = await orpc.apiReference.handle(request.raw, reply.raw, {
+			const result = await orpc.apiReference.handle(request, reply, {
 				context: await createContext(request.headers, request.log),
 				prefix: "/api-reference",
 			});
 			if (!result.matched) {
-				reply.raw.statusCode = 404;
-				reply.raw.end("Not Found");
+				reply.code(404).send("Not Found");
 			}
 		});
 	}

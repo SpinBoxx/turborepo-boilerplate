@@ -10,15 +10,19 @@ export const Route = createFileRoute("/mon-hotel")({
 function MonHotelPage() {
 	const [hotelIdInput, setHotelIdInput] = useState<string>("1");
 	const hotelId = useMemo(() => {
-		const n = Number(hotelIdInput);
-		return Number.isFinite(n) && n > 0 ? n : null;
+		const v = hotelIdInput.trim();
+		return v.length > 0 ? v : null;
 	}, [hotelIdInput]);
 
 	const hotelQuery = useHotel(hotelId);
 	const createHotelMutation = useCreateHotel();
 
 	const [name, setName] = useState("");
-	const [city, setCity] = useState("");
+	const [description, setDescription] = useState("");
+	const [address, setAddress] = useState("");
+	const [mapLink, setMapLink] = useState("");
+	const [latitude, setLatitude] = useState("");
+	const [longitude, setLongitude] = useState("");
 
 	return (
 		<div className="space-y-6 p-4">
@@ -38,7 +42,6 @@ function MonHotelPage() {
 							className="rounded border px-3 py-2"
 							value={hotelIdInput}
 							onChange={(e) => setHotelIdInput(e.target.value)}
-							inputMode="numeric"
 						/>
 					</label>
 					<Button variant={"secondary"}>feff</Button>
@@ -61,7 +64,7 @@ function MonHotelPage() {
 				{hotelQuery.data && (
 					<div className="rounded border p-3">
 						<div className="font-medium">{hotelQuery.data.name}</div>
-						<div className="text-sm opacity-80">{hotelQuery.data.city}</div>
+						<div className="text-sm opacity-80">{hotelQuery.data.address}</div>
 						<div className="text-xs opacity-60">id: {hotelQuery.data.id}</div>
 					</div>
 				)}
@@ -79,17 +82,56 @@ function MonHotelPage() {
 						/>
 					</label>
 					<label className="flex flex-col gap-1">
-						<span className="text-sm">Ville</span>
+						<span className="text-sm">Description</span>
 						<input
 							className="rounded border px-3 py-2"
-							value={city}
-							onChange={(e) => setCity(e.target.value)}
+							value={description}
+							onChange={(e) => setDescription(e.target.value)}
+						/>
+					</label>
+					<label className="flex flex-col gap-1">
+						<span className="text-sm">Adresse</span>
+						<input
+							className="rounded border px-3 py-2"
+							value={address}
+							onChange={(e) => setAddress(e.target.value)}
+						/>
+					</label>
+					<label className="flex flex-col gap-1">
+						<span className="text-sm">Map link</span>
+						<input
+							className="rounded border px-3 py-2"
+							value={mapLink}
+							onChange={(e) => setMapLink(e.target.value)}
+						/>
+					</label>
+					<label className="flex flex-col gap-1">
+						<span className="text-sm">Latitude</span>
+						<input
+							className="rounded border px-3 py-2"
+							value={latitude}
+							onChange={(e) => setLatitude(e.target.value)}
+						/>
+					</label>
+					<label className="flex flex-col gap-1">
+						<span className="text-sm">Longitude</span>
+						<input
+							className="rounded border px-3 py-2"
+							value={longitude}
+							onChange={(e) => setLongitude(e.target.value)}
 						/>
 					</label>
 					<button
 						className="rounded border px-3 py-2"
 						onClick={async () =>
-							await createHotelMutation.mutateAsync({ name, city })
+							await createHotelMutation.mutateAsync({
+								name,
+								description,
+								address,
+								mapLink,
+								latitude,
+								longitude,
+							})
 						}
 						disabled={createHotelMutation.isPending}
 						type="button"

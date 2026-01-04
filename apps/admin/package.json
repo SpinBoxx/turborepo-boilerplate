@@ -21,6 +21,7 @@
 		"@zanadeal/auth": "file:../../packages/auth",
 		"@zanadeal/db": "file:../../packages/db",
 		"@zanadeal/ui": "file:../../packages/ui",
+		"@zanadeal/utils": "file:../../packages/utils",
 		"date-fns": "^4.1.0",
 		"drizzle-orm": "^0.45.1",
 		"lucide-react": "^0.562.0",
@@ -28,7 +29,7 @@
 		"react-dom": "^19.2.3",
 		"sonner": "^2.0.7",
 		"vite": "^6.3.5",
-		"zod": "^4.2.1"
+		"zod": "^4.3.4"
 	},
 	"devDependencies": {
 		"chalk": "^5.4.1",

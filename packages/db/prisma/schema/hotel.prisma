@@ -1,0 +1,79 @@
+model Hotel {
+  id          String         @id @default(cuid())
+  name        String
+  description String
+  address     String
+  mapLink     String
+  isArchived  Boolean        @default(false)  
+  latitude    String
+  longitude   String
+  contacts    Contact[]
+  rooms       Room[]
+  reviews     Review[]
+  favorites   Favorite[]
+  amenities   Amenity[] 
+  images      HotelImage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Review {
+  id          String      @id @default(cuid())
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  hotel       Hotel      @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotelId     String
+  rating      Int
+  comment     String?
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Favorite {
+  id          String      @id @default(cuid())
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  hotel       Hotel       @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotelId     String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Guest {
+  id          String      @id @default(cuid())
+  booking     Booking?     
+  bookingId   String?     @unique
+  firstName   String
+  lastName    String
+  email       String
+  phoneNumber String?
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+
+model HotelImage {
+  id      String @id @default(cuid())
+  url     String
+  publicId String
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotelId String
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Contact {
+  id          String   @id @default(uuid())
+  email       String
+  note        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  phoneNumber String?
+  name        String
+
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotelId String
+}

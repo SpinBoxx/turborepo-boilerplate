@@ -1,0 +1,34 @@
+model Room {
+  id          String        @id @default(cuid())
+  hotel       Hotel         @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotelId     String
+  type        RoomType
+  price       Float
+  promoPrice  Float
+  description String
+  capacity    Int
+  quantity    Int
+  bookings    Booking[]
+  amenities   Amenity[] 
+  images      RoomImage[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum RoomType {
+  STANDARD
+  PREMIUM
+}
+
+model RoomImage {
+  id      String @id @default(cuid())
+  url     String
+  publicId String
+  room    Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId  String
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+

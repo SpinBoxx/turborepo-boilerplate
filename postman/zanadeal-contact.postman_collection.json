@@ -1,0 +1,88 @@
+{
+	"info": {
+		"name": "Zanadeal - Contact",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001"
+		},
+		{
+			"key": "contactId",
+			"value": ""
+		},
+		{
+			"key": "hotelId",
+			"value": ""
+		},
+		{
+			"key": "take",
+			"value": "20"
+		},
+		{
+			"key": "cursor",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "Contact",
+			"item": [
+				{
+					"name": "POST /api/contacts (create)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/contacts",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "contacts"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"client@example.com\",\n  \"note\": \"Je veux des infos\",\n  \"phoneNumber\": \"+33600000000\",\n  \"name\": \"Jean Dupont\",\n  \"hotelId\": \"{{hotelId}}\"\n}"
+						}
+					}
+				},
+				{
+					"name": "GET /api/contacts/:id (protected)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "contacts", "{{contactId}}"]
+						}
+					}
+				},
+				{
+					"name": "GET /api/hotels/:hotelId/contacts (protected)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/hotels/{{hotelId}}/contacts?take={{take}}&cursor={{cursor}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hotels", "{{hotelId}}", "contacts"],
+							"query": [
+								{
+									"key": "take",
+									"value": "{{take}}"
+								},
+								{
+									"key": "cursor",
+									"value": "{{cursor}}"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

@@ -1,11 +1,18 @@
 import { ORPCError } from "@orpc/server";
-import { protectedProcedure, publicProcedure } from "../../index";
+import { adminProcedure, publicProcedure } from "../../index";
 import {
 	CreateHotelInputSchema,
 	GetHotelInputSchema,
 	HotelSchema,
+	ToggleHotelArchivedInputSchema,
+	UpdateHotelInputSchema,
 } from "./hotel.schemas";
-import { createHotelInStore, getHotelById } from "./hotel.store";
+import {
+	createHotel as createHotelInDb,
+	getHotelById,
+	toggleArchived,
+	updateHotel,
+} from "./hotel.store";
 
 export const getHotel = publicProcedure
 	.route({
@@ -16,15 +23,18 @@ export const getHotel = publicProcedure
 	})
 	.input(GetHotelInputSchema)
 	.output(HotelSchema)
-	.handler(({ input }) => {
-		const hotel = getHotelById(input.id);
+	.handler(async ({ input, context }) => {
+		const hotel = await getHotelById(input.id, {
+			viewerUserId: context.session?.user?.id,
+		});
 		if (!hotel) {
 			throw new ORPCError("NOT_FOUND");
 		}
+
 		return hotel;
 	});
 
-export const createHotel = protectedProcedure
+export const createHotelRoute = publicProcedure
 	.route({
 		method: "POST",
 		path: "/hotels",
@@ -33,11 +43,53 @@ export const createHotel = protectedProcedure
 	})
 	.input(CreateHotelInputSchema)
 	.output(HotelSchema)
-	.handler(({ input }) => {
-		return createHotelInStore(input);
+	.handler(async ({ input }) => {
+		console.log({ input });
+
+		return createHotelInDb(input);
+	});
+
+export const updateHotelRoute = adminProcedure
+	.route({
+		method: "PATCH",
+		path: "/hotels/{id}",
+		summary: "Update a hotel",
+		tags: ["Hotel"],
+	})
+	.input(UpdateHotelInputSchema)
+	.output(HotelSchema)
+	.handler(async ({ input, context }) => {
+		const hotel = await updateHotel(input, {
+			viewerUserId: context.session?.user?.id,
+		});
+		if (!hotel) {
+			throw new ORPCError("NOT_FOUND");
+		}
+		return hotel;
+	});
+
+export const toggleHotelArchivedRoute = adminProcedure
+	.route({
+		method: "PATCH",
+		path: "/hotels/{id}/toggle-archived",
+		summary: "Toggle hotel archived state",
+		tags: ["Hotel"],
+	})
+	.input(ToggleHotelArchivedInputSchema)
+	.output(HotelSchema)
+	.handler(async ({ input, context }) => {
+		const hotel = await toggleArchived(input, {
+			viewerUserId: context.session?.user?.id,
+		});
+		if (!hotel) {
+			throw new ORPCError("NOT_FOUND");
+		}
+		return hotel;
 	});
 
 export const hotelRouter = {
 	get: getHotel,
-	create: createHotel,
+	create: createHotelRoute,
+	updateHotel: updateHotelRoute,
+	toggleArchived: toggleHotelArchivedRoute,
 };

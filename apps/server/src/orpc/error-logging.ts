@@ -127,6 +127,7 @@ export async function logOrpcError(params: {
 	const rpcDetails =
 		params.kind === "rpc" ? extractRpcDetails(body) : undefined;
 	const orpcDetails = extractOrpcErrorDetails(params.error);
+	console.log(orpcDetails, body, params.error);
 
 	logger.error(
 		{
