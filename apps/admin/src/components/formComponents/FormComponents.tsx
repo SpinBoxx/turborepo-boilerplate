@@ -10,6 +10,7 @@ import {
 	SelectLabel,
 	SelectTrigger,
 	SelectValue,
+	Spinner,
 	Switch as SwitchComp,
 	Textarea,
 	Select as UiSelect,
@@ -40,7 +41,10 @@ export function SubscribeButton({
 					disabled={isSubmitting}
 				>
 					{isSubmitting ? (
-						loadingLabel && <span className="ml-0">{loadingLabel}</span>
+						<>
+							<Spinner />
+							{loadingLabel && <span className="ml-0">{loadingLabel}</span>}
+						</>
 					) : (
 						icon || label
 					)}

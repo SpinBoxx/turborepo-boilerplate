@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./auth/providers/AuthProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { createQueryClient } from "./lib/queryClient";
+import type { FileRouteTypes } from "./routeTree.gen";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 
@@ -29,7 +30,7 @@ declare module "@tanstack/react-router" {
 		router: typeof router;
 	}
 }
-
+export type AppRoutes = FileRouteTypes["to"];
 // Render the app
 const rootElement = document.getElementById("root");
 if (!rootElement) {

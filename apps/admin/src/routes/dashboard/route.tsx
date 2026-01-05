@@ -1,13 +1,7 @@
-import {
-	createFileRoute,
-	Outlet,
-	redirect,
-	useRouteContext,
-	useRouter,
-} from "@tanstack/react-router";
-import { Button } from "@zanadeal/ui";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { SidebarInset, SidebarProvider } from "@zanadeal/ui";
 import { isAdmin } from "@zanadeal/utils";
-import { useAuth } from "@/auth/providers/AuthProvider";
+import { DashboardSidebar } from "@/components/sidebar/DashboardSidebar";
 
 export const Route = createFileRoute("/dashboard")({
 	component: RouteComponent,
@@ -28,21 +22,14 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function RouteComponent() {
-	const { user, signOut } = useAuth();
-	const { user: routeUser } = useRouteContext({ from: "/dashboard" });
-	const router = useRouter();
 	return (
-		<div>
-			{user?.email}r{routeUser?.email}
-			<Button
-				onClick={async () => {
-					await signOut({ onSuccess: () => router.invalidate() });
-					router.navigate({ to: "/login" });
-				}}
-			>
-				signout
-			</Button>
-			<Outlet />
-		</div>
+		<SidebarProvider>
+			<div className="relative flex h-screen w-full">
+				<DashboardSidebar />
+				<SidebarInset>
+					<Outlet />
+				</SidebarInset>
+			</div>
+		</SidebarProvider>
 	);
 }
