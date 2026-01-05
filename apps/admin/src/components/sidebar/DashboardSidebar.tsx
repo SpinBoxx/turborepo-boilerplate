@@ -46,8 +46,8 @@ export function DashboardSidebar() {
 						: "flex-row items-center justify-between",
 				)}
 			>
-				<Link to="/dashboard" className="flex items-center gap-2">
-					<Logo className="size-9 fill-primary" />
+				<Link to="/dashboard" className="flex items-center gap-2 self-center">
+					<Logo className="size-10 fill-primary" />
 					{!isCollapsed && (
 						<span className="font-semibold text-black dark:text-white">
 							Zanadeal
