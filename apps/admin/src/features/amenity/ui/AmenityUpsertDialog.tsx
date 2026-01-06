@@ -88,7 +88,7 @@ export default function AmenityUpsertDialog({
 						e.stopPropagation();
 						form.handleSubmit();
 					}}
-					className="grid gap-4"
+					className="mt-4 grid gap-4"
 				>
 					<form.AppField
 						name="name"
