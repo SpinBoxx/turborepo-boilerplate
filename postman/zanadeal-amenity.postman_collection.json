@@ -1,0 +1,111 @@
+{
+	"info": {
+		"name": "Zanadeal - Amenity",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001"
+		},
+		{
+			"key": "amenityId",
+			"value": ""
+		},
+		{
+			"key": "take",
+			"value": "50"
+		},
+		{
+			"key": "cursor",
+			"value": ""
+		},
+		{
+			"key": "cookie",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "Amenity",
+			"item": [
+				{
+					"name": "GET /api/amenities (list)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/amenities?take={{take}}&cursor={{cursor}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "amenities"],
+							"query": [
+								{ "key": "take", "value": "{{take}}" },
+								{ "key": "cursor", "value": "{{cursor}}" }
+							]
+						}
+					}
+				},
+				{
+					"name": "GET /api/amenities/:id (get)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/amenities/{{amenityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "amenities", "{{amenityId}}"]
+						}
+					}
+				},
+				{
+					"name": "POST /api/amenities (admin create)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Cookie", "value": "{{cookie}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/amenities",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "amenities"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Piscine\",\n  \"icon\": \"pool\"\n}"
+						}
+					}
+				},
+				{
+					"name": "PATCH /api/amenities/:id (admin update)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Cookie", "value": "{{cookie}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/amenities/{{amenityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "amenities", "{{amenityId}}"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Piscine chauffée\",\n  \"icon\": \"pool\"\n}"
+						}
+					}
+				},
+				{
+					"name": "DELETE /api/amenities/:id (admin delete)",
+					"request": {
+						"method": "DELETE",
+						"header": [{ "key": "Cookie", "value": "{{cookie}}" }],
+						"url": {
+							"raw": "{{baseUrl}}/api/amenities/{{amenityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "amenities", "{{amenityId}}"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

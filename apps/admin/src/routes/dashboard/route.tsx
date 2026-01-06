@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { SidebarInset, SidebarProvider } from "@zanadeal/ui";
 import { isAdmin } from "@zanadeal/utils";
 import { DashboardSidebar } from "@/components/sidebar/DashboardSidebar";
+import SidebarNavbar from "@/components/sidebar/SidebarNavbar";
 
 export const Route = createFileRoute("/dashboard")({
 	component: RouteComponent,
@@ -26,7 +27,8 @@ function RouteComponent() {
 		<SidebarProvider>
 			<div className="relative flex h-screen w-full">
 				<DashboardSidebar />
-				<SidebarInset>
+				<SidebarInset className="space-y-4 p-2 md:p-6">
+					<SidebarNavbar />
 					<Outlet />
 				</SidebarInset>
 			</div>

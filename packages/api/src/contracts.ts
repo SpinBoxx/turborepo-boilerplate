@@ -1,4 +1,18 @@
 export {
+	type Amenity,
+	AmenitySchema,
+	type CreateAmenityInput,
+	CreateAmenityInputSchema,
+	type DeleteAmenityInput,
+	DeleteAmenityInputSchema,
+	type GetAmenityInput,
+	GetAmenityInputSchema,
+	type ListAmenitiesInput,
+	ListAmenitiesInputSchema,
+	type UpdateAmenityInput,
+	UpdateAmenityInputSchema,
+} from "./features/amenity/amenity.schemas";
+export {
 	type Contact,
 	ContactSchema,
 	type CreateContactInput,
