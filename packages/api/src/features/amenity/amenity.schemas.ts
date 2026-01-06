@@ -16,7 +16,7 @@ export const GetAmenityInputSchema = z.object({
 
 export const ListAmenitiesInputSchema = z.object({
 	cursor: z.string().optional(),
-	take: z.number().int().min(1).max(100).optional(),
+	take: z.coerce.number().int().min(1).max(100).optional(),
 });
 
 export const CreateAmenityInputSchema = z.object({

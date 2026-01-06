@@ -29,7 +29,9 @@ function RouteComponent() {
 				<DashboardSidebar />
 				<SidebarInset className="space-y-4 p-2 md:p-6">
 					<SidebarNavbar />
-					<Outlet />
+					<div className="p-2">
+						<Outlet />
+					</div>
 				</SidebarInset>
 			</div>
 		</SidebarProvider>
