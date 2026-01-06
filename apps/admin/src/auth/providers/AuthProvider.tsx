@@ -133,23 +133,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				);
 
 				if (!response.ok) {
-					let description = "Identifiants invalides.";
-					try {
-						const data = (await response.json()) as {
-							error?: string;
-							message?: string;
-						};
-						description = data.error || data.message || description;
-					} catch {
-						// ignore JSON parse
-					}
-					toast.error("Connexion impossible", { description });
-					const err = new Error(description);
-					if (options?.onError) {
-						await options.onError(err);
-						return;
-					}
-					throw err;
+					// Do not display backend-provided details to avoid leaking whether an
+					// account exists or not.
+					const description =
+						response.status === 401
+							? "Identifiants invalides."
+							: "Connexion impossible.";
+					throw new Error(description);
 				}
 
 				const nextUser = await loadSession();
@@ -159,10 +149,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				return;
 			} catch (error) {
 				const err =
-					error instanceof Error ? error : new Error("Connexion impossible");
-				toast.error("Connexion impossible", {
-					description: err.message,
-				});
+					error instanceof Error ? error : new Error("Connexion impossible.");
+
+				const description =
+					err.message && err.message.trim().length > 0
+						? err.message
+						: "Connexion impossible.";
+				toast.error("Connexion impossible", { description });
+
 				if (options?.onError) {
 					await options.onError(err);
 					return;
