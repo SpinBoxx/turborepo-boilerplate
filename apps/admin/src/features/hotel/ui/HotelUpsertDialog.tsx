@@ -20,7 +20,9 @@ export default function HotelUpsertDialog({
 		>
 			<DialogContent className="sm:max-w-2xl">
 				<DialogHeader className="border-b pb-2">
-					<DialogTitle>Ajouter un hotel</DialogTitle>
+					<DialogTitle>
+						{hotel ? "Modifier un hôtel" : "Ajouter un hôtel"}
+					</DialogTitle>
 				</DialogHeader>
 				<HotelUpsertForm hotel={hotel} className="mt-2" />
 			</DialogContent>

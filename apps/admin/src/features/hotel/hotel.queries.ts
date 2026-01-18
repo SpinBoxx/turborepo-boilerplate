@@ -4,6 +4,8 @@ import type {
 	ListHotelsInput,
 	UpdateHotelInput,
 } from "@zanadeal/api/contracts";
+import { toast } from "sonner";
+import { getErrorMessage } from "../amenity/amenity.queries";
 import {
 	createHotel,
 	getHotelById,
@@ -42,9 +44,17 @@ export function useCreateHotel() {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: (input: CreateHotelInput) => createHotel(input),
+		onError: (error) => {
+			console.log(error);
+
+			toast.error("Modification impossible", {
+				description: getErrorMessage(error),
+			});
+		},
 		onSuccess: (hotel) => {
 			queryClient.setQueryData(hotelKeys().byId(hotel.id), hotel);
 			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
+			toast.success("Hotel created successfully");
 		},
 	});
 }

@@ -33,6 +33,7 @@
 		"dotenv": "^17.2.2",
 		"zod": "^4.3.4",
 		"@zanadeal/auth": "*",
-		"@zanadeal/db": "*"
+		"@zanadeal/db": "*",
+		"@zanadeal/utils": "*"
 	}
 }

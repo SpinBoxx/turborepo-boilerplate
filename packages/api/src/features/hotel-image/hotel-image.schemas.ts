@@ -16,9 +16,7 @@ export const GetHotelImageInputSchema = z.object({
 });
 
 export const CreateHotelImageInputSchema = z.object({
-	url: z.string().min(1),
-	publicId: z.string().min(1),
-	hotelId: z.string().min(1),
+	base64: z.string().min(1),
 });
 
 export type CreateHotelImageInput = z.infer<typeof CreateHotelImageInputSchema>;

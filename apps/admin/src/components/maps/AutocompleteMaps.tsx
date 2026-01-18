@@ -23,10 +23,18 @@ const AutocompleteMap = ({ onUpdate, defaultPlace }: Props) => {
 		useState<google.maps.places.PlaceResult | null>(null);
 	const [markerRef, marker] = useAdvancedMarkerRef();
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		if (onUpdate) onUpdate(selectedPlace);
-	}, [selectedPlace]);
+	const handleUserPlaceSelect = (
+		place: google.maps.places.PlaceResult | null,
+	) => {
+		setSelectedPlace(place);
+		if (onUpdate) onUpdate(place);
+	};
+
+	const handleDefaultPlaceResolved = (
+		place: google.maps.places.PlaceResult | null,
+	) => {
+		setSelectedPlace(place);
+	};
 
 	return (
 		<APIProvider
@@ -47,7 +55,8 @@ const AutocompleteMap = ({ onUpdate, defaultPlace }: Props) => {
 				<div className="autocomplete-control mt-2 w-[250px]">
 					<PlaceAutocomplete
 						name={defaultPlace || ""}
-						onPlaceSelect={setSelectedPlace}
+						onPlaceSelect={handleUserPlaceSelect}
+						onDefaultPlaceResolved={handleDefaultPlaceResolved}
 					/>
 				</div>
 			</MapControl>
@@ -78,14 +87,22 @@ const MapHandler = ({ place, marker }: MapHandlerProps) => {
 
 interface PlaceAutocompleteProps {
 	onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
+	onDefaultPlaceResolved?: (
+		place: google.maps.places.PlaceResult | null,
+	) => void;
 	name: string;
 }
 
-const PlaceAutocomplete = ({ onPlaceSelect, name }: PlaceAutocompleteProps) => {
+const PlaceAutocomplete = ({
+	onPlaceSelect,
+	onDefaultPlaceResolved,
+	name,
+}: PlaceAutocompleteProps) => {
 	const [placeAutocomplete, setPlaceAutocomplete] =
 		useState<google.maps.places.Autocomplete | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const places = useMapsLibrary("places");
+	const map = useMap();
 
 	useEffect(() => {
 		if (!places || !inputRef.current) return;
@@ -105,14 +122,39 @@ const PlaceAutocomplete = ({ onPlaceSelect, name }: PlaceAutocompleteProps) => {
 		});
 	}, [onPlaceSelect, placeAutocomplete]);
 
+	useEffect(() => {
+		if (!inputRef.current) return;
+		inputRef.current.value = name;
+	}, [name]);
+
+	useEffect(() => {
+		if (!places || !map || !name) return;
+
+		const service = new places.PlacesService(map);
+		service.findPlaceFromQuery(
+			{
+				query: name,
+				fields: ["geometry", "name", "formatted_address", "place_id"],
+			},
+			(results, status) => {
+				if (
+					status === google.maps.places.PlacesServiceStatus.OK &&
+					results?.[0]
+				) {
+					onDefaultPlaceResolved?.(results[0]);
+				}
+			},
+		);
+	}, [name, map, onDefaultPlaceResolved, places]);
+
 	return (
 		<div className="autocomplete-container">
 			<Input
 				type="text"
-				defaultValue={name}
 				ref={inputRef}
 				className="rounded-lg border bg-white px-3 py-2 shadow-md focus:ring-2 focus:ring-primary dark:bg-input/90"
 			/>
+
 			{/* Custom style for the dropdown container */}
 			<style>{`
 					.custom-autocomplete-container {

@@ -34,8 +34,6 @@ export function getHotelUpsertDefaultValues(hotel?: Hotel): CreateHotelInput {
 					accountHolderName: hotel.bankAccount.accountHolderName,
 				}
 			: undefined,
-		images:
-			hotel.images?.map((img) => ({ url: img.url, publicId: img.publicId })) ??
-			undefined,
+		images: undefined,
 	};
 }

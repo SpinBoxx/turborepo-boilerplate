@@ -15,7 +15,7 @@ import {
 	updateAmenity,
 } from "./amenity.api";
 
-function getErrorMessage(error: unknown) {
+export function getErrorMessage(error: unknown) {
 	if (error instanceof Error) return error.message;
 	if (typeof error === "string") return error;
 	return "Une erreur inattendue est survenue.";

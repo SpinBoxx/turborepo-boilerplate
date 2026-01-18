@@ -23,6 +23,7 @@
 		"@zanadeal/db": "file:../../packages/db",
 		"@zanadeal/ui": "file:../../packages/ui",
 		"@zanadeal/utils": "file:../../packages/utils",
+		"cloudinary": "^2.9.0",
 		"date-fns": "^4.1.0",
 		"drizzle-orm": "^0.45.1",
 		"framer-motion": "^12.23.26",

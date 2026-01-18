@@ -1,4 +1,7 @@
+import { ORPCError } from "@orpc/client";
 import prisma from "@zanadeal/db";
+import { createUuid } from "@zanadeal/utils";
+import type { UploadResult } from "../../services/cloudinary.service";
 import { mapHotelDbToSchema } from "./hotel.mapper";
 import type {
 	CreateHotelInput,
@@ -7,6 +10,7 @@ import type {
 	ToggleHotelArchivedInput,
 	UpdateHotelInput,
 } from "./hotel.schemas";
+import { createHotelImages } from "./hotel.service";
 
 type GetHotelOptions = {
 	viewerUserId?: string;
@@ -36,6 +40,25 @@ function buildHotelInclude(options: GetHotelOptions) {
 }
 
 export async function createHotel(input: CreateHotelInput): Promise<Hotel> {
+	let images: UploadResult[] = [];
+	if (input.images?.length) {
+		console.log({ length: input.images.length });
+
+		images = await createHotelImages(input.images, {
+			folder: `hotels/${input.name}`,
+			publicId: createUuid(),
+		});
+
+		images.forEach((img, index) => {
+			if (!img.success) {
+				throw new ORPCError("UPLOAD_FAILED", {
+					status: 400,
+					message: `Cannot upload image number ${index + 1}`,
+				});
+			}
+		});
+	}
+
 	const full = await prisma.hotel.create({
 		data: {
 			name: input.name,
@@ -60,11 +83,11 @@ export async function createHotel(input: CreateHotelInput): Promise<Hotel> {
 						connect: input.amenityIds.map((id) => ({ id })),
 					}
 				: undefined,
-			images: input.images?.length
+			images: images.length
 				? {
-						create: input.images.map((img) => ({
-							url: img.url,
-							publicId: img.publicId,
+						create: images.map((img) => ({
+							url: img.success ? img.url : "",
+							publicId: img.success ? img.publicId : "",
 						})),
 					}
 				: undefined,

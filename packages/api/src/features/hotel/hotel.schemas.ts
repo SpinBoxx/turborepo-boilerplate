@@ -68,9 +68,7 @@ export const CreateHotelInputSchema = z.object({
 	longitude: z.string().min(1),
 	amenityIds: z.array(z.string().min(1)).optional(),
 	bankAccount: BankAccountInputSchema.optional(),
-	images: z
-		.array(CreateHotelImageInputSchema.omit({ hotelId: true }))
-		.optional(),
+	images: z.array(CreateHotelImageInputSchema).optional(),
 });
 
 export const UpdateHotelInputSchema = z.object({
@@ -84,9 +82,7 @@ export const UpdateHotelInputSchema = z.object({
 	// Full list of amenity ids to associate with the hotel.
 	amenityIds: z.array(z.string().min(1)).optional(),
 	bankAccount: BankAccountInputSchema.optional(),
-	imagesToCreate: z
-		.array(CreateHotelImageInputSchema.omit({ hotelId: true }))
-		.optional(),
+	imagesToCreate: z.array(CreateHotelImageInputSchema).optional(),
 });
 
 export const ToggleHotelArchivedInputSchema = z.object({

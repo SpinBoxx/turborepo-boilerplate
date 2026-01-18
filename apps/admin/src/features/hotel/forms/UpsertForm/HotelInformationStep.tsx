@@ -6,11 +6,14 @@ const HotelInformationsStep = withForm({
 	defaultValues: HOTEL_UPSERT_DEFAULT_VALUES,
 
 	render: function Render({ form }) {
+		// const name = useStore(form.store, (state) => state.values.name);
 		return (
 			<div className="w-full space-y-4">
 				<AutocompleteMap
 					defaultPlace={form.getFieldValue("name")}
 					onUpdate={(selectedPlace) => {
+						console.log("reset");
+
 						form.setFieldValue(
 							"address",
 							selectedPlace?.formatted_address || "",
@@ -26,7 +29,6 @@ const HotelInformationsStep = withForm({
 						form.setFieldValue("name", selectedPlace?.name || "");
 						// Générer le lien Google Maps Embed avec le place_id
 						if (selectedPlace?.place_id) {
-							const _apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 							form.setFieldValue(
 								"mapLink",
 								`https://www.google.com/maps/embed/v1/place?q=place_id:${selectedPlace.place_id}`,

@@ -1,6 +1,7 @@
 import type { Hotel } from "@zanadeal/api/contracts";
 import { cn } from "@zanadeal/ui";
-import type { ComponentProps } from "react";
+import { fileToBase64, urlToFile } from "@zanadeal/utils";
+import { type ComponentProps, useEffect, useState } from "react";
 import { FormStepperFooter } from "@/components/stepper/FormStepper/FormStepperFooter";
 import FormStepperNav from "@/components/stepper/FormStepper/FormStepperNav";
 import {
@@ -10,8 +11,10 @@ import {
 	StepperPanel,
 } from "@/components/stepper/FormStepper/FormStepperProvider";
 import { useAppForm } from "@/hooks/useAppForm";
+import { useCreateHotel } from "../../hotel.queries";
 import HotelAmenitiesStep from "./HotelAmenitiesStep";
 import HotelBankAccountStep from "./HotelBankAccountStep";
+import HotelImagesStep from "./HotelImagesStep";
 import HotelInformationsStep from "./HotelInformationStep";
 import { getHotelUpsertDefaultValues } from "./hotelUpsertForm.defaults";
 
@@ -20,12 +23,37 @@ interface Props extends ComponentProps<"div"> {
 }
 
 export default function HotelUpsertForm({ hotel, className }: Props) {
+	const [files, setFiles] = useState<File[]>([]);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const createHotel = useCreateHotel();
+	console.log(hotel);
+
 	const form = useAppForm({
 		defaultValues: getHotelUpsertDefaultValues(hotel || undefined),
 		onSubmit: async ({ value }) => {
-			console.log(value);
+			setIsSubmitting(true);
+			const imagesBase64 = await Promise.all(files.map(fileToBase64));
+
+			await createHotel
+				.mutateAsync({
+					...value,
+					images: imagesBase64.map((base64) => ({ base64 })),
+				})
+				.finally(() => setIsSubmitting(false));
 		},
 	});
+
+	useEffect(() => {
+		if (hotel?.images.length) {
+			Promise.all(
+				hotel.images.map((image, index) =>
+					urlToFile(image.url, `hotel-image-${index}.jpg`, "image/jpeg"),
+				),
+			).then((files) => {
+				setFiles(files);
+			});
+		}
+	}, [hotel?.images]);
 
 	const steps: FormStepperStep[] = [
 		{
@@ -34,7 +62,12 @@ export default function HotelUpsertForm({ hotel, className }: Props) {
 		},
 		{ content: <HotelBankAccountStep form={form} />, title: "Compte bancaire" },
 		{ content: <HotelAmenitiesStep form={form} />, title: "Services" },
-		{ content: <div>Bonjour2</div>, title: "Step 4" },
+		{
+			content: (
+				<HotelImagesStep form={form} files={files} setFiles={setFiles} />
+			),
+			title: "Images",
+		},
 	];
 
 	return (
@@ -65,7 +98,12 @@ export default function HotelUpsertForm({ hotel, className }: Props) {
 							</StepperContent>
 						))}
 					</StepperPanel>
-					<FormStepperFooter />
+					{form.getFieldValue("images")?.length}
+					<FormStepperFooter
+						submitButtonProps={{
+							isSubmitting,
+						}}
+					/>
 				</Stepper>
 			</form>
 		</div>
