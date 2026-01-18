@@ -4,6 +4,7 @@ import type { ComponentProps } from "react";
 export default function Logo({ className, ...props }: ComponentProps<"svg">) {
 	return (
 		<svg
+			{...props}
 			xmlns="http://www.w3.org/2000/svg"
 			version="1.0"
 			xlinkTitle="Logo"

@@ -4,15 +4,30 @@ import {
 	CreateHotelInputSchema,
 	GetHotelInputSchema,
 	HotelSchema,
+	ListHotelsInputSchema,
 	ToggleHotelArchivedInputSchema,
 	UpdateHotelInputSchema,
 } from "./hotel.schemas";
 import {
 	createHotel as createHotelInDb,
 	getHotelById,
+	listHotels,
 	toggleArchived,
 	updateHotel,
 } from "./hotel.store";
+
+export const listHotelsRoute = publicProcedure
+	.route({
+		method: "GET",
+		path: "/hotels",
+		summary: "List hotels",
+		tags: ["Hotel"],
+	})
+	.input(ListHotelsInputSchema)
+	.output(HotelSchema.array())
+	.handler(async ({ input, context }) => {
+		return listHotels(input, { viewerUserId: context.session?.user?.id });
+	});
 
 export const getHotel = publicProcedure
 	.route({
@@ -88,6 +103,7 @@ export const toggleHotelArchivedRoute = adminProcedure
 	});
 
 export const hotelRouter = {
+	list: listHotelsRoute,
 	get: getHotel,
 	create: createHotelRoute,
 	updateHotel: updateHotelRoute,

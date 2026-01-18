@@ -3,9 +3,11 @@ import { cn } from "@zanadeal/ui";
 export default function AmenityIcon({
 	svg,
 	className,
+	iconClassName,
 }: {
 	svg: string;
 	className?: string;
+	iconClassName?: string;
 }) {
 	const src = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 
@@ -18,7 +20,7 @@ export default function AmenityIcon({
 		>
 			<span
 				aria-hidden="true"
-				className="size-4 bg-current"
+				className={cn("size-4 bg-current", iconClassName)}
 				style={{
 					maskImage: src,
 					WebkitMaskImage: src,

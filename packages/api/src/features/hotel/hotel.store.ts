@@ -3,6 +3,7 @@ import { mapHotelDbToSchema } from "./hotel.mapper";
 import type {
 	CreateHotelInput,
 	Hotel,
+	ListHotelsInput,
 	ToggleHotelArchivedInput,
 	UpdateHotelInput,
 } from "./hotel.schemas";
@@ -17,6 +18,7 @@ const hotelIncludeBase = {
 	reviews: true,
 	contacts: true,
 	rooms: true,
+	bankAccount: true,
 } as const;
 
 function buildHotelInclude(options: GetHotelOptions) {
@@ -43,6 +45,16 @@ export async function createHotel(input: CreateHotelInput): Promise<Hotel> {
 			isArchived: input.isArchived ?? false,
 			latitude: input.latitude,
 			longitude: input.longitude,
+			bankAccount: input.bankAccount
+				? {
+						create: {
+							iban: input.bankAccount.iban,
+							bic: input.bankAccount.bic,
+							bankName: input.bankAccount.bankName,
+							accountHolderName: input.bankAccount.accountHolderName,
+						},
+					}
+				: undefined,
 			amenities: input.amenityIds?.length
 				? {
 						connect: input.amenityIds.map((id) => ({ id })),
@@ -94,6 +106,24 @@ export async function updateHotel(
 				mapLink: input.mapLink,
 				latitude: input.latitude,
 				longitude: input.longitude,
+				bankAccount: input.bankAccount
+					? {
+							upsert: {
+								create: {
+									iban: input.bankAccount.iban,
+									bic: input.bankAccount.bic,
+									bankName: input.bankAccount.bankName,
+									accountHolderName: input.bankAccount.accountHolderName,
+								},
+								update: {
+									iban: input.bankAccount.iban,
+									bic: input.bankAccount.bic,
+									bankName: input.bankAccount.bankName,
+									accountHolderName: input.bankAccount.accountHolderName,
+								},
+							},
+						}
+					: undefined,
 				amenities: input.amenityIds
 					? {
 							set: input.amenityIds.map((id) => ({ id })),
@@ -126,6 +156,29 @@ export async function updateHotel(
 	return full
 		? await mapHotelDbToSchema(full, { viewerUserId: options.viewerUserId })
 		: null;
+}
+
+export async function listHotels(
+	input: ListHotelsInput,
+	options: GetHotelOptions = {},
+): Promise<Hotel[]> {
+	const hotels = await prisma.hotel.findMany({
+		orderBy: { createdAt: "desc" },
+		...(input.cursor
+			? {
+					cursor: { id: input.cursor },
+					skip: 1,
+				}
+			: {}),
+		take: input.take ?? 50,
+		include: buildHotelInclude(options),
+	});
+
+	return await Promise.all(
+		hotels.map((h) =>
+			mapHotelDbToSchema(h, { viewerUserId: options.viewerUserId }),
+		),
+	);
 }
 
 export async function toggleArchived(

@@ -1,0 +1,14 @@
+{
+	"extends": ["//"],
+	"tasks": {
+		"build": {
+			"passThroughEnv": ["VITE_GOOGLE_MAPS_API_KEY"]
+		},
+		"dev": {
+			"passThroughEnv": ["VITE_GOOGLE_MAPS_API_KEY"]
+		},
+		"start": {
+			"passThroughEnv": ["VITE_GOOGLE_MAPS_API_KEY"]
+		}
+	}
+}

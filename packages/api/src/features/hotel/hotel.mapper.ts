@@ -14,6 +14,15 @@ export type HotelDb = {
 	isArchived: boolean;
 	latitude: string;
 	longitude: string;
+	bankAccount?: {
+		id: string;
+		iban: string;
+		bic: string;
+		bankName: string;
+		accountHolderName: string;
+		createdAt: Date;
+		updatedAt: Date;
+	} | null;
 	createdAt: Date;
 	updatedAt: Date;
 	amenities?: Amenity[];
@@ -38,12 +47,14 @@ function createHotelDraft(source: HotelDb): Hotel {
 	return {
 		id: source.id,
 		name: source.name,
+		rating: 0,
 		description: source.description,
 		address: source.address,
 		mapLink: source.mapLink,
 		isArchived: source.isArchived,
 		latitude: source.latitude,
 		longitude: source.longitude,
+		bankAccount: source.bankAccount ?? null,
 		createdAt: source.createdAt,
 		updatedAt: source.updatedAt,
 		amenities: [],
@@ -74,8 +85,20 @@ const mapComputed: HotelMapperStep = (draft, source, _ctx) => {
 			: Math.min(...rooms.map((room) => Math.min(room.price, room.promoPrice)));
 };
 
+const mapHotelRating: HotelMapperStep = (draft) => {
+	let rating = 0;
+
+	if (draft.reviews && draft.reviews.length > 0) {
+		rating =
+			draft.reviews.reduce((acc, review) => acc + review.rating, 0) /
+			draft.reviews.length;
+	}
+
+	draft.rating = rating ?? 0;
+};
+
 export function createHotelMapper(
-	steps: HotelMapperStep[] = [mapRelations, mapComputed],
+	steps: HotelMapperStep[] = [mapRelations, mapComputed, mapHotelRating],
 ) {
 	return {
 		async toSchema(

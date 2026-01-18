@@ -49,6 +49,7 @@ function DialogContent({
 	className,
 	children,
 	showCloseButton = true,
+	onInteractOutside,
 	...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
 	showCloseButton?: boolean;
@@ -63,6 +64,14 @@ function DialogContent({
 					// "overflow-y-auto",
 					className,
 				)}
+				onInteractOutside={(event) => {
+					// Prevent closing when clicking on Google Maps autocomplete dropdown
+					const target = event.target as Element;
+					if (target?.closest?.(".pac-container")) {
+						event.preventDefault();
+					}
+					onInteractOutside?.(event);
+				}}
 				{...props}
 			>
 				<ScrollArea className="max-h-[90vh]">

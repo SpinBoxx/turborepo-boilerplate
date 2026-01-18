@@ -29,6 +29,8 @@ export {
 	GetHotelInputSchema,
 	type Hotel,
 	HotelSchema,
+	type ListHotelsInput,
+	ListHotelsInputSchema,
 	type ToggleHotelArchivedInput,
 	ToggleHotelArchivedInputSchema,
 	type UpdateHotelInput,

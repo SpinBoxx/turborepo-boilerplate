@@ -20,6 +20,20 @@ export * from "./components/drawer";
 export * from "./components/dropdown-menu";
 export * from "./components/empty";
 export * from "./components/field";
+export {
+	FileUpload,
+	FileUploadClear,
+	FileUploadDropzone,
+	FileUploadItem,
+	FileUploadItemDelete,
+	FileUploadItemMetadata,
+	FileUploadItemPreview,
+	FileUploadItemProgress,
+	FileUploadList,
+	type FileUploadProps,
+	FileUploadTrigger,
+	useFileUpload,
+} from "./components/file-upload";
 export * from "./components/form";
 export * from "./components/hover-card";
 export * from "./components/input";

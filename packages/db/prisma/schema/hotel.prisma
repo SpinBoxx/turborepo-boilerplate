@@ -7,6 +7,7 @@ model Hotel {
   isArchived  Boolean        @default(false)  
   latitude    String
   longitude   String
+  bankAccount BankAccount?
   contacts    Contact[]
   rooms       Room[]
   reviews     Review[]
@@ -15,6 +16,20 @@ model Hotel {
   images      HotelImage[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+}
+
+model BankAccount {
+  id                String   @id @default(cuid())
+  iban              String
+  bic               String
+  bankName          String
+  accountHolderName String
+
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotelId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Review {
