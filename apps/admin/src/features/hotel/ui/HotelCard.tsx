@@ -12,34 +12,36 @@ import {
 	ContextMenuTrigger,
 	cn,
 } from "@zanadeal/ui";
-import { Pen, Trash } from "lucide-react";
+import { Eye, Pen, Trash, X } from "lucide-react";
 import {
 	HotelAddress,
 	HotelAmenities,
-	HotelCardActions,
-	HotelCardProvider,
+	HotelContext,
 	HotelDescription,
 	HotelImage,
 	HotelName,
+	HotelProvider,
 	HotelRating,
 } from "../components";
+import HotelArchived from "../components/HotelArchived";
+import { useArchiveHotel, useDeleteHotel } from "../hotel.queries";
 
 export default function HotelCard({ hotel }: { hotel: Hotel }) {
+	const toggleArchiveHotel = useArchiveHotel();
+	const deleteHotel = useDeleteHotel();
 	return (
-		<HotelCardProvider hotel={hotel}>
+		<HotelProvider hotel={hotel}>
 			<ContextMenu>
 				<ContextMenuTrigger>
 					<Card className="group gap-0 overflow-hidden rounded-3xl py-0">
 						<CardHeader className="p-0">
 							<div className="relative aspect-16/10 w-full overflow-hidden">
 								<HotelImage className="h-full w-full bg-muted object-cover" />
-
+								<div className="absolute top-4 right-4 rounded-full bg-white/70 p-1">
+									<HotelArchived className="text-black" />
+								</div>
 								<div className="absolute top-4 left-4">
 									<HotelRating />
-								</div>
-
-								<div className="absolute top-4 right-4">
-									<HotelCardActions className="flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100" />
 								</div>
 							</div>
 						</CardHeader>
@@ -60,19 +62,52 @@ export default function HotelCard({ hotel }: { hotel: Hotel }) {
 				</ContextMenuTrigger>
 				<ContextMenuContent>
 					<ContextMenuGroup>
-						<ContextMenuItem className="text-blue-500">
-							<Pen className="text-blue-500" />
-							Modifier
-						</ContextMenuItem>
-						<ContextMenuItem>
-							<Badge variant={"destructive"}>
-								<Trash className="text-white" />
-								Supprimer
-							</Badge>
-						</ContextMenuItem>
+						<HotelContext.Consumer>
+							{({ hotel }) => (
+								<>
+									<ContextMenuItem className="text-blue-500">
+										<Pen className="text-blue-500" />
+										Modifier
+									</ContextMenuItem>
+									{hotel.isArchived ? (
+										<ContextMenuItem
+											className="text-red-500"
+											onClick={() =>
+												toggleArchiveHotel.mutate({
+													id: hotel.id,
+												})
+											}
+										>
+											<Eye className="text-red-500" />
+											Désarchiver
+										</ContextMenuItem>
+									) : (
+										<ContextMenuItem
+											className="text-red-500"
+											onClick={() =>
+												toggleArchiveHotel.mutate({
+													id: hotel.id,
+												})
+											}
+										>
+											<X className="text-red-500" />
+											Archiver
+										</ContextMenuItem>
+									)}
+									<ContextMenuItem
+										onClick={() => deleteHotel.mutate({ id: hotel.id })}
+									>
+										<Badge variant={"destructive"}>
+											<Trash className="text-white" />
+											Supprimer
+										</Badge>
+									</ContextMenuItem>
+								</>
+							)}
+						</HotelContext.Consumer>
 					</ContextMenuGroup>
 				</ContextMenuContent>
 			</ContextMenu>
-		</HotelCardProvider>
+		</HotelProvider>
 	);
 }

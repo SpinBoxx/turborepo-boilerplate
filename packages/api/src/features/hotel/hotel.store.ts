@@ -5,6 +5,7 @@ import type { UploadResult } from "../../services/cloudinary.service";
 import { mapHotelDbToSchema } from "./hotel.mapper";
 import type {
 	CreateHotelInput,
+	DeleteHotelInput,
 	Hotel,
 	ListHotelsInput,
 	ToggleHotelArchivedInput,
@@ -229,4 +230,15 @@ export async function toggleArchived(
 	return full
 		? await mapHotelDbToSchema(full, { viewerUserId: options.viewerUserId })
 		: null;
+}
+
+export async function deleteHotel(
+	input: DeleteHotelInput,
+	_options: GetHotelOptions = {},
+) {
+	const deleted = await prisma.hotel.delete({
+		where: { id: input.id },
+	});
+
+	return deleted;
 }

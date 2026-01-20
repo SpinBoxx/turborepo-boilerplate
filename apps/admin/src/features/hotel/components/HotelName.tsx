@@ -1,6 +1,6 @@
 import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
-import { useHotelContext } from "./HotelCardProvider";
+import { useHotelContext } from "./HotelProvider";
 
 interface Props extends ComponentProps<"p"> {}
 

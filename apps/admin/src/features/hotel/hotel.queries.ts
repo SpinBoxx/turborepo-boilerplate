@@ -2,12 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
 	CreateHotelInput,
 	ListHotelsInput,
+	ToggleHotelArchivedInput,
 	UpdateHotelInput,
 } from "@zanadeal/api/contracts";
+import type { DeleteHotelInput } from "@zanadeal/api/features/hotel/hotel.schemas";
 import { toast } from "sonner";
 import { getErrorMessage } from "../amenity/amenity.queries";
 import {
+	archiveHotel,
 	createHotel,
+	deleteHotel,
 	getHotelById,
 	listHotels,
 	updateHotel,
@@ -66,6 +70,42 @@ export function useUpdateHotel() {
 		onSuccess: (hotel) => {
 			queryClient.setQueryData(hotelKeys().byId(hotel.id), hotel);
 			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
+		},
+	});
+}
+
+export function useArchiveHotel() {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (input: ToggleHotelArchivedInput) => archiveHotel(input),
+		onSuccess: (hotel) => {
+			queryClient.setQueryData(hotelKeys().byId(hotel.id), hotel);
+			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
+			if (hotel.isArchived) {
+				toast.success("Hotel archived successfully", {
+					description: "Hotel can no longer be booked",
+				});
+			} else {
+				toast.success("Hotel unarchived successfully", {
+					description: "Hotel can now be booked",
+				});
+			}
+		},
+	});
+}
+
+export function useDeleteHotel() {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (input: DeleteHotelInput) => deleteHotel(input),
+		onSuccess: (hotel) => {
+			queryClient.setQueryData(hotelKeys().byId(hotel.id), hotel);
+			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
+		},
+		onError: (error) => {
+			toast.error("Suppression impossible", {
+				description: getErrorMessage(error),
+			});
 		},
 	});
 }

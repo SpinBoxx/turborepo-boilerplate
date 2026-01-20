@@ -2,6 +2,7 @@ import { ORPCError } from "@orpc/server";
 import { adminProcedure, publicProcedure } from "../../index";
 import {
 	CreateHotelInputSchema,
+	DeleteHotelInputSchema,
 	GetHotelInputSchema,
 	HotelSchema,
 	ListHotelsInputSchema,
@@ -10,6 +11,7 @@ import {
 } from "./hotel.schemas";
 import {
 	createHotel as createHotelInDb,
+	deleteHotel,
 	getHotelById,
 	listHotels,
 	toggleArchived,
@@ -102,10 +104,27 @@ export const toggleHotelArchivedRoute = adminProcedure
 		return hotel;
 	});
 
+export const deleteHotelRoute = adminProcedure
+	.route({
+		method: "DELETE",
+		path: "/hotels/{id}",
+		summary: "Delete a hotel",
+		tags: ["Hotel"],
+	})
+	.input(DeleteHotelInputSchema)
+	.handler(async ({ input, context }) => {
+		const hotel = await deleteHotel(input);
+		if (!hotel) {
+			throw new ORPCError("NOT_FOUND");
+		}
+		return hotel;
+	});
+
 export const hotelRouter = {
 	list: listHotelsRoute,
 	get: getHotel,
 	create: createHotelRoute,
 	updateHotel: updateHotelRoute,
 	toggleArchived: toggleHotelArchivedRoute,
+	deleteHotel: deleteHotelRoute,
 };

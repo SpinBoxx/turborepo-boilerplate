@@ -93,14 +93,7 @@ export default function HotelPage() {
 			) : viewMode === "grid" ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 					{hotels.map((hotel) => (
-						<HotelCard
-							key={hotel.id}
-							hotel={hotel}
-							onEdit={(h) => {
-								setSelected(h);
-								setUpsertOpen(true);
-							}}
-						/>
+						<HotelCard key={hotel.id} hotel={hotel} />
 					))}
 				</div>
 			) : (

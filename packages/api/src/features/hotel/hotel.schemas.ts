@@ -89,6 +89,10 @@ export const ToggleHotelArchivedInputSchema = z.object({
 	id: z.string().min(1),
 });
 
+export const DeleteHotelInputSchema = z.object({
+	id: z.string().min(1),
+});
+
 export type CreateHotelInput = z.infer<typeof CreateHotelInputSchema>;
 export type GetHotelInput = z.infer<typeof GetHotelInputSchema>;
 export type ListHotelsInput = z.infer<typeof ListHotelsInputSchema>;
@@ -96,3 +100,4 @@ export type UpdateHotelInput = z.infer<typeof UpdateHotelInputSchema>;
 export type ToggleHotelArchivedInput = z.infer<
 	typeof ToggleHotelArchivedInputSchema
 >;
+export type DeleteHotelInput = z.infer<typeof DeleteHotelInputSchema>;
