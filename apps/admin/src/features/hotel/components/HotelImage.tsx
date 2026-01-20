@@ -1,10 +1,14 @@
-import { useHotelCard } from "./HotelCardProvider";
+import type { ComponentProps } from "react";
+import { useHotelContext } from "./HotelCardProvider";
 
-export function HotelImage({ className }: { className?: string }) {
-	const { hotel } = useHotelCard();
+interface Props extends ComponentProps<"img"> {}
+
+export function HotelImage({ className, ...props }: Props) {
+	const { hotel } = useHotelContext();
 
 	return (
 		<img
+			{...props}
 			src={hotel.images[0]?.url}
 			alt={hotel.name}
 			className={className}

@@ -1,12 +1,22 @@
+import { cn } from "@zanadeal/ui";
 import { MapPin } from "lucide-react";
-import { useHotelCard } from "./HotelCardProvider";
+import type { ComponentProps } from "react";
+import { useHotelContext } from "./HotelCardProvider";
 
-export function HotelAddress({ className }: { className?: string }) {
-	const { hotel } = useHotelCard();
+interface Props extends ComponentProps<"div"> {}
+
+export function HotelAddress({ className, ...props }: Props) {
+	const { hotel } = useHotelContext();
 	return (
-		<div className={className}>
-			<MapPin className="size-4 text-primary" />
-			<span className="truncate">{hotel.address}</span>
+		<div
+			className={cn(
+				"flex w-auto items-center gap-1 truncate text-muted-foreground text-xs md:gap-2 md:text-md",
+				className,
+			)}
+			{...props}
+		>
+			<MapPin className="size-4 shrink-0 text-primary" />
+			<span className="">{hotel.address}</span>
 		</div>
 	);
 }

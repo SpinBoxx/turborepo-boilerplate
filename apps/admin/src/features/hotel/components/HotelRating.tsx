@@ -1,11 +1,21 @@
+import { cn } from "@zanadeal/ui";
 import { Star } from "lucide-react";
-import { useHotelCard } from "./HotelCardProvider";
+import type { ComponentProps } from "react";
+import { useHotelContext } from "./HotelCardProvider";
 
-export function HotelRating() {
-	const { hotel } = useHotelCard();
+interface Props extends ComponentProps<"div"> {}
+
+export function HotelRating({ className, ...props }: Props) {
+	const { hotel } = useHotelContext();
 
 	return (
-		<div className="inline-flex items-center gap-1 rounded-full bg-background/70 px-2 py-1 text-xs backdrop-blur">
+		<div
+			className={cn(
+				"inline-flex items-center gap-1 rounded-full bg-background/70 px-2 py-1 text-xs backdrop-blur",
+				className,
+			)}
+			{...props}
+		>
 			<Star className="size-3 text-yellow-500" />
 			{hotel.rating === 0 ? (
 				<span className="font-medium">No reviews yet</span>

@@ -1,18 +1,21 @@
 import { Button, cn } from "@zanadeal/ui";
 import { Pencil, Trash2 } from "lucide-react";
-import { useHotelCard } from "./HotelCardProvider";
+import type { ComponentProps } from "react";
+import { useHotelContext } from "./HotelCardProvider";
+
+interface Props extends ComponentProps<"div"> {
+	buttonClassName?: string;
+}
 
 export function HotelCardActions({
 	className,
 	buttonClassName,
-}: {
-	className?: string;
-	buttonClassName?: string;
-}) {
-	const { hotel, onEdit, onDelete } = useHotelCard();
+	...props
+}: Props) {
+	const { hotel } = useHotelContext();
 
 	return (
-		<div className={cn("flex items-center gap-2", className)}>
+		<div className={cn("flex items-center gap-2", className)} {...props}>
 			<Button
 				type="button"
 				variant="ghost"
@@ -21,7 +24,7 @@ export function HotelCardActions({
 					"size-10 rounded-full bg-background/70 backdrop-blur hover:bg-background/80",
 					buttonClassName,
 				)}
-				onClick={() => onEdit?.(hotel)}
+				// onClick={() => onEdit?.(hotel)}
 			>
 				<Pencil className="size-4" />
 				<span className="sr-only">Modifier</span>
@@ -34,7 +37,7 @@ export function HotelCardActions({
 					"size-10 rounded-full bg-background/70 backdrop-blur hover:bg-background/80",
 					buttonClassName,
 				)}
-				onClick={() => onDelete?.(hotel)}
+				// onClick={() => onDelete?.(hotel)}
 			>
 				<Trash2 className="size-4" />
 				<span className="sr-only">Supprimer</span>

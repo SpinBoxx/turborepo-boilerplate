@@ -46,7 +46,7 @@ export default function HotelPage() {
 				</div>
 
 				<div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-					<div className="inline-flex w-full items-center justify-between gap-1 rounded-md border p-1 sm:w-auto">
+					<div className="ml-auto inline-flex w-fit items-center justify-between gap-1 rounded-md border p-1 sm:w-auto">
 						<Button
 							type="button"
 							variant={viewMode === "grid" ? "secondary" : "ghost"}
@@ -104,16 +104,9 @@ export default function HotelPage() {
 					))}
 				</div>
 			) : (
-				<div className={cn("grid gap-3")}>
+				<div className={cn("grid gap-3 md:grid-cols-2")}>
 					{hotels.map((hotel) => (
-						<HotelRow
-							key={hotel.id}
-							hotel={hotel}
-							onEdit={(h) => {
-								setSelected(h);
-								setUpsertOpen(true);
-							}}
-						/>
+						<HotelRow key={hotel.id} hotel={hotel} />
 					))}
 				</div>
 			)}

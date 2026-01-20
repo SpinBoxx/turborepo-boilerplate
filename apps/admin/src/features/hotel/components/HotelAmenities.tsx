@@ -1,19 +1,18 @@
 import { Badge, cn } from "@zanadeal/ui";
-import { useHotelCard } from "./HotelCardProvider";
+import type { ComponentProps } from "react";
+import { useHotelContext } from "./HotelCardProvider";
 
-export function HotelAmenities({
-	max = 3,
-	className,
-}: {
+interface Props extends ComponentProps<"div"> {
 	max?: number;
-	className?: string;
-}) {
-	const { hotel } = useHotelCard();
+}
+
+export function HotelAmenities({ max = 3, className, ...props }: Props) {
+	const { hotel } = useHotelContext();
 	const amenities = hotel.amenities ?? [];
 	if (amenities.length === 0) return null;
 
 	return (
-		<div className={cn("flex flex-wrap gap-2", className)}>
+		<div className={cn("flex flex-wrap gap-2", className)} {...props}>
 			{amenities.slice(0, max).map((a) => (
 				<Badge key={a.id} variant="secondary" className="truncate rounded-full">
 					{a.name.toUpperCase()}
