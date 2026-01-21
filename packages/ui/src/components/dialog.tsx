@@ -75,7 +75,7 @@ function DialogContent({
 				{...props}
 			>
 				<ScrollArea className="max-h-[90vh]">
-					<div className="px-7">{children}</div>
+					<div className="pr-4 pl-4 sm:px-6">{children}</div>
 				</ScrollArea>
 				{showCloseButton && (
 					<DialogPrimitive.Close

@@ -14,6 +14,7 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardHotelsIndexRouteImport } from './routes/dashboard/hotels/index'
 import { Route as DashboardAmenitiesIndexRouteImport } from './routes/dashboard/amenities/index'
 
 const LoginRouteRoute = LoginRouteRouteImport.update({
@@ -41,6 +42,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardHotelsIndexRoute = DashboardHotelsIndexRouteImport.update({
+  id: '/hotels/',
+  path: '/hotels/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardAmenitiesIndexRoute = DashboardAmenitiesIndexRouteImport.update({
   id: '/amenities/',
   path: '/amenities/',
@@ -54,12 +60,14 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/dashboard/amenities': typeof DashboardAmenitiesIndexRoute
+  '/dashboard/hotels': typeof DashboardHotelsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/dashboard/amenities': typeof DashboardAmenitiesIndexRoute
+  '/dashboard/hotels': typeof DashboardHotelsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/dashboard/amenities/': typeof DashboardAmenitiesIndexRoute
+  '/dashboard/hotels/': typeof DashboardHotelsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,8 +88,14 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/login/'
     | '/dashboard/amenities'
+    | '/dashboard/hotels'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/dashboard/amenities'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/dashboard/amenities'
+    | '/dashboard/hotels'
   id:
     | '__root__'
     | '/'
@@ -89,6 +104,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/login/'
     | '/dashboard/amenities/'
+    | '/dashboard/hotels/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -134,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/hotels/': {
+      id: '/dashboard/hotels/'
+      path: '/hotels'
+      fullPath: '/dashboard/hotels'
+      preLoaderRoute: typeof DashboardHotelsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/amenities/': {
       id: '/dashboard/amenities/'
       path: '/amenities'
@@ -147,11 +170,13 @@ declare module '@tanstack/react-router' {
 interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardAmenitiesIndexRoute: typeof DashboardAmenitiesIndexRoute
+  DashboardHotelsIndexRoute: typeof DashboardHotelsIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardAmenitiesIndexRoute: DashboardAmenitiesIndexRoute,
+  DashboardHotelsIndexRoute: DashboardHotelsIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

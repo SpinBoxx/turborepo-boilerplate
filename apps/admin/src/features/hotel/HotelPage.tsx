@@ -18,7 +18,7 @@ function getErrorMessage(error: unknown) {
 
 type ViewMode = "grid" | "list";
 
-export default function HotelPage() {
+export default function HotelsPage() {
 	const { data, isPending, isError, error } = useHotels({ take: 100 });
 	const [upsertOpen, setUpsertOpen] = useState(false);
 	const [selected, setSelected] = useState<Hotel | null>(null);
@@ -99,7 +99,16 @@ export default function HotelPage() {
 			) : (
 				<div className={cn("grid gap-3 md:grid-cols-2")}>
 					{hotels.map((hotel) => (
-						<HotelRow key={hotel.id} hotel={hotel} />
+						<HotelRow
+							key={hotel.id}
+							hotel={hotel}
+							onClick={() => {
+								console.log("selected", hotel);
+
+								setSelected(hotel);
+								setUpsertOpen(true);
+							}}
+						/>
 					))}
 				</div>
 			)}

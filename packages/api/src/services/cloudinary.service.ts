@@ -159,6 +159,15 @@ export async function uploadBase64Image(
 	}
 }
 
+export async function deleteImageByPublicId(publicId: string): Promise<void> {
+	try {
+		await cloudinary.uploader.destroy(publicId);
+	} catch (error: any) {
+		console.error("Error deleting image from Cloudinary:", error);
+		throw new Error(`Failed to delete image: ${error.message}`);
+	}
+}
+
 /**
  * Gets an image URL from Cloudinary with optional transformations
  * @param path - Public ID or full path of the image
@@ -200,7 +209,6 @@ export function getImageUrl(
 		if (options.gravity) {
 			transformations.gravity = options.gravity;
 		}
-
 		// Generate URL with transformations
 		return cloudinary.url(path, transformations);
 	} catch (error: any) {

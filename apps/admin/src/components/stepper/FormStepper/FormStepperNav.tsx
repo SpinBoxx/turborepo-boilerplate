@@ -27,8 +27,11 @@ export default function FormStepperNav({ steps }: Props) {
 							className="flex grow flex-col items-start justify-center gap-3.5"
 						>
 							<div className="flex flex-col items-start gap-1">
-								<StepperTitle className="text-start font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+								<StepperTitle className="hidden text-start font-semibold group-data-[state=inactive]/step:text-muted-foreground sm:block">
 									{step.title}
+								</StepperTitle>
+								<StepperTitle className="block text-start font-semibold group-data-[state=inactive]/step:text-muted-foreground sm:hidden">
+									{step.title.slice(0, 4)}
 								</StepperTitle>
 							</div>
 							<StepperIndicator className="h-1 w-full rounded-full bg-border data-[state=active]:bg-primary" />

@@ -28,7 +28,7 @@ const dashboardRoutes: Route[] = [
 		id: "hotels",
 		title: "Hotels",
 		icon: <HotelIcon className="size-4" />,
-		link: "/dashboard",
+		link: "/dashboard/hotels",
 	},
 	{
 		id: "amenities",

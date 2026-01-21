@@ -113,7 +113,9 @@ export const deleteHotelRoute = adminProcedure
 	})
 	.input(DeleteHotelInputSchema)
 	.handler(async ({ input, context }) => {
-		const hotel = await deleteHotel(input);
+		const hotel = await deleteHotel(input, {
+			viewerUserId: context.session?.user?.id,
+		});
 		if (!hotel) {
 			throw new ORPCError("NOT_FOUND");
 		}

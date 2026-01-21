@@ -8,8 +8,10 @@ import {
 	ContextMenuGroup,
 	ContextMenuItem,
 	ContextMenuTrigger,
+	cn,
 } from "@zanadeal/ui";
 import { Eye, Pen, Trash, X } from "lucide-react";
+import type { ComponentProps } from "react";
 import {
 	HotelAddress,
 	HotelContext,
@@ -20,12 +22,19 @@ import {
 } from "../components";
 import HotelArchived from "../components/HotelArchived";
 
-export default function HotelRow({ hotel }: { hotel: Hotel }) {
+interface Props extends ComponentProps<"div"> {
+	hotel: Hotel;
+}
+
+export default function HotelRow({ hotel, className, ...props }: Props) {
 	return (
 		<HotelProvider hotel={hotel}>
 			<ContextMenu>
 				<ContextMenuTrigger>
-					<Card className="overflow-hidden rounded-[14px] p-2">
+					<Card
+						className={cn("overflow-hidden rounded-[14px] p-2", className)}
+						{...props}
+					>
 						<CardContent className="overflow-hidden p-0">
 							<div className="flex gap-2">
 								<div className="group relative aspect-square h-fit w-fit shrink-0 overflow-hidden rounded-[10px]">
