@@ -32,12 +32,15 @@ export default function HotelRow({ hotel, className, ...props }: Props) {
 			<ContextMenu>
 				<ContextMenuTrigger>
 					<Card
-						className={cn("overflow-hidden rounded-[14px] p-2", className)}
+						className={cn(
+							"group overflow-hidden rounded-[14px] p-2",
+							className,
+						)}
 						{...props}
 					>
 						<CardContent className="overflow-hidden p-0">
 							<div className="flex gap-2">
-								<div className="group relative aspect-square h-fit w-fit shrink-0 overflow-hidden rounded-[10px]">
+								<div className="relative aspect-square h-fit w-fit shrink-0 overflow-hidden rounded-[10px]">
 									<HotelImage className="size-18 object-fill transition-transform duration-300 ease-out group-hover:scale-110" />
 									<div className="absolute top-1 right-1 rounded-full bg-white/70 p-0.5">
 										<HotelArchived className="text-black [&_svg]:size-4.5" />

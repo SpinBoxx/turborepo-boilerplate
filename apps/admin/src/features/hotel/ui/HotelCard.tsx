@@ -13,6 +13,7 @@ import {
 	cn,
 } from "@zanadeal/ui";
 import { Eye, Pen, Trash, X } from "lucide-react";
+import type { ComponentProps } from "react";
 import {
 	HotelAddress,
 	HotelAmenities,
@@ -26,17 +27,27 @@ import {
 import HotelArchived from "../components/HotelArchived";
 import { useArchiveHotel, useDeleteHotel } from "../hotel.queries";
 
-export default function HotelCard({ hotel }: { hotel: Hotel }) {
+interface Props extends ComponentProps<"div"> {
+	hotel: Hotel;
+}
+
+export default function HotelCard({ hotel, className, ...props }: Props) {
 	const toggleArchiveHotel = useArchiveHotel();
 	const deleteHotel = useDeleteHotel();
 	return (
 		<HotelProvider hotel={hotel}>
 			<ContextMenu>
 				<ContextMenuTrigger>
-					<Card className="group gap-0 overflow-hidden rounded-3xl py-0">
+					<Card
+						className={cn(
+							"group gap-0 overflow-hidden rounded-3xl py-0",
+							className,
+						)}
+						{...props}
+					>
 						<CardHeader className="p-0">
 							<div className="relative aspect-16/10 w-full overflow-hidden">
-								<HotelImage className="h-full w-full bg-muted object-cover" />
+								<HotelImage className="h-full w-full bg-muted object-cover transition-transform duration-300 ease-out group-hover:scale-110" />
 								<div className="absolute top-4 right-4 rounded-full bg-white/70 p-1">
 									<HotelArchived className="text-black" />
 								</div>
