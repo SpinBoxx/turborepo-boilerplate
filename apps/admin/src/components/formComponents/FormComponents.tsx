@@ -1,6 +1,7 @@
 import { useStore } from "@tanstack/react-form";
 import {
 	Button,
+	type ButtonVariants,
 	cn,
 	Input,
 	Label,
@@ -24,11 +25,13 @@ export function SubscribeButton({
 	label,
 	icon,
 	loadingLabel,
+	variants,
 }: {
 	label?: string;
 	icon?: React.ReactNode;
 	loadingLabel?: string;
 	loaderProps?: Record<string, never>;
+	variants?: ButtonVariants;
 }) {
 	const form = useFormContext();
 	return (
@@ -36,8 +39,9 @@ export function SubscribeButton({
 			{(isSubmitting) => (
 				<Button
 					type="submit"
-					size={icon ? "icon" : "default"}
+					size={icon && !label ? "icon" : "default"}
 					className={cn(!icon && "w-full")}
+					variant={variants?.variant}
 					disabled={isSubmitting}
 				>
 					{isSubmitting ? (
@@ -46,7 +50,10 @@ export function SubscribeButton({
 							{loadingLabel && <span className="ml-0">{loadingLabel}</span>}
 						</>
 					) : (
-						icon || label
+						<>
+							{icon}
+							{label}
+						</>
 					)}
 				</Button>
 			)}

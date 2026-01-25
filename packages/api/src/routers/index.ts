@@ -2,6 +2,7 @@ import type { RouterClient } from "@orpc/server";
 import { amenityRouter } from "../features/amenity/amenity.router";
 import { contactRouter } from "../features/contact/contact.router";
 import { hotelRouter } from "../features/hotel/hotel.router";
+import { termsRouter } from "../features/terms/terms.router";
 import { protectedProcedure, publicProcedure } from "../index";
 
 export const appRouter = {
@@ -17,6 +18,7 @@ export const appRouter = {
 	hotel: hotelRouter,
 	amenity: amenityRouter,
 	contact: contactRouter,
+	terms: termsRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

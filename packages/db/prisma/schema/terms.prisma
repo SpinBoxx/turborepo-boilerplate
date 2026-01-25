@@ -1,0 +1,13 @@
+model Terms {
+  id        String @id @default(uuid()) 
+  type      TermsType
+  content   String
+  version   String
+  createdAt DateTime @default(now())
+}
+
+enum TermsType {
+  CGU
+  CGV
+  PRIVACY_POLICY
+}

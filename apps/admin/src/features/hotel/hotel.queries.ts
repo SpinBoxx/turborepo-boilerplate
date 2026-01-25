@@ -49,8 +49,6 @@ export function useCreateHotel() {
 	return useMutation({
 		mutationFn: (input: CreateHotelInput) => createHotel(input),
 		onError: (error) => {
-			console.log(error);
-
 			toast.error("Modification impossible", {
 				description: getErrorMessage(error),
 			});

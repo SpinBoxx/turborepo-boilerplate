@@ -36,3 +36,18 @@ export {
 	type UpdateHotelInput,
 	UpdateHotelInputSchema,
 } from "./features/hotel/hotel.schemas";
+
+export {
+	type CreateTermsInput,
+	CreateTermsInputSchema,
+	type DeleteTermsInput,
+	DeleteTermsInputSchema,
+	type GetTermsInput,
+	GetTermsInputSchema,
+	type ListTermsInput,
+	ListTermsInputSchema,
+	type Terms,
+	TermsSchema,
+	type TermsType,
+	type UpdateTermsInput,
+} from "./features/terms/terms-schemas";

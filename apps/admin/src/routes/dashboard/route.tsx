@@ -27,7 +27,7 @@ function RouteComponent() {
 		<SidebarProvider>
 			<div className="relative flex h-screen w-full">
 				<DashboardSidebar />
-				<SidebarInset className="space-y-4 p-2 md:p-6">
+				<SidebarInset className="min-h-fit space-y-4 p-2 md:p-6">
 					<SidebarNavbar />
 					<div className="p-2">
 						<Outlet />
