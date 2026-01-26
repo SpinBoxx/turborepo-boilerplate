@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardTermsIndexRouteImport } from './routes/dashboard/terms/index'
+import { Route as DashboardRoomsIndexRouteImport } from './routes/dashboard/rooms/index'
 import { Route as DashboardHotelsIndexRouteImport } from './routes/dashboard/hotels/index'
 import { Route as DashboardAmenitiesIndexRouteImport } from './routes/dashboard/amenities/index'
 import { Route as DashboardTermsCreateTermRouteImport } from './routes/dashboard/terms/create-term'
@@ -50,6 +51,11 @@ const DashboardTermsIndexRoute = DashboardTermsIndexRouteImport.update({
   path: '/terms/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardRoomsIndexRoute = DashboardRoomsIndexRouteImport.update({
+  id: '/rooms/',
+  path: '/rooms/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardHotelsIndexRoute = DashboardHotelsIndexRouteImport.update({
   id: '/hotels/',
   path: '/hotels/',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/terms/create-term': typeof DashboardTermsCreateTermRoute
   '/dashboard/amenities': typeof DashboardAmenitiesIndexRoute
   '/dashboard/hotels': typeof DashboardHotelsIndexRoute
+  '/dashboard/rooms': typeof DashboardRoomsIndexRoute
   '/dashboard/terms': typeof DashboardTermsIndexRoute
   '/dashboard/terms/$id/update-term': typeof DashboardTermsIdUpdateTermRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/dashboard/terms/create-term': typeof DashboardTermsCreateTermRoute
   '/dashboard/amenities': typeof DashboardAmenitiesIndexRoute
   '/dashboard/hotels': typeof DashboardHotelsIndexRoute
+  '/dashboard/rooms': typeof DashboardRoomsIndexRoute
   '/dashboard/terms': typeof DashboardTermsIndexRoute
   '/dashboard/terms/$id/update-term': typeof DashboardTermsIdUpdateTermRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/dashboard/terms/create-term': typeof DashboardTermsCreateTermRoute
   '/dashboard/amenities/': typeof DashboardAmenitiesIndexRoute
   '/dashboard/hotels/': typeof DashboardHotelsIndexRoute
+  '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
   '/dashboard/terms/': typeof DashboardTermsIndexRoute
   '/dashboard/terms/$id/update-term': typeof DashboardTermsIdUpdateTermRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/dashboard/terms/create-term'
     | '/dashboard/amenities'
     | '/dashboard/hotels'
+    | '/dashboard/rooms'
     | '/dashboard/terms'
     | '/dashboard/terms/$id/update-term'
   fileRoutesByTo: FileRoutesByTo
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/dashboard/terms/create-term'
     | '/dashboard/amenities'
     | '/dashboard/hotels'
+    | '/dashboard/rooms'
     | '/dashboard/terms'
     | '/dashboard/terms/$id/update-term'
   id:
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/dashboard/terms/create-term'
     | '/dashboard/amenities/'
     | '/dashboard/hotels/'
+    | '/dashboard/rooms/'
     | '/dashboard/terms/'
     | '/dashboard/terms/$id/update-term'
   fileRoutesById: FileRoutesById
@@ -195,6 +207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTermsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/rooms/': {
+      id: '/dashboard/rooms/'
+      path: '/rooms'
+      fullPath: '/dashboard/rooms'
+      preLoaderRoute: typeof DashboardRoomsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/hotels/': {
       id: '/dashboard/hotels/'
       path: '/hotels'
@@ -231,6 +250,7 @@ interface DashboardRouteRouteChildren {
   DashboardTermsCreateTermRoute: typeof DashboardTermsCreateTermRoute
   DashboardAmenitiesIndexRoute: typeof DashboardAmenitiesIndexRoute
   DashboardHotelsIndexRoute: typeof DashboardHotelsIndexRoute
+  DashboardRoomsIndexRoute: typeof DashboardRoomsIndexRoute
   DashboardTermsIndexRoute: typeof DashboardTermsIndexRoute
   DashboardTermsIdUpdateTermRoute: typeof DashboardTermsIdUpdateTermRoute
 }
@@ -240,6 +260,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardTermsCreateTermRoute: DashboardTermsCreateTermRoute,
   DashboardAmenitiesIndexRoute: DashboardAmenitiesIndexRoute,
   DashboardHotelsIndexRoute: DashboardHotelsIndexRoute,
+  DashboardRoomsIndexRoute: DashboardRoomsIndexRoute,
   DashboardTermsIndexRoute: DashboardTermsIndexRoute,
   DashboardTermsIdUpdateTermRoute: DashboardTermsIdUpdateTermRoute,
 }

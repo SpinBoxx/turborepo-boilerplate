@@ -3,7 +3,6 @@ model Room {
   hotel       Hotel         @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   hotelId     String
   type        RoomType
-  promoPrice  Float
   description String
   capacity    Int
   quantity    Int
@@ -21,6 +20,7 @@ model RoomPrice {
   roomId      String
   room        Room          @relation(fields: [roomId], references: [id], onDelete: Cascade)
   price       Float
+  promoPrice  Float
   startDate   DateTime
   endDate     DateTime?
 

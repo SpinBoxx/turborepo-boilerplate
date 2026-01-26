@@ -12,8 +12,9 @@ import {
 	ContextMenuTrigger,
 	cn,
 } from "@zanadeal/ui";
-import { Eye, Pen, Trash, X } from "lucide-react";
-import type { ComponentProps } from "react";
+import { BedDouble, Eye, Pen, Trash, X } from "lucide-react";
+import { type ComponentProps, useState } from "react";
+import UpsertRoomDialog from "@/features/rooms/components/dialogs/UpsertRoomDialog";
 import {
 	HotelAddress,
 	HotelAmenities,
@@ -34,6 +35,8 @@ interface Props extends ComponentProps<"div"> {
 export default function HotelCard({ hotel, className, ...props }: Props) {
 	const toggleArchiveHotel = useArchiveHotel();
 	const deleteHotel = useDeleteHotel();
+
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	return (
 		<HotelProvider hotel={hotel}>
 			<ContextMenu>
@@ -76,6 +79,17 @@ export default function HotelCard({ hotel, className, ...props }: Props) {
 						<HotelContext.Consumer>
 							{({ hotel }) => (
 								<>
+									<ContextMenuItem
+										className="text-blue-500"
+										onClick={(_e) => {
+											setIsDialogOpen(true);
+										}}
+									>
+										<div>
+											<BedDouble className="text-blue-500" />
+											Ajouter une chambre
+										</div>
+									</ContextMenuItem>
 									<ContextMenuItem className="text-blue-500">
 										<Pen className="text-blue-500" />
 										Modifier
@@ -119,6 +133,11 @@ export default function HotelCard({ hotel, className, ...props }: Props) {
 					</ContextMenuGroup>
 				</ContextMenuContent>
 			</ContextMenu>
+			<UpsertRoomDialog
+				hotelId={hotel.id}
+				open={isDialogOpen}
+				onOpenChange={setIsDialogOpen}
+			/>
 		</HotelProvider>
 	);
 }

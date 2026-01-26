@@ -1,5 +1,11 @@
 import prisma from "@zanadeal/db";
-import type { ListRoomsInput, Room } from "./room.schemas";
+
+import type {
+	CreateRoomInput,
+	DeleteRoomInput,
+	ListRoomsInput,
+	Room,
+} from "./room.schemas";
 
 export const listRooms = async (input: ListRoomsInput): Promise<Room[]> => {
 	return await prisma.room.findMany({
@@ -21,6 +27,45 @@ export const listRooms = async (input: ListRoomsInput): Promise<Room[]> => {
 					price: input.orderBy?.price,
 				},
 			},
+		},
+	});
+};
+
+export const createRoom = async (input: CreateRoomInput): Promise<Room> => {
+	return await prisma.room.create({
+		data: {
+			...input,
+			images: {
+				createMany: {
+					data: input.images,
+				},
+			},
+			amenities: {
+				connect: input.amenityIds.map((id) => ({ id })),
+			},
+			prices: {
+				createMany: {
+					data: input.prices,
+				},
+			},
+		},
+		include: {
+			images: true,
+			amenities: true,
+			prices: true,
+		},
+	});
+};
+
+export const deleteRoom = async (input: DeleteRoomInput): Promise<Room> => {
+	return await prisma.room.delete({
+		where: {
+			id: input.id,
+		},
+		include: {
+			images: true,
+			amenities: true,
+			prices: true,
 		},
 	});
 };

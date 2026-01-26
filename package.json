@@ -22,6 +22,7 @@
 		"db:migrate": "turbo -F @zanadeal/db db:migrate"
 	},
 	"dependencies": {
+		"@base-ui/react": "^1.1.0",
 		"dotenv": "^17.2.2",
 		"react-resizable-panels": "^4.2.1",
 		"zod": "^4.3.4"
