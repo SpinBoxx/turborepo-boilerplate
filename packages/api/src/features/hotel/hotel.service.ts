@@ -1,23 +1,13 @@
-import {
-	type UploadOptions,
-	type UploadResult,
-	uploadBase64Image,
-} from "../../services/cloudinary.service";
-import type { CreateHotelImageInput } from "../hotel-image/hotel-image.schemas";
+import type { User } from "../../../../db/prisma/generated/client";
+import { getHotel, getHotelAdmin } from "./hotel.store";
 
-export const createHotelImages = async (
-	images: CreateHotelImageInput[],
-	options: UploadOptions,
-): Promise<UploadResult[]> => {
-	return await Promise.all(
-		images.map(async (image, index) => {
-			const publicId = options.publicId
-				? `${options.publicId}-${index + 1}`
-				: undefined;
-			return await uploadBase64Image(image.base64, {
-				...options,
-				publicId,
-			});
-		}),
-	);
+export const getHotelByRole = async (
+	hotelId: string,
+	user: User | undefined,
+) => {
+	if (!user || !user.roles.includes("ADMIN")) {
+		// Regular users can only access non-archived hotels
+		return await getHotel(hotelId);
+	}
+	return await getHotelAdmin(hotelId);
 };

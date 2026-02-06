@@ -1,10 +1,10 @@
 import prisma from "@zanadeal/db";
 
 import type {
-	CreateRoomInput,
 	DeleteRoomInput,
 	ListRoomsInput,
 	Room,
+	UpsertRoomComputedInput,
 } from "./room.schemas";
 
 export const listRooms = async (input: ListRoomsInput): Promise<Room[]> => {
@@ -17,6 +17,11 @@ export const listRooms = async (input: ListRoomsInput): Promise<Room[]> => {
 				},
 			},
 			hotelId: input.where.hotelId,
+			hotel: {
+				name: {
+					contains: input.where.hotelName,
+				},
+			},
 			type: input.where.type,
 		},
 		include: {
@@ -27,27 +32,37 @@ export const listRooms = async (input: ListRoomsInput): Promise<Room[]> => {
 					price: input.orderBy?.price,
 				},
 			},
+			hotel: true,
 		},
 	});
 };
 
-export const createRoom = async (input: CreateRoomInput): Promise<Room> => {
+export const createRoom = async (
+	input: UpsertRoomComputedInput,
+): Promise<Room> => {
+	const { images, amenityIds, prices, ...roomData } = input;
+
 	return await prisma.room.create({
 		data: {
-			...input,
-			images: {
-				createMany: {
-					data: input.images,
-				},
-			},
+			...roomData,
+			images: images.length
+				? {
+						create: images.map((img) => ({
+							url: img.url ?? "",
+							publicId: img.publicId ?? "",
+						})),
+					}
+				: undefined,
 			amenities: {
-				connect: input.amenityIds.map((id) => ({ id })),
+				connect: amenityIds.map((id) => ({ id })),
 			},
-			prices: {
-				createMany: {
-					data: input.prices,
-				},
-			},
+			prices: prices.length
+				? {
+						createMany: {
+							data: prices,
+						},
+					}
+				: undefined,
 		},
 		include: {
 			images: true,

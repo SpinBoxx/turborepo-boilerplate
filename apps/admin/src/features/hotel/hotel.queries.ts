@@ -2,14 +2,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
 	CreateHotelInput,
 	ListHotelsInput,
-	ToggleHotelArchivedInput,
-	UpdateHotelInput,
 } from "@zanadeal/api/contracts";
-import type { DeleteHotelInput } from "@zanadeal/api/features/hotel/hotel.schemas";
+import type {
+	DeleteHotelInput,
+	UpsertHotelInput,
+} from "@zanadeal/api/features/hotel/schemas/hotel.schema";
 import { toast } from "sonner";
 import { getErrorMessage } from "../amenity/amenity.queries";
 import {
-	archiveHotel,
 	createHotel,
 	deleteHotel,
 	getHotelById,
@@ -49,45 +49,27 @@ export function useCreateHotel() {
 	return useMutation({
 		mutationFn: (input: CreateHotelInput) => createHotel(input),
 		onError: (error) => {
-			toast.error("Modification impossible", {
+			toast.error("Création impossible", {
 				description: getErrorMessage(error),
 			});
 		},
 		onSuccess: (hotel) => {
 			queryClient.setQueryData(hotelKeys().byId(hotel.id), hotel);
 			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
-			toast.success("Hotel created successfully");
+			toast.success("Hôtel créé avec succès");
 		},
 	});
 }
 
-export function useUpdateHotel() {
+export function useUpdateHotel(hotelId: string) {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (input: UpdateHotelInput) => updateHotel(input),
-		onSuccess: (hotel) => {
-			queryClient.setQueryData(hotelKeys().byId(hotel.id), hotel);
-			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
+		mutationFn: (input: Partial<UpsertHotelInput>) => {
+			return updateHotel(hotelId, input);
 		},
-	});
-}
-
-export function useArchiveHotel() {
-	const queryClient = useQueryClient();
-	return useMutation({
-		mutationFn: (input: ToggleHotelArchivedInput) => archiveHotel(input),
 		onSuccess: (hotel) => {
 			queryClient.setQueryData(hotelKeys().byId(hotel.id), hotel);
 			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
-			if (hotel.isArchived) {
-				toast.success("Hotel archived successfully", {
-					description: "Hotel can no longer be booked",
-				});
-			} else {
-				toast.success("Hotel unarchived successfully", {
-					description: "Hotel can now be booked",
-				});
-			}
 		},
 	});
 }

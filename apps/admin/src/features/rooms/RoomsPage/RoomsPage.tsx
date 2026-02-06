@@ -1,3 +1,9 @@
+import DisplayRoomsByHotel from "./components/DisplayRooms";
+
 export default function RoomsPage() {
-	return <div>Romomes</div>;
+	return (
+		<div>
+			<DisplayRoomsByHotel />
+		</div>
+	);
 }

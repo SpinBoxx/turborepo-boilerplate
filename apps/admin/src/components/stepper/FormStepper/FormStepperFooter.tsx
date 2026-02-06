@@ -11,15 +11,10 @@ import {
 	type FormStepperPrevButtonProps,
 } from "./FormStepperPrevButton";
 import { useStepper } from "./FormStepperProvider";
-import {
-	FormStepperSubmitButton,
-	type FormStepperSubmitButtonProps,
-} from "./FormStepperSubmitButton";
 
 interface FormStepperFooterProps extends React.ComponentProps<"div"> {
 	prevButtonProps?: FormStepperPrevButtonProps;
 	nextButtonProps?: FormStepperNextButtonProps;
-	submitButtonProps?: FormStepperSubmitButtonProps;
 	showPrevButton?: boolean;
 	showNextButton?: boolean;
 	showSubmitButton?: boolean;
@@ -29,10 +24,10 @@ function FormStepperFooter({
 	className,
 	prevButtonProps,
 	nextButtonProps,
-	submitButtonProps,
 	showPrevButton = true,
 	showNextButton = true,
 	showSubmitButton = true,
+	children,
 	...props
 }: FormStepperFooterProps) {
 	const { activeStep, stepsCount } = useStepper();
@@ -54,9 +49,7 @@ function FormStepperFooter({
 				{showNextButton && !isLastStep && (
 					<FormStepperNextButton {...nextButtonProps} />
 				)}
-				{showSubmitButton && isLastStep && (
-					<FormStepperSubmitButton {...submitButtonProps} />
-				)}
+				{showSubmitButton && isLastStep && children}
 			</div>
 		</div>
 	);

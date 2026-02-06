@@ -95,7 +95,7 @@ function extractOrpcErrorDetails(error: unknown):
 		data &&
 		typeof data === "object" &&
 		"issues" in (data as Record<string, unknown>)
-			? (data as Record<string, unknown>).issues
+			? JSON.stringify((data as Record<string, unknown>).issues)
 			: undefined;
 	return {
 		code: record.code,

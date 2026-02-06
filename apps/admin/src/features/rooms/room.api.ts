@@ -1,7 +1,7 @@
 import type {
-	CreateRoomInput,
 	DeleteRoomInput,
 	ListRoomsInput,
+	UpsertRoomInput,
 } from "@zanadeal/api/features/room/room.schemas";
 import { orpc } from "@/lib/orpc";
 
@@ -9,7 +9,7 @@ export async function listRooms(input: ListRoomsInput) {
 	return orpc.room.list(input);
 }
 
-export async function createRoom(input: CreateRoomInput) {
+export async function createRoom(input: UpsertRoomInput) {
 	return orpc.room.create(input);
 }
 

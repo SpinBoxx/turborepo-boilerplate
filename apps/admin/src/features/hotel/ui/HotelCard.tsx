@@ -12,7 +12,7 @@ import {
 	ContextMenuTrigger,
 	cn,
 } from "@zanadeal/ui";
-import { BedDouble, Eye, Pen, Trash, X } from "lucide-react";
+import { BedDouble, File, Pen, Trash } from "lucide-react";
 import { type ComponentProps, useState } from "react";
 import UpsertRoomDialog from "@/features/rooms/components/dialogs/UpsertRoomDialog";
 import {
@@ -26,15 +26,16 @@ import {
 	HotelRating,
 } from "../components";
 import HotelArchived from "../components/HotelArchived";
-import { useArchiveHotel, useDeleteHotel } from "../hotel.queries";
+import DeleteHotelForm from "../forms/DeleteForm/DeleteHotelForm";
+import ToggleIsArchivedForm from "../forms/ToggleIsArchivedForm/ToggleIsArchivedForm";
+import { useDeleteHotel } from "../hotel.queries";
 
 interface Props extends ComponentProps<"div"> {
 	hotel: Hotel;
 }
 
 export default function HotelCard({ hotel, className, ...props }: Props) {
-	const toggleArchiveHotel = useArchiveHotel();
-	const deleteHotel = useDeleteHotel();
+	const _deleteHotel = useDeleteHotel();
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	return (
@@ -85,46 +86,37 @@ export default function HotelCard({ hotel, className, ...props }: Props) {
 											setIsDialogOpen(true);
 										}}
 									>
-										<div>
-											<BedDouble className="text-blue-500" />
-											Ajouter une chambre
-										</div>
+										<BedDouble className="text-blue-500" />
+										Ajouter une chambre
 									</ContextMenuItem>
 									<ContextMenuItem className="text-blue-500">
 										<Pen className="text-blue-500" />
 										Modifier
 									</ContextMenuItem>
-									{hotel.isArchived ? (
-										<ContextMenuItem
-											className="text-red-500"
-											onClick={() =>
-												toggleArchiveHotel.mutate({
-													id: hotel.id,
-												})
-											}
-										>
-											<Eye className="text-red-500" />
-											Désarchiver
-										</ContextMenuItem>
-									) : (
-										<ContextMenuItem
-											className="text-red-500"
-											onClick={() =>
-												toggleArchiveHotel.mutate({
-													id: hotel.id,
-												})
-											}
-										>
-											<X className="text-red-500" />
-											Archiver
-										</ContextMenuItem>
-									)}
-									<ContextMenuItem
-										onClick={() => deleteHotel.mutate({ id: hotel.id })}
-									>
+
+									<ContextMenuItem className="text-orange-500">
+										<File />
+										<ToggleIsArchivedForm
+											hotelId={hotel.id}
+											buttonProps={{
+												variant: "extraGhost",
+												size: "sm",
+												className: "p-0! hover:text-orange-700",
+											}}
+											isArchived={hotel.isArchived}
+										/>
+									</ContextMenuItem>
+
+									<ContextMenuItem>
 										<Badge variant={"destructive"}>
 											<Trash className="text-white" />
-											Supprimer
+											<DeleteHotelForm
+												hotelId={hotel.id}
+												buttonProps={{
+													variant: "extraGhost",
+													size: "sm",
+												}}
+											/>
 										</Badge>
 									</ContextMenuItem>
 								</>

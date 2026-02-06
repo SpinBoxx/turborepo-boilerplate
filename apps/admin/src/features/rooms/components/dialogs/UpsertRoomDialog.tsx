@@ -5,6 +5,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Separator,
 } from "@zanadeal/ui";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import UpsertRoomForm from "../../forms/UpsertRoom/UpsertRoomForm";
@@ -34,6 +35,7 @@ export default function UpsertRoomDialog({
 						{room ? `Modifier la chambre ${room.type}` : "Creer une chambre"}
 					</DialogTitle>
 				</DialogHeader>
+				<Separator className="my-2" />
 				<UpsertRoomForm room={room} hotelId={hotelId} />
 			</DialogContent>
 		</Dialog>

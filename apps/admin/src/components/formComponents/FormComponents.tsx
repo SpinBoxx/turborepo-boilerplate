@@ -1,7 +1,6 @@
 import { useStore } from "@tanstack/react-form";
 import {
 	Button,
-	type ButtonVariants,
 	cn,
 	Input,
 	Label,
@@ -11,7 +10,6 @@ import {
 	SelectLabel,
 	SelectTrigger,
 	SelectValue,
-	Spinner,
 	Switch as SwitchComp,
 	Textarea,
 	Select as UiSelect,
@@ -19,47 +17,7 @@ import {
 } from "@zanadeal/ui";
 import { Eye, EyeClosed } from "lucide-react";
 import { type ComponentProps, useId, useState } from "react";
-import { useFieldContext, useFormContext } from "@/hooks/useFormContext";
-
-export function SubscribeButton({
-	label,
-	icon,
-	loadingLabel,
-	variants,
-}: {
-	label?: string;
-	icon?: React.ReactNode;
-	loadingLabel?: string;
-	loaderProps?: Record<string, never>;
-	variants?: ButtonVariants;
-}) {
-	const form = useFormContext();
-	return (
-		<form.Subscribe selector={(state) => state.isSubmitting}>
-			{(isSubmitting) => (
-				<Button
-					type="submit"
-					size={icon && !label ? "icon" : "default"}
-					className={cn(!icon && "w-full")}
-					variant={variants?.variant}
-					disabled={isSubmitting}
-				>
-					{isSubmitting ? (
-						<>
-							<Spinner />
-							{loadingLabel && <span className="ml-0">{loadingLabel}</span>}
-						</>
-					) : (
-						<>
-							{icon}
-							{label}
-						</>
-					)}
-				</Button>
-			)}
-		</form.Subscribe>
-	);
-}
+import { useFieldContext } from "@/hooks/useFormContext";
 
 // Default values shown
 

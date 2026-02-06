@@ -1,34 +1,32 @@
 import type {
-	CreateRoomInput,
 	Room,
+	UpsertRoomInput,
 } from "@zanadeal/api/features/room/room.schemas";
 
-const mapRoomToCreateRoomInput = (room: Room): CreateRoomInput => {
+export const ROOM_UPSERT_DEFAULT_VALUES: UpsertRoomInput = {
+	amenityIds: [],
+	capacity: 1,
+	description: "",
+	images: [],
+	prices: [],
+	quantity: 1,
+	type: "PREMIUM",
+	hotelId: "",
+};
+
+const mapRoomToCreateRoomInput = (room: Room): UpsertRoomInput => {
 	return {
 		...room,
 		amenityIds: room.amenities.map((amenity) => amenity.id),
-		images: room.images.map((image) => ({
-			publicId: image.publicId,
-			roomId: image.roomId,
-			url: image.url,
-		})),
+		images: [],
 	};
 };
 
 export const getInitValues = (
 	hotelId: string,
 	room?: Room,
-): CreateRoomInput => {
+): UpsertRoomInput => {
 	return room
 		? mapRoomToCreateRoomInput(room)
-		: {
-				amenityIds: [],
-				capacity: 1,
-				description: "",
-				images: [],
-				prices: [],
-				quantity: 1,
-				type: "PREMIUM",
-				hotelId: hotelId,
-			};
+		: { ...ROOM_UPSERT_DEFAULT_VALUES, hotelId };
 };

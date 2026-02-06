@@ -1,6 +1,7 @@
 import type { Hotel } from "@zanadeal/api/contracts";
 import { cn } from "@zanadeal/ui";
 import { fileToBase64, urlToFile } from "@zanadeal/utils";
+import { Save } from "lucide-react";
 import { type ComponentProps, useEffect, useState } from "react";
 import { FormStepperFooter } from "@/components/stepper/FormStepper/FormStepperFooter";
 import FormStepperNav from "@/components/stepper/FormStepper/FormStepperNav";
@@ -24,9 +25,8 @@ interface Props extends ComponentProps<"div"> {
 
 export default function HotelUpsertForm({ hotel, className }: Props) {
 	const [files, setFiles] = useState<File[]>([]);
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [_isSubmitting, setIsSubmitting] = useState(false);
 	const createHotel = useCreateHotel();
-	console.log(hotel);
 
 	const form = useAppForm({
 		defaultValues: getHotelUpsertDefaultValues(hotel || undefined),
@@ -98,12 +98,15 @@ export default function HotelUpsertForm({ hotel, className }: Props) {
 							</StepperContent>
 						))}
 					</StepperPanel>
-					{form.getFieldValue("images")?.length}
-					<FormStepperFooter
-						submitButtonProps={{
-							isSubmitting,
-						}}
-					/>
+
+					<FormStepperFooter>
+						<form.AppForm>
+							<form.SubmitButton variants={{}}>
+								<Save />
+								Sauvegarder
+							</form.SubmitButton>
+						</form.AppForm>
+					</FormStepperFooter>
 				</Stepper>
 			</form>
 		</div>

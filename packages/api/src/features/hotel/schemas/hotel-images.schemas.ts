@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "zod";
 
 export const HotelImageSchema = z.object({
 	id: z.string().min(1),
@@ -19,5 +19,13 @@ export const CreateHotelImageInputSchema = z.object({
 	base64: z.string().min(1),
 });
 
+export const CreateHotelImageComputedInputSchema = z.object({
+	url: z.string().min(1),
+	publicId: z.string().min(1),
+});
+
 export type CreateHotelImageInput = z.infer<typeof CreateHotelImageInputSchema>;
+export type CreateHotelImageComputedInput = z.infer<
+	typeof CreateHotelImageComputedInputSchema
+>;
 export type GetHotelImageInput = z.infer<typeof GetHotelImageInputSchema>;

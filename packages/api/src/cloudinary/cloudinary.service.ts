@@ -1,5 +1,5 @@
 import type { UploadApiResponse } from "cloudinary";
-import { cloudinary } from "../instances/cloudinary";
+import { cloudinary } from "./cloudinary";
 
 /**
  * Configuration options for image upload

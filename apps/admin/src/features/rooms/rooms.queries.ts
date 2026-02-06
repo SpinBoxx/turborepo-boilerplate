@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
-	CreateRoomInput,
 	DeleteRoomInput,
 	ListRoomsInput,
+	UpsertRoomInput,
 } from "@zanadeal/api/features/room/room.schemas";
 import { toast } from "sonner";
 import { getErrorMessage } from "../amenity/amenity.queries";
@@ -34,7 +34,7 @@ export function useRooms(input: ListRoomsInput) {
 export function useCreateRoom() {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (input: CreateRoomInput) => createRoom(input),
+		mutationFn: (input: UpsertRoomInput) => createRoom(input),
 		onError: (error) => {
 			toast.error("Création impossible", {
 				description: getErrorMessage(error),

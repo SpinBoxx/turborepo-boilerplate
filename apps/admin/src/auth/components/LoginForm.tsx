@@ -103,7 +103,7 @@ export default function LoginForm({
 					</Link>
 				</div>
 				<form.AppForm>
-					<form.SubscribeButton label="Se connecter" />
+					<form.SubmitButton>Se connecter</form.SubmitButton>
 				</form.AppForm>
 			</form>
 		</div>

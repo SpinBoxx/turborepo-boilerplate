@@ -1,11 +1,14 @@
 import * as z from "zod";
+import { RoomType } from "../../../../db/prisma/generated/enums";
 import { AmenitySchema } from "../amenity/amenity.schemas";
 import {
+	CreateRoomImageComputedInputSchema,
 	CreateRoomImageInputSchema,
 	RoomImageSchema,
 } from "../room-image/room-image.schemas";
 
-export const RoomTypeSchema = z.enum(["STANDARD", "PREMIUM"]);
+// Zod schema derived from the Prisma RoomType enum
+export const RoomTypeSchema = z.enum(Object.values(RoomType));
 
 export const RoomPriceSchema = z.object({
 	id: z.string().min(1),
@@ -33,14 +36,13 @@ export const RoomSchema = z.object({
 });
 
 export const CreateRoomPriceInputSchema = z.object({
-	roomId: z.string().min(1),
 	price: z.number(),
 	promoPrice: z.number(),
 	startDate: z.date(),
 	endDate: z.date().nullable(),
 });
 
-export const CreateRoomInputSchema = z.object({
+export const UpsertRoomInputSchema = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
 	description: z.string().min(1),
@@ -49,6 +51,17 @@ export const CreateRoomInputSchema = z.object({
 	prices: z.array(CreateRoomPriceInputSchema),
 	amenityIds: z.array(z.string().min(1)),
 	images: z.array(CreateRoomImageInputSchema),
+});
+
+export const UpsertRoomComputedInputSchema = z.object({
+	hotelId: z.string().min(1),
+	type: RoomTypeSchema,
+	description: z.string().min(1),
+	capacity: z.number().int(),
+	quantity: z.number().int(),
+	prices: z.array(CreateRoomPriceInputSchema),
+	amenityIds: z.array(z.string().min(1)),
+	images: z.array(CreateRoomImageComputedInputSchema),
 });
 
 export const GetRoomInputSchema = z.object({
@@ -65,6 +78,7 @@ export const ListRoomsInputSchema = z.object({
 	}),
 	where: z.object({
 		hotelId: z.string().min(1).optional(),
+		hotelName: z.string().optional(),
 		type: RoomTypeSchema.optional(),
 		startDate: z.date().default(new Date()),
 		endDate: z.date().nullable(),
@@ -72,9 +86,12 @@ export const ListRoomsInputSchema = z.object({
 });
 
 export type ListRoomsInput = z.infer<typeof ListRoomsInputSchema>;
-export type RoomType = z.infer<typeof RoomTypeSchema>;
 export type RoomPrice = z.infer<typeof RoomPriceSchema>;
+export type CreateRoomPriceInput = z.infer<typeof CreateRoomPriceInputSchema>;
 export type Room = z.infer<typeof RoomSchema>;
-export type CreateRoomInput = z.infer<typeof CreateRoomInputSchema>;
+export type UpsertRoomInput = z.infer<typeof UpsertRoomInputSchema>;
+export type UpsertRoomComputedInput = z.infer<
+	typeof UpsertRoomComputedInputSchema
+>;
 export type GetRoomInput = z.infer<typeof GetRoomInputSchema>;
 export type DeleteRoomInput = z.infer<typeof DeleteRoomInputSchema>;

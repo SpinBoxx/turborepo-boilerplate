@@ -16,9 +16,12 @@ export const GetRoomImageInputSchema = z.object({
 });
 
 export const CreateRoomImageInputSchema = z.object({
-	url: z.string().min(1),
-	publicId: z.string().min(1),
-	roomId: z.string().min(1),
+	base64: z.string().min(1),
+});
+
+export const CreateRoomImageComputedInputSchema = z.object({
+	url: z.string(),
+	publicId: z.string(),
 });
 
 export type CreateRoomImageInput = z.infer<typeof CreateRoomImageInputSchema>;

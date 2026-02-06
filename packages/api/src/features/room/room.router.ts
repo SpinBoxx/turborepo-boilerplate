@@ -1,10 +1,12 @@
 import { adminProcedure, publicProcedure } from "../..";
+import { computeUpsertRoomInput } from "./computes/upsert-compute";
 import {
-	CreateRoomInputSchema,
 	DeleteRoomInputSchema,
 	ListRoomsInputSchema,
 	RoomSchema,
+	UpsertRoomInputSchema,
 } from "./room.schemas";
+
 import { createRoom, deleteRoom, listRooms } from "./room.store";
 
 export const createRoomRoute = adminProcedure
@@ -14,10 +16,12 @@ export const createRoomRoute = adminProcedure
 		summary: "Create a new room",
 		tags: ["Room"],
 	})
-	.input(CreateRoomInputSchema)
+	.input(UpsertRoomInputSchema)
 	.output(RoomSchema)
 	.handler(async ({ input }) => {
-		return createRoom(input);
+		const computedInput = await computeUpsertRoomInput(input);
+
+		return createRoom(computedInput);
 	});
 
 export const listRoomRoute = publicProcedure
