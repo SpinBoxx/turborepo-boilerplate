@@ -11,7 +11,7 @@ import {
 } from "@zanadeal/ui";
 import { Upload, X } from "lucide-react";
 import * as React from "react";
-import { type SetStateAction, useEffect } from "react";
+import { type SetStateAction } from "react";
 import { toast } from "sonner";
 
 type UploadOptions = {
@@ -35,10 +35,6 @@ export function UploadImages({ files, setFiles, options }: Props) {
 
 	const MAX_FILES = options?.maxFiles || 2;
 	const MAX_SIZE = options?.maxSize || 5 * 1024 * 1024;
-
-	useEffect(() => {
-		console.log(files);
-	}, [files]);
 
 	return (
 		<FileUpload

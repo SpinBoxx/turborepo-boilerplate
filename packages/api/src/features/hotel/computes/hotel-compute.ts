@@ -1,3 +1,4 @@
+import { computeRoom } from "../../room/computes/room-compute";
 import type { Hotel, HotelComputed } from "../schemas/hotel.schema";
 
 const computeRating = (hotel: Hotel): number => {
@@ -26,8 +27,11 @@ export const computeHotel = async (hotels: Hotel): Promise<HotelComputed> => {
 	const computedRating = computeRating(hotels);
 	const computedStartingPrice = computeStartingPrice(hotels);
 
+	const rooms = await Promise.all(hotels.rooms.map(computeRoom));
+
 	return {
 		...hotels,
+		rooms,
 		rating: computedRating,
 		isUserFavorite: false, // Placeholder, should be computed based on user's favorites
 		startingPrice: computedStartingPrice,

@@ -4,12 +4,14 @@ import RoomPricePeriodItem from "./RoomPricePeriodItem";
 
 interface RoomPricePeriodListProps {
 	periods: CreateRoomPriceInput[];
+	onEditPeriod?: (index: number) => void;
 	onDeletePeriod?: (index: number) => void;
 	className?: string;
 }
 
 export default function RoomPricePeriodList({
 	periods,
+	onEditPeriod,
 	onDeletePeriod,
 	className,
 }: RoomPricePeriodListProps) {
@@ -33,6 +35,7 @@ export default function RoomPricePeriodList({
 					<RoomPricePeriodItem
 						key={`period-${period.startDate.getTime()}-${index}`}
 						period={period}
+						onEdit={onEditPeriod ? () => onEditPeriod(index) : undefined}
 						onDelete={onDeletePeriod ? () => onDeletePeriod(index) : undefined}
 					/>
 				))}

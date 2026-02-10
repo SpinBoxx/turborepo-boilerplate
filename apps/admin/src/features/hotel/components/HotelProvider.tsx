@@ -3,8 +3,6 @@ import { createContext, useContext } from "react";
 
 type HotelContextValue = {
 	hotel: Hotel;
-	// archiveHotel: () => Promise<void>;
-	// deleteHotel: () => Promise<void>;
 };
 
 export const HotelContext = createContext<HotelContextValue>(

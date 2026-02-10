@@ -13,6 +13,10 @@ export async function createRoom(input: UpsertRoomInput) {
 	return orpc.room.create(input);
 }
 
+export async function updateRoom(roomId: string, input: UpsertRoomInput) {
+	return orpc.room.update({ id: roomId, ...input });
+}
+
 export async function deleteRoom(input: DeleteRoomInput) {
 	return orpc.room.delete(input);
 }

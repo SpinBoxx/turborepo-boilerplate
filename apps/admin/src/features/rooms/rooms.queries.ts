@@ -6,7 +6,8 @@ import type {
 } from "@zanadeal/api/features/room/room.schemas";
 import { toast } from "sonner";
 import { getErrorMessage } from "../amenity/amenity.queries";
-import { createRoom, deleteRoom, listRooms } from "./room.api";
+import { hotelKeys } from "../hotel/hotel.queries";
+import { createRoom, deleteRoom, listRooms, updateRoom } from "./room.api";
 
 export function roomKeys() {
 	return {
@@ -43,6 +44,23 @@ export function useCreateRoom() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: roomKeys().all });
 			toast.success("Chambre créée avec succès");
+		},
+	});
+}
+
+export function useUpdateRoom(roomId: string) {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (input: UpsertRoomInput) => updateRoom(roomId, input),
+		onError: (error) => {
+			toast.error("Création impossible", {
+				description: getErrorMessage(error),
+			});
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: roomKeys().all });
+			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
+			toast.success("Chambre modifiée avec succès");
 		},
 	});
 }

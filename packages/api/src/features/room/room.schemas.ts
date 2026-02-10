@@ -35,6 +35,22 @@ export const RoomSchema = z.object({
 	updatedAt: z.date(),
 });
 
+export const RoomComputedSchema = z.object({
+	id: z.string().min(1),
+	hotelId: z.string().min(1),
+	type: RoomTypeSchema,
+	description: z.string().min(1),
+	capacity: z.number().int(),
+	quantity: z.number().int(),
+	images: z.array(RoomImageSchema),
+	amenities: z.array(AmenitySchema),
+	price: z.number(),
+	promoPrice: z.number(),
+	prices: z.array(RoomPriceSchema),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
 export const CreateRoomPriceInputSchema = z.object({
 	price: z.number(),
 	promoPrice: z.number(),
@@ -89,6 +105,7 @@ export type ListRoomsInput = z.infer<typeof ListRoomsInputSchema>;
 export type RoomPrice = z.infer<typeof RoomPriceSchema>;
 export type CreateRoomPriceInput = z.infer<typeof CreateRoomPriceInputSchema>;
 export type Room = z.infer<typeof RoomSchema>;
+export type RoomComputed = z.infer<typeof RoomComputedSchema>;
 export type UpsertRoomInput = z.infer<typeof UpsertRoomInputSchema>;
 export type UpsertRoomComputedInput = z.infer<
 	typeof UpsertRoomComputedInputSchema

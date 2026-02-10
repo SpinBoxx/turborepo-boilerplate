@@ -2,16 +2,18 @@ import type { CreateRoomPriceInput } from "@zanadeal/api/features/room/room.sche
 import { cn } from "@zanadeal/ui";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { CalendarIcon, Trash2 } from "lucide-react";
+import { CalendarIcon, Pen, Trash2 } from "lucide-react";
 
 interface RoomPricePeriodItemProps {
 	period: CreateRoomPriceInput;
+	onEdit?: () => void;
 	onDelete?: () => void;
 	className?: string;
 }
 
 export default function RoomPricePeriodItem({
 	period,
+	onEdit,
 	onDelete,
 	className,
 }: RoomPricePeriodItemProps) {
@@ -65,15 +67,26 @@ export default function RoomPricePeriodItem({
 						</div>
 					)}
 				</div>
-				{onDelete && (
-					<button
-						type="button"
-						onClick={onDelete}
-						className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-					>
-						<Trash2 className="size-4" />
-					</button>
-				)}
+				<div className="flex flex-col">
+					{onEdit && (
+						<button
+							type="button"
+							onClick={onEdit}
+							className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-blue-600/10 hover:text-blue-500"
+						>
+							<Pen className="size-4" />
+						</button>
+					)}
+					{onDelete && (
+						<button
+							type="button"
+							onClick={onDelete}
+							className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+						>
+							<Trash2 className="size-4" />
+						</button>
+					)}
+				</div>
 			</div>
 		</div>
 	);

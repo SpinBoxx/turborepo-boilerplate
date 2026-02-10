@@ -1,13 +1,15 @@
+import z from "zod";
 import { adminProcedure, publicProcedure } from "../..";
 import { computeUpsertRoomInput } from "./computes/upsert-compute";
 import {
 	DeleteRoomInputSchema,
+	GetRoomInputSchema,
 	ListRoomsInputSchema,
 	RoomSchema,
 	UpsertRoomInputSchema,
 } from "./room.schemas";
 
-import { createRoom, deleteRoom, listRooms } from "./room.store";
+import { createRoom, deleteRoom, listRooms, updateRoom } from "./room.store";
 
 export const createRoomRoute = adminProcedure
 	.route({
@@ -22,6 +24,20 @@ export const createRoomRoute = adminProcedure
 		const computedInput = await computeUpsertRoomInput(input);
 
 		return createRoom(computedInput);
+	});
+
+export const updateRoomRoute = adminProcedure
+	.route({
+		method: "PATCH",
+		path: "/rooms/{id}",
+		summary: "Update a room",
+		tags: ["Room"],
+	})
+	.input(z.intersection(UpsertRoomInputSchema.partial(), GetRoomInputSchema))
+	.output(RoomSchema)
+	.handler(async ({ input }) => {
+		const computedInput = await computeUpsertRoomInput(input);
+		return updateRoom(input.id, computedInput);
 	});
 
 export const listRoomRoute = publicProcedure
@@ -53,5 +69,6 @@ export const deleteRoomRoute = adminProcedure
 export const roomRouter = {
 	list: listRoomRoute,
 	create: createRoomRoute,
+	update: updateRoomRoute,
 	delete: deleteRoomRoute,
 };

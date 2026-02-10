@@ -72,6 +72,50 @@ export const createRoom = async (
 	});
 };
 
+export const updateRoom = async (
+	roomId: string,
+	input: Partial<UpsertRoomComputedInput>,
+): Promise<Room> => {
+	const { images, amenityIds, prices, ...roomData } = input;
+	console.log({ amenityIds });
+
+	return await prisma.room.update({
+		where: {
+			id: roomId,
+		},
+		data: {
+			...roomData,
+			images: images?.length
+				? {
+						deleteMany: {}, // Supprime les images existantes
+						create: images.map((img) => ({
+							url: img.url ?? "",
+							publicId: img.publicId ?? "",
+						})),
+					}
+				: undefined,
+			amenities: amenityIds
+				? {
+						set: amenityIds.map((id) => ({ id })),
+					}
+				: undefined,
+			prices: prices?.length
+				? {
+						deleteMany: {}, // Supprime les prix existants
+						createMany: {
+							data: prices,
+						},
+					}
+				: undefined,
+		},
+		include: {
+			images: true,
+			amenities: true,
+			prices: true,
+		},
+	});
+};
+
 export const deleteRoom = async (input: DeleteRoomInput): Promise<Room> => {
 	return await prisma.room.delete({
 		where: {

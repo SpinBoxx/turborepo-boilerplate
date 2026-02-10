@@ -15,7 +15,7 @@ interface Props {
 	hotelId: string;
 	children?: ReactNode;
 	open?: boolean;
-	onOpenChange: Dispatch<SetStateAction<boolean>>;
+	onOpenChange?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function UpsertRoomDialog({

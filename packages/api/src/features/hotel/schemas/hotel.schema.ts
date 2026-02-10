@@ -1,7 +1,7 @@
 import z from "zod";
 import { AmenitySchema } from "../../amenity/amenity.schemas";
 import { ContactSchema } from "../../contact/contact.schemas";
-import { RoomSchema } from "../../room/room.schemas";
+import { RoomComputedSchema, RoomSchema } from "../../room/room.schemas";
 import {
 	BankAccountSchema,
 	UpsertBankAccountInputSchema,
@@ -49,7 +49,7 @@ export const HotelComputedSchema = z.object({
 	isUserFavorite: z.boolean(),
 	startingPrice: z.number(),
 	contacts: z.array(ContactSchema),
-	rooms: z.array(RoomSchema),
+	rooms: z.array(RoomComputedSchema),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });

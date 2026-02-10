@@ -11,7 +11,7 @@ import {
 	StepperPanel,
 } from "@/components/stepper/FormStepper/FormStepperProvider";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useCreateRoom } from "../../rooms.queries";
+import { useCreateRoom, useUpdateRoom } from "../../rooms.queries";
 import RoomAmenitiesStep from "./steps/RoomAmenitiesStep";
 import RoomImagesStep from "./steps/RoomImagesStep";
 import RoomInformationsFormStep from "./steps/RoomInformationsFormStep";
@@ -26,15 +26,23 @@ interface Props {
 export default function UpsertRoomForm({ room, hotelId }: Props) {
 	const [files, setFiles] = useState<File[]>([]);
 	const createRoom = useCreateRoom();
+	const updateRoom = useUpdateRoom(room?.id ?? "");
 	const form = useAppForm({
 		defaultValues: getInitValues(hotelId, room),
 		onSubmit: async ({ value }) => {
 			const imagesBase64 = await Promise.all(files.map(fileToBase64));
 
-			await createRoom.mutateAsync({
-				...value,
-				images: imagesBase64.map((base64) => ({ base64 })),
-			});
+			if (room) {
+				await updateRoom.mutateAsync({
+					...value,
+					images: imagesBase64.map((base64) => ({ base64 })),
+				});
+			} else {
+				await createRoom.mutateAsync({
+					...value,
+					images: imagesBase64.map((base64) => ({ base64 })),
+				});
+			}
 		},
 	});
 
