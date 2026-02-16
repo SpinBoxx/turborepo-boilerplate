@@ -1,39 +1,35 @@
-import type { CreateHotelInput, Hotel } from "@zanadeal/api/contracts";
+import type {
+	Hotel,
+	UpsertHotelInput,
+} from "@zanadeal/api/features/hotel/schemas/hotel.schema";
 
-export const HOTEL_UPSERT_DEFAULT_VALUES: CreateHotelInput = {
-	name: "",
-	description: "",
+export const HOTEL_UPSERT_DEFAULT_VALUES: UpsertHotelInput = {
+	amenityIds: [],
 	address: "",
-	mapLink: "",
+	description: "",
+	images: [],
+	name: "",
 	latitude: "",
 	longitude: "",
-	amenityIds: [],
-	// Keep the optional fields unset by default in this minimal scaffold.
-	// bankAccount: undefined,
-	// images: undefined,
-	// isArchived: undefined,
+	mapLink: "",
+	isArchived: false,
 };
 
-export function getHotelUpsertDefaultValues(hotel?: Hotel): CreateHotelInput {
-	if (!hotel) return HOTEL_UPSERT_DEFAULT_VALUES;
-
+const mapHotelToUpsertHotelInput = (hotel: Hotel): UpsertHotelInput => {
 	return {
-		...HOTEL_UPSERT_DEFAULT_VALUES,
-		name: hotel.name ?? "",
-		description: hotel.description ?? "",
-		address: hotel.address ?? "",
-		mapLink: hotel.mapLink ?? "",
-		latitude: hotel.latitude ?? "",
-		longitude: hotel.longitude ?? "",
-		amenityIds: hotel.amenities?.map((a) => a.id) ?? [],
+		...hotel,
+		amenityIds: hotel.amenities.map((amenity) => amenity.id),
+		images: [],
 		bankAccount: hotel.bankAccount
 			? {
-					iban: hotel.bankAccount.iban,
-					bic: hotel.bankAccount.bic,
-					bankName: hotel.bankAccount.bankName,
-					accountHolderName: hotel.bankAccount.accountHolderName,
+					...hotel.bankAccount,
 				}
 			: undefined,
-		images: undefined,
 	};
-}
+};
+
+export const getHotelInitValues = (hotel?: Hotel): UpsertHotelInput => {
+	return hotel
+		? mapHotelToUpsertHotelInput(hotel)
+		: { ...HOTEL_UPSERT_DEFAULT_VALUES };
+};

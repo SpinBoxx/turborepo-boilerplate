@@ -10,7 +10,7 @@ import {
 	ContextMenuTrigger,
 	cn,
 } from "@zanadeal/ui";
-import { Eye, Pen, Trash, X } from "lucide-react";
+import { Eye, Trash, X } from "lucide-react";
 import type { ComponentProps } from "react";
 import {
 	HotelAddress,
@@ -40,8 +40,11 @@ export default function HotelRow({ hotel, className, ...props }: Props) {
 					>
 						<CardContent className="overflow-hidden p-0">
 							<div className="flex gap-2">
-								<div className="relative aspect-square h-fit w-fit shrink-0 overflow-hidden rounded-[10px]">
-									<HotelImage className="size-18 object-fill transition-transform duration-300 ease-out group-hover:scale-110" />
+								<div className="relative size-22 shrink-0 overflow-hidden rounded-[10px] md:size-18">
+									<HotelImage
+										className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+										variant="room-thumbnail"				
+									/>
 									<div className="absolute top-1 right-1 rounded-full bg-white/70 p-0.5">
 										<HotelArchived className="text-black [&_svg]:size-4.5" />
 									</div>
@@ -57,10 +60,6 @@ export default function HotelRow({ hotel, className, ...props }: Props) {
 				</ContextMenuTrigger>
 				<ContextMenuContent>
 					<ContextMenuGroup>
-						<ContextMenuItem className="text-blue-500">
-							<Pen className="text-blue-500" />
-							Modifier
-						</ContextMenuItem>
 						<HotelContext.Consumer>
 							{({ hotel }) =>
 								hotel.isArchived ? (

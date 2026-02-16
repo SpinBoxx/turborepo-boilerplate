@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/client";
 
-import { uploadBase64Image } from "../../../cloudinary/cloudinary.service";
+import { uploadBase64Image } from "../../../cloudinary/cloudinary.upload.service";
 import type { UpsertRoomComputedInput, UpsertRoomInput } from "../room.schemas";
 
 const computeRoomImages = async (

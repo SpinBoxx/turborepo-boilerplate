@@ -1,4 +1,4 @@
-import type { Hotel } from "@zanadeal/api/contracts";
+import type { Hotel } from "@zanadeal/api/features/hotel/schemas/hotel.schema";
 import { cn } from "@zanadeal/ui";
 import { fileToBase64, urlToFile } from "@zanadeal/utils";
 import { Save } from "lucide-react";
@@ -12,12 +12,12 @@ import {
 	StepperPanel,
 } from "@/components/stepper/FormStepper/FormStepperProvider";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useCreateHotel } from "../../hotel.queries";
+import { useCreateHotel, useUpdateHotel } from "../../hotel.queries";
 import HotelAmenitiesStep from "./HotelAmenitiesStep";
 import HotelBankAccountStep from "./HotelBankAccountStep";
 import HotelImagesStep from "./HotelImagesStep";
 import HotelInformationsStep from "./HotelInformationStep";
-import { getHotelUpsertDefaultValues } from "./hotelUpsertForm.defaults";
+import { getHotelInitValues } from "./hotelUpsertForm.defaults";
 
 interface Props extends ComponentProps<"div"> {
 	hotel: Hotel | null;
@@ -27,14 +27,14 @@ export default function HotelUpsertForm({ hotel, className }: Props) {
 	const [files, setFiles] = useState<File[]>([]);
 	const [_isSubmitting, setIsSubmitting] = useState(false);
 	const createHotel = useCreateHotel();
+	const updateHotel = useUpdateHotel(hotel?.id || "");
 
 	const form = useAppForm({
-		defaultValues: getHotelUpsertDefaultValues(hotel || undefined),
+		defaultValues: getHotelInitValues(hotel || undefined),
 		onSubmit: async ({ value }) => {
 			setIsSubmitting(true);
 			const imagesBase64 = await Promise.all(files.map(fileToBase64));
-
-			await createHotel
+			await (hotel ? updateHotel : createHotel)
 				.mutateAsync({
 					...value,
 					images: imagesBase64.map((base64) => ({ base64 })),

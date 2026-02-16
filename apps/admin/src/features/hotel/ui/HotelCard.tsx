@@ -1,6 +1,5 @@
 import type { Hotel } from "@zanadeal/api/contracts";
 import {
-	Badge,
 	Card,
 	CardContent,
 	CardFooter,
@@ -12,7 +11,7 @@ import {
 	ContextMenuTrigger,
 	cn,
 } from "@zanadeal/ui";
-import { BedDouble, File, Pen, Trash } from "lucide-react";
+import { BedDouble, File, MapPin, Pen, Trash } from "lucide-react";
 import { type ComponentProps, useState } from "react";
 import UpsertRoomDialog from "@/features/rooms/components/dialogs/UpsertRoomDialog";
 import {
@@ -35,8 +34,6 @@ interface Props extends ComponentProps<"div"> {
 }
 
 export default function HotelCard({ hotel, className, ...props }: Props) {
-	const _deleteHotel = useDeleteHotel();
-
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	return (
 		<HotelProvider hotel={hotel}>
@@ -51,7 +48,7 @@ export default function HotelCard({ hotel, className, ...props }: Props) {
 					>
 						<CardHeader className="p-0">
 							<div className="relative aspect-16/10 w-full overflow-hidden">
-								<HotelImage className="h-full w-full bg-muted object-cover transition-transform duration-300 ease-out group-hover:scale-110" />
+								<HotelImage variant="listing-card" className="object-cover transition-transform duration-300 ease-out group-hover:scale-110" />
 								<div className="absolute top-4 right-4 rounded-full bg-white/70 p-1">
 									<HotelArchived className="text-black" />
 								</div>
@@ -61,13 +58,16 @@ export default function HotelCard({ hotel, className, ...props }: Props) {
 							</div>
 						</CardHeader>
 
-						<CardContent className="grid gap-2 p-2">
+						<CardContent className="grid gap-2 overflow-hidden truncate p-2">
 							<div className="min-w-0">
 								<HotelName className="truncate font-semibold text-foreground text-lg" />
-								<HotelAddress className="mt-1 flex items-center gap-2 text-muted-foreground text-sm" />
+								<div className="mt-1 flex items-center gap-2">
+									<MapPin className="size-5 shrink-0 text-muted-foreground" />
+									<HotelAddress className="" />
+								</div>
 							</div>
 
-							<HotelDescription className="line-clamp-2 text-muted-foreground text-sm" />
+							<HotelDescription className="line-clamp-2 truncate text-muted-foreground text-sm" />
 						</CardContent>
 
 						<CardFooter className={cn("px-2 py-4 pt-0")}>
@@ -82,7 +82,7 @@ export default function HotelCard({ hotel, className, ...props }: Props) {
 								<>
 									<ContextMenuItem
 										className="text-blue-500"
-										onClick={(_e) => {
+										onClick={() => {
 											setIsDialogOpen(true);
 										}}
 									>
@@ -94,30 +94,29 @@ export default function HotelCard({ hotel, className, ...props }: Props) {
 										Modifier
 									</ContextMenuItem>
 
-									<ContextMenuItem className="text-orange-500">
-										<File />
+									<ContextMenuItem className={"hover:bg-orange-400/20"}>
+										<File className="text-orange-500" />
 										<ToggleIsArchivedForm
 											hotelId={hotel.id}
 											buttonProps={{
 												variant: "extraGhost",
 												size: "sm",
-												className: "p-0! hover:text-orange-700",
+												className: "p-0! text-orange-500 ",
 											}}
 											isArchived={hotel.isArchived}
 										/>
 									</ContextMenuItem>
 
-									<ContextMenuItem>
-										<Badge variant={"destructive"}>
-											<Trash className="text-white" />
-											<DeleteHotelForm
-												hotelId={hotel.id}
-												buttonProps={{
-													variant: "extraGhost",
-													size: "sm",
-												}}
-											/>
-										</Badge>
+									<ContextMenuItem className={"hover:bg-red-400/20"}>
+										<Trash className="text-red-500" />
+										<DeleteHotelForm
+											hotelId={hotel.id}
+											buttonProps={{
+												variant: "extraGhost",
+												size: "sm",
+												className: "p-0! text-red-500",
+											}}
+										/>
 									</ContextMenuItem>
 								</>
 							)}

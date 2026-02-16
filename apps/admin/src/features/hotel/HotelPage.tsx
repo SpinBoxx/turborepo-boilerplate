@@ -110,8 +110,6 @@ export default function HotelsPage() {
 							key={hotel.id}
 							hotel={hotel}
 							onClick={() => {
-								console.log("selected", hotel);
-
 								setSelected(hotel);
 								setUpsertOpen(true);
 							}}

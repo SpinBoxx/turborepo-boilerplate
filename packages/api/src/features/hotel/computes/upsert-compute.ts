@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/client";
-import { uploadBase64Image } from "../../../cloudinary/cloudinary.service";
+import { uploadBase64Image } from "../../../cloudinary/cloudinary.upload.service";
 import type {
 	UpsertHotelComputedInput,
 	UpsertHotelInput,
@@ -44,7 +44,7 @@ export async function computeUpsertHotelInput(
 	| UpsertHotelComputedInput
 	| (Partial<UpsertHotelComputedInput> & { id: string })
 > {
-	const { amenityIds, images, bankAccount, ...hotelData } = input;
+	const { images, ...hotelData } = input;
 
 	const result: Record<string, unknown> = { ...hotelData };
 

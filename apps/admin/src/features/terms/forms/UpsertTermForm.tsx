@@ -66,10 +66,10 @@ const UpsertTermForm = ({ term, className }: Props) => {
 				)}
 			</form.AppField>
 			<form.AppForm>
-				<form.SubscribeButton
-					icon={<PlusCircle className="size-5" />}
-					label={cn(term ? "Créer une nouvelle version" : "Créer")}
-				/>
+				<form.SubmitButton>
+					<PlusCircle className="mr-2" />
+					{term ? "Créer une nouvelle version" : "Créer"}
+				</form.SubmitButton>
 			</form.AppForm>
 		</form>
 	);

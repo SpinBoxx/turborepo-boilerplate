@@ -36,19 +36,20 @@ const hotelUserIncludeBase = {
 } satisfies Prisma.HotelInclude;
 
 export async function createHotel(input: UpsertHotelComputedInput) {
+	const { amenityIds, bankAccount, images, ...hotelData } = input;
 	const hotel = await prisma.hotel.create({
 		data: {
-			...input,
+			...hotelData,
 			amenities: {
-				connect: input.amenityIds?.map((id) => ({ id })),
+				connect: amenityIds?.map((id) => ({ id })),
 			},
-			bankAccount: input.bankAccount
+			bankAccount: bankAccount
 				? {
-						create: { ...input.bankAccount },
+						create: { ...bankAccount },
 					}
 				: undefined,
 			images: {
-				create: input.images?.map((img) => ({
+				create: images?.map((img) => ({
 					url: img.url,
 					publicId: img.publicId,
 				})),
@@ -77,25 +78,27 @@ export async function updateHotel(
 	id: string,
 	input: Partial<UpsertHotelComputedInput>,
 ) {
+	const { amenityIds, bankAccount, images, ...hotelData } = input;
+
 	const hotel = await prisma.hotel.update({
 		where: { id },
 		data: {
-			...input,
+			...hotelData,
 			amenities: {
-				connect: input.amenityIds?.map((id) => ({ id })),
+				set: amenityIds?.map((id) => ({ id })),
 			},
-			bankAccount: input.bankAccount
+			bankAccount: bankAccount
 				? {
 						upsert: {
-							create: { ...input.bankAccount },
-							update: { ...input.bankAccount },
+							create: { ...bankAccount },
+							update: { ...bankAccount },
 						},
 					}
 				: undefined,
-			images: input.images
+			images: images
 				? {
 						deleteMany: {}, // Supprime toutes les images existantes
-						create: input.images?.map((img) => ({
+						create: images?.map((img) => ({
 							url: img.url,
 							publicId: img.publicId,
 						})),

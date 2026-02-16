@@ -1,6 +1,6 @@
 import type { DeleteTermsInput } from "@zanadeal/api/contracts";
 import { cn } from "@zanadeal/ui";
-import { Trash2 } from "lucide-react";
+import { Trash } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useDeleteTerm } from "../terms.queries";
@@ -33,10 +33,9 @@ const DeleteTermButton = ({ id, className }: Props) => {
 			className={cn("", className)}
 		>
 			<form.AppForm>
-				<form.SubscribeButton
-					variants={{ variant: "destructive" }}
-					icon={<Trash2 />}
-				/>
+				<form.SubmitButton variants={{ variant: "destructive" }}>
+					<Trash />
+				</form.SubmitButton>
 			</form.AppForm>
 		</form>
 	);
