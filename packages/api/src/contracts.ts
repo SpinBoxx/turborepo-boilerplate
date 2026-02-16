@@ -13,31 +13,6 @@ export {
 	UpdateAmenityInputSchema,
 } from "./features/amenity/amenity.schemas";
 export {
-	type Contact,
-	ContactSchema,
-	type CreateContactInput,
-	CreateContactInputSchema,
-	type GetContactInput,
-	GetContactInputSchema,
-	type ListContactsByHotelInput,
-	ListContactsByHotelInputSchema,
-} from "./features/contact/contact.schemas";
-export {
-	type CreateHotelInput,
-	CreateHotelInputSchema,
-	type GetHotelInput,
-	GetHotelInputSchema,
-	type Hotel,
-	HotelSchema,
-	type ListHotelsInput,
-	ListHotelsInputSchema,
-	type ToggleHotelArchivedInput,
-	ToggleHotelArchivedInputSchema,
-	type UpdateHotelInput,
-	UpdateHotelInputSchema,
-} from "./features/hotel/hotel.schemas";
-
-export {
 	type CreateTermsInput,
 	CreateTermsInputSchema,
 	type DeleteTermsInput,

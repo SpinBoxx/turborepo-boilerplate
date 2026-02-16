@@ -1,6 +1,5 @@
 import z from "zod";
-import { AmenitySchema } from "../../amenity/amenity.schemas";
-import { ContactSchema } from "../../contact/contact.schemas";
+import { AmenitySchema } from "../../amenity/amenity.schemas";;
 import { RoomComputedSchema, RoomSchema } from "../../room/room.schemas";
 import {
 	BankAccountSchema,
@@ -22,11 +21,12 @@ export const HotelSchema = z.object({
 	isArchived: z.boolean(),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
+	email: z.email().optional().nullable(),
+	phoneNumber: z.string().optional().nullable(),
 	bankAccount: BankAccountSchema.optional().nullable(), // Hotel may or may not have a bank account associated
 	amenities: z.array(AmenitySchema),
 	images: z.array(HotelImageSchema),
 	reviews: z.array(ReviewSchema).optional(), // Only include reviews for admin view
-	contacts: z.array(ContactSchema),
 	rooms: z.array(RoomSchema),
 	createdAt: z.date(),
 	updatedAt: z.date(),
@@ -41,6 +41,8 @@ export const HotelComputedSchema = z.object({
 	isArchived: z.boolean(),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
+	email: z.email().optional().nullable(),
+	phoneNumber: z.string().optional().nullable(),
 	bankAccount: BankAccountSchema.optional().nullable(), // Hotel may or may not have a bank account associated
 	amenities: z.array(AmenitySchema),
 	images: z.array(HotelImageSchema),
@@ -48,7 +50,6 @@ export const HotelComputedSchema = z.object({
 	rating: z.number(),
 	isUserFavorite: z.boolean(),
 	startingPrice: z.number(),
-	contacts: z.array(ContactSchema),
 	rooms: z.array(RoomComputedSchema),
 	createdAt: z.date(),
 	updatedAt: z.date(),
@@ -62,6 +63,8 @@ export const UpsertHotelInputSchema = z.object({
 	isArchived: z.boolean().default(false),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
+	email: z.email().optional(),
+	phoneNumber: z.string().optional(),
 	// Full list of amenity ids to associate with the hotel.
 	amenityIds: z.array(z.string().min(1)),
 	bankAccount: UpsertBankAccountInputSchema.optional(),
@@ -76,6 +79,8 @@ export const UpsertHotelComputedInputSchema = z.object({
 	isArchived: z.boolean().optional(),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
+	email: z.email().optional(),
+	phoneNumber: z.string().optional(),
 	amenityIds: z.array(z.string().min(1)).optional(),
 	bankAccount: UpsertBankAccountInputSchema.optional(),
 	images: z.array(CreateHotelImageComputedInputSchema).optional(),

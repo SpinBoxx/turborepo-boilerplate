@@ -63,30 +63,22 @@ const HotelInformationsStep = withForm({
 						/>
 					)}
 				</form.AppField>
-				<form.AppField name="latitude">
+				<form.AppField name="email">
 					{(field) => (
 						<field.TextField
-							label="Latitude"
-							inputProps={{ placeholder: "48.8566" }}
-						/>
-					)}
-				</form.AppField>
-				<form.AppField name="longitude">
-					{(field) => (
-						<field.TextField
-							label="Longitude"
+							label="Email"
 							inputProps={{
-								placeholder: "2.3522",
+								placeholder: "contact@hotel.com",
 							}}
 						/>
 					)}
 				</form.AppField>
-				<form.AppField name="mapLink">
+				<form.AppField name="phoneNumber">
 					{(field) => (
 						<field.TextField
-							label="Google Maps Link"
+							label="Numéro de téléphone"
 							inputProps={{
-								placeholder: "https://maps.google.com/?q=48.8566,2.3522",
+								placeholder: "06 12 34 56 78",
 							}}
 						/>
 					)}

@@ -18,6 +18,8 @@ export const HOTEL_UPSERT_DEFAULT_VALUES: UpsertHotelInput = {
 const mapHotelToUpsertHotelInput = (hotel: Hotel): UpsertHotelInput => {
 	return {
 		...hotel,
+		email: hotel.email ?? undefined,
+		phoneNumber: hotel.phoneNumber ?? undefined,
 		amenityIds: hotel.amenities.map((amenity) => amenity.id),
 		images: [],
 		bankAccount: hotel.bankAccount

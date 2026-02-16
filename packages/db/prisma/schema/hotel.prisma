@@ -7,6 +7,8 @@ model Hotel {
   isArchived  Boolean        @default(false)  
   latitude    String
   longitude   String
+  email       String?
+  phoneNumber String?
   bankAccount BankAccount?
   contacts    Contact[]
   rooms       Room[]
