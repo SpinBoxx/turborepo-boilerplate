@@ -24,14 +24,14 @@ export default function FormStepperNav({ steps }: Props) {
 					>
 						<StepperTrigger
 							type="button"
-							className="flex grow flex-col items-start justify-center gap-3.5"
+							className="flex grow flex-col items-start justify-center gap-2.5"
 						>
-							<div className="flex flex-col items-start gap-1">
+							<div className="flex w-full flex-col items-start">
 								<StepperTitle className="hidden text-start font-semibold group-data-[state=inactive]/step:text-muted-foreground sm:block">
 									{step.title}
 								</StepperTitle>
-								<StepperTitle className="block text-start font-semibold group-data-[state=inactive]/step:text-muted-foreground sm:hidden">
-									{step.title.slice(0, 4)}
+								<StepperTitle className="self-center font-semibold group-data-[state=inactive]/step:text-muted-foreground sm:hidden [&_svg]:size-5">
+									{step.icon}
 								</StepperTitle>
 							</div>
 							<StepperIndicator className="h-1 w-full rounded-full bg-border data-[state=active]:bg-primary" />

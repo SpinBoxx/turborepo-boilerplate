@@ -104,7 +104,7 @@ export default function HotelsPage() {
 					))}
 				</div>
 			) : (
-				<div className={cn("grid gap-3 md:grid-cols-2")}>
+				<div className={cn("grid gap-3 md:grid-cols-2 lg:grid-cols-3")}>
 					{hotels.map((hotel) => (
 						<HotelRow
 							key={hotel.id}

@@ -1,7 +1,7 @@
 import type { Hotel } from "@zanadeal/api/features/hotel/schemas/hotel.schema";
 import { cn } from "@zanadeal/ui";
 import { fileToBase64, urlToFile } from "@zanadeal/utils";
-import { Save } from "lucide-react";
+import { CreditCard, ForkKnife, Image, Info, Save } from "lucide-react";
 import { type ComponentProps, useEffect, useState } from "react";
 import { FormStepperFooter } from "@/components/stepper/FormStepper/FormStepperFooter";
 import FormStepperNav from "@/components/stepper/FormStepper/FormStepperNav";
@@ -58,14 +58,24 @@ export default function HotelUpsertForm({ hotel, className }: Props) {
 	const steps: FormStepperStep[] = [
 		{
 			content: <HotelInformationsStep form={form} />,
+			icon: <Info />,
 			title: "Informations",
 		},
-		{ content: <HotelBankAccountStep form={form} />, title: "Compte bancaire" },
-		{ content: <HotelAmenitiesStep form={form} />, title: "Services" },
+		{
+			content: <HotelBankAccountStep form={form} />,
+			title: "Compte bancaire",
+			icon: <CreditCard />,
+		},
+		{
+			content: <HotelAmenitiesStep form={form} />,
+			title: "Services",
+			icon: <ForkKnife />,
+		},
 		{
 			content: (
 				<HotelImagesStep form={form} files={files} setFiles={setFiles} />
 			),
+			icon: <Image />,
 			title: "Images",
 		},
 	];

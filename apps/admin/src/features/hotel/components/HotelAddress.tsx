@@ -7,11 +7,14 @@ interface Props extends ComponentProps<"div"> {}
 export function HotelAddress({ className, ...props }: Props) {
 	const { hotel } = useHotelContext();
 	return (
-		<span
-			className={cn("truncate text-muted-foreground text-sm", className)}
+		<p
+			className={cn(
+				"truncate text-ellipsis text-muted-foreground text-sm",
+				className,
+			)}
 			{...props}
 		>
 			{hotel.address}
-		</span>
+		</p>
 	);
 }

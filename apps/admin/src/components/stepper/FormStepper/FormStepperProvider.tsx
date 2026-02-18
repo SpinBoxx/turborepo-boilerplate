@@ -20,6 +20,7 @@ type StepIndicators = {
 export type FormStepperStep = {
 	content: React.ReactNode;
 	title: string;
+	icon: React.ReactNode;
 };
 
 interface StepperContextValue {
