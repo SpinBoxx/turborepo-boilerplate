@@ -1,28 +1,29 @@
 import prisma from "@zanadeal/db";
-import type { Prisma } from "../../../../db/prisma/generated/client";
+import type { Amenity, Prisma } from "../../../../db/prisma/generated/client";
 import type {
-	Amenity,
-	CreateAmenityInput,
 	DeleteAmenityInput,
 	ListAmenitiesInput,
-	UpdateAmenityInput,
+	UpsertAmenityComputedInput,
 } from "./amenity.schemas";
 
 const amenitySelect: Prisma.AmenitySelect = {
 	id: true,
-	name: true,
+	slug: true,
 	icon: true,
+	translations: true,
 	createdAt: true,
 	updatedAt: true,
 } as const;
 
 export async function createAmenity(
-	input: CreateAmenityInput,
+	input: UpsertAmenityComputedInput,
 ): Promise<Amenity> {
+	const { translations, ...amenityData } = input;
+
 	const created = await prisma.amenity.create({
 		data: {
-			name: input.name,
-			icon: input.icon,
+			...amenityData,
+			translations: translations as Prisma.InputJsonValue,
 		},
 		select: amenitySelect,
 	});
@@ -31,16 +32,22 @@ export async function createAmenity(
 }
 
 export async function getAmenityById(id: string): Promise<Amenity | null> {
-	return prisma.amenity.findUnique({
+	const amenity = await prisma.amenity.findUnique({
 		where: { id },
 		select: amenitySelect,
 	});
+
+	if (!amenity) {
+		return null;
+	}
+
+	return amenity;
 }
 
 export async function listAmenities(
 	input: ListAmenitiesInput,
 ): Promise<Amenity[]> {
-	return prisma.amenity.findMany({
+	const amenities = await prisma.amenity.findMany({
 		orderBy: { createdAt: "desc" },
 		...(input.cursor
 			? {
@@ -51,20 +58,30 @@ export async function listAmenities(
 		take: input.take ?? 50,
 		select: amenitySelect,
 	});
+
+	return amenities;
 }
 
 export async function updateAmenity(
-	input: UpdateAmenityInput,
+	id: string,
+	input: Partial<UpsertAmenityComputedInput>,
 ): Promise<Amenity | null> {
+	const { translations, ...amenityData } = input;
+
 	try {
-		return await prisma.amenity.update({
-			where: { id: input.id },
+		const updatedAmenity = await prisma.amenity.update({
+			where: { id },
 			data: {
-				name: input.name,
-				icon: input.icon,
+				...amenityData,
+				translations:
+					translations === undefined
+						? undefined
+						: (translations as Prisma.InputJsonValue),
 			},
 			select: amenitySelect,
 		});
+
+		return updatedAmenity;
 	} catch (error) {
 		if ((error as { code?: string } | null)?.code === "P2025") {
 			return null;
@@ -77,10 +94,12 @@ export async function deleteAmenity(
 	input: DeleteAmenityInput,
 ): Promise<Amenity | null> {
 	try {
-		return await prisma.amenity.delete({
+		const deletedAmenity = await prisma.amenity.delete({
 			where: { id: input.id },
 			select: amenitySelect,
 		});
+
+		return deletedAmenity;
 	} catch (error) {
 		if ((error as { code?: string } | null)?.code === "P2025") {
 			return null;

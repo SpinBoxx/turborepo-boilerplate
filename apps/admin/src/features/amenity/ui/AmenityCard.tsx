@@ -1,4 +1,4 @@
-import type { Amenity } from "@zanadeal/api/contracts";
+import type { Amenity } from "@zanadeal/api/features/amenity/amenity.schemas";
 import { Button, Card, CardContent, cn } from "@zanadeal/ui";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Check, Pencil, Trash2 } from "lucide-react";
@@ -102,8 +102,8 @@ const textVariants = cva("truncate font-semibold", {
 const buttonVariants = cva("", {
 	variants: {
 		size: {
-			sm: "h-5 w-5",
-			md: "h-6 w-6",
+			sm: "h-8 w-8",
+			md: "h-8 w-8",
 			lg: "h-8 w-8",
 		},
 	},
@@ -115,8 +115,8 @@ const buttonVariants = cva("", {
 const buttonIconVariants = cva("", {
 	variants: {
 		size: {
-			sm: "size-3",
-			md: "size-3.5",
+			sm: "size-4",
+			md: "size-4",
 			lg: "size-4",
 		},
 	},
@@ -219,14 +219,21 @@ export default function AmenityCard({
 				</div>
 
 				<div className="min-w-0">
-					<p
-						className={cn(
-							textVariants({ size }),
-							isSelected ? "text-primary" : "text-foreground",
-						)}
-					>
-						{amenity.name}
-					</p>
+					{Object.entries(amenity.translations).map(([lang, translation]) => (
+						<div key={lang} className="flex items-center gap-1">
+							<span
+								className={cn(
+									textVariants({ size }),
+									isSelected ? "text-primary" : "text-foreground",
+								)}
+							>
+								{translation.name}
+							</span>
+							<span className="rounded bg-muted px-1 text-muted-foreground text-xs">
+								{lang.toUpperCase()}
+							</span>
+						</div>
+					))}
 				</div>
 			</CardContent>
 		</Card>

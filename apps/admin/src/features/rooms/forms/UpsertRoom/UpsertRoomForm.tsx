@@ -1,6 +1,6 @@
 import type { Room } from "@zanadeal/api/features/room/room.schemas";
 import { fileToBase64, urlToFile } from "@zanadeal/utils";
-import { Save } from "lucide-react";
+import { Euro, ForkKnife, Image, Info, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormStepperFooter } from "@/components/stepper/FormStepper/FormStepperFooter";
 import FormStepperNav from "@/components/stepper/FormStepper/FormStepperNav";
@@ -62,18 +62,22 @@ export default function UpsertRoomForm({ room, hotelId }: Props) {
 		{
 			content: <RoomInformationsFormStep form={form} />,
 			title: "Informations",
+			icon: <Info />,
 		},
 		{
 			content: <RoomAmenitiesStep form={form} />,
 			title: "Services",
+			icon: <ForkKnife />,
 		},
 		{
 			content: <RoomPricesFormStep form={form} />,
 			title: "Tarifs",
+			icon: <Euro />,
 		},
 		{
 			content: <RoomImagesStep form={form} files={files} setFiles={setFiles} />,
 			title: "Images",
+			icon: <Image />,
 		},
 	];
 

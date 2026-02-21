@@ -1,4 +1,4 @@
-import type { Amenity } from "@zanadeal/api/contracts";
+import type { Amenity } from "@zanadeal/api/features/amenity/amenity.schemas";
 import {
 	Button,
 	Dialog,
@@ -9,8 +9,10 @@ import {
 	DialogTitle,
 } from "@zanadeal/ui";
 import { useEffect } from "react";
+import { TranslationTabsForm } from "@/components/TranslationTabsForm";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useCreateAmenity, useUpdateAmenity } from "../amenity.queries";
+import { getAmenityInitialValues } from "./init-amenity";
 
 export default function AmenityUpsertDialog({
 	open,
@@ -22,25 +24,23 @@ export default function AmenityUpsertDialog({
 	amenity: Amenity | null;
 }) {
 	const createMutation = useCreateAmenity();
-	const updateMutation = useUpdateAmenity();
+	const updateMutation = useUpdateAmenity(amenity?.id ?? "");
 	const isEdit = amenity != null;
 	const isPending = createMutation.isPending || updateMutation.isPending;
 
 	const form = useAppForm({
-		defaultValues: {
-			name: amenity?.name ?? "",
-			icon: amenity?.icon ?? "",
-		},
+		defaultValues: getAmenityInitialValues(amenity),
 		onSubmit: async ({ value }) => {
 			if (isEdit && amenity) {
 				await updateMutation.mutateAsync({
-					id: amenity.id,
-					name: value.name,
+					slug: value.slug,
+					translations: value.translations,
 					icon: value.icon,
 				});
 			} else {
 				await createMutation.mutateAsync({
-					name: value.name,
+					slug: value.slug,
+					translations: value.translations,
 					icon: value.icon,
 				});
 			}
@@ -58,10 +58,7 @@ export default function AmenityUpsertDialog({
 
 	useEffect(() => {
 		if (!open) return;
-		form.reset({
-			name: amenity?.name ?? "",
-			icon: amenity?.icon ?? "",
-		});
+		form.reset(getAmenityInitialValues(amenity));
 	}, [open, amenity, form]);
 
 	return (
@@ -91,11 +88,11 @@ export default function AmenityUpsertDialog({
 					className="mt-4 grid gap-4"
 				>
 					<form.AppField
-						name="name"
+						name="slug"
 						validators={{
 							onBlur: ({ value }) => {
 								if (!value || value.trim().length === 0) {
-									return "Nom requis";
+									return "Slug requis";
 								}
 								return undefined;
 							},
@@ -103,8 +100,19 @@ export default function AmenityUpsertDialog({
 					>
 						{(field) => (
 							<field.TextField
-								label="Nom"
-								inputProps={{ placeholder: "WiFi gratuit" }}
+								label="Slug"
+								inputProps={{
+									placeholder: "wifi",
+								}}
+							/>
+						)}
+					</form.AppField>
+
+					<form.AppField name="translations">
+						{(field) => (
+							<TranslationTabsForm
+								value={field.state.value}
+								onChange={field.handleChange}
 							/>
 						)}
 					</form.AppField>
@@ -120,7 +128,23 @@ export default function AmenityUpsertDialog({
 							},
 						}}
 					>
-						{(field) => <field.TextArea label="Icône" placeholder="svg" />}
+						{(field) => (
+							<div>
+								<field.TextArea label="Icône" placeholder="svg" />
+								<small>
+									Site d'icône:{" "}
+									<a
+										href="https://lucide.dev/icons"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-blue-500 underline"
+									>
+										https://lucide.dev/icons
+									</a>{" "}
+									(Inserer le code SVG)
+								</small>
+							</div>
+						)}
 					</form.AppField>
 
 					<DialogFooter className="pt-2">
@@ -133,10 +157,9 @@ export default function AmenityUpsertDialog({
 							Annuler
 						</Button>
 						<form.AppForm>
-							<form.SubscribeButton
-								label={isEdit ? "Enregistrer" : "Créer"}
-								loadingLabel={isEdit ? "Enregistrement" : "Création"}
-							/>
+							<form.SubmitButton>
+								{isEdit ? "Enregistrer" : "Créer"}
+							</form.SubmitButton>
 						</form.AppForm>
 					</DialogFooter>
 				</form>

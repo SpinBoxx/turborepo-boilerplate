@@ -1,14 +1,14 @@
-import type { Amenity } from "@zanadeal/api/contracts";
+import type { Amenity } from "@zanadeal/api/features/amenity/amenity.schemas";
 import { Button, Spinner } from "@zanadeal/ui";
 import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import H1 from "@/components/H1";
 import { useAmenities } from "./amenity.queries";
+import AmenityUpsertDialog from "./forms/AmenityUpsertDialog";
 import AmenityCard from "./ui/AmenityCard";
 import AmenityDeleteAlertDialog from "./ui/AmenityDeleteAlertDialog";
 import AmenityEmptyState from "./ui/AmenityEmptyState";
-import AmenityUpsertDialog from "./ui/AmenityUpsertDialog";
 
 function getErrorMessage(error: unknown) {
 	if (error instanceof Error) return error.message;
@@ -65,6 +65,7 @@ export default function AmenityPage() {
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 					{amenities.map((amenity) => (
 						<AmenityCard
+							size={"sm"}
 							key={amenity.id}
 							amenity={amenity}
 							onEdit={() => {

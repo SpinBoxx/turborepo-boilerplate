@@ -1,3 +1,4 @@
+import { inspect } from "node:util";
 import type { Context } from "@zanadeal/api/context";
 
 type Logger = Context["logger"];
@@ -92,10 +93,8 @@ function extractOrpcErrorDetails(error: unknown):
 	const record = error as Record<string, unknown>;
 	const data = record.data;
 	const issues =
-		data &&
-		typeof data === "object" &&
-		"issues" in (data as Record<string, unknown>)
-			? JSON.stringify((data as Record<string, unknown>).issues)
+		data && typeof data === "object"
+			? (data as Record<string, unknown>).issues
 			: undefined;
 	return {
 		code: record.code,
@@ -127,7 +126,22 @@ export async function logOrpcError(params: {
 	const rpcDetails =
 		params.kind === "rpc" ? extractRpcDetails(body) : undefined;
 	const orpcDetails = extractOrpcErrorDetails(params.error);
-	console.log(orpcDetails, body, params.error);
+	console.error(
+		inspect(
+			redactSensitive({
+				orpcDetails,
+				body,
+				error: params.error,
+			}),
+			{
+				depth: Number.POSITIVE_INFINITY,
+				colors: true,
+				compact: false,
+				maxArrayLength: null,
+				maxStringLength: null,
+			},
+		),
+	);
 
 	logger.error(
 		{

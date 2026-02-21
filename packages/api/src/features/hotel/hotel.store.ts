@@ -1,5 +1,6 @@
 import prisma from "@zanadeal/db";
 import type { Prisma } from "../../../../db/prisma/generated/client";
+import { computeAmenity } from "../amenity/computes/amenity-compute";
 import type {
 	DeleteHotelInput,
 	Hotel,
@@ -68,10 +69,25 @@ export async function getHotelAdmin(id: string) {
 }
 
 export async function getHotel(id: string): Promise<Hotel | null> {
-	return await prisma.hotel.findUnique({
+	const hotel = await prisma.hotel.findUnique({
 		where: { id },
 		include: hotelUserIncludeBase,
 	});
+
+	if (!hotel) {
+		return null;
+	}
+
+	const computedHotel = {
+		...hotel,
+		amenities: hotel.amenities.map(computeAmenity),
+		rooms: hotel.rooms.map((room) => ({
+			...room,
+			amenities: room.amenities.map(computeAmenity),
+		})),
+	};
+
+	return computedHotel as unknown as Hotel;
 }
 
 export async function updateHotel(

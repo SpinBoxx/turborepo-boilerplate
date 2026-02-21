@@ -64,10 +64,10 @@ export function useCreateAmenity() {
 	});
 }
 
-export function useUpdateAmenity() {
+export function useUpdateAmenity(id: string) {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (input: UpdateAmenityInput) => updateAmenity(input),
+		mutationFn: (input: UpdateAmenityInput) => updateAmenity({ id, ...input }),
 		onError: (error) => {
 			toast.error("Modification impossible", {
 				description: getErrorMessage(error),

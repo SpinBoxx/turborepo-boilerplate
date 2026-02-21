@@ -1,12 +1,12 @@
 import { ORPCError } from "@orpc/server";
+import z from "zod";
 import { adminProcedure, publicProcedure } from "../../index";
 import {
-	AmenitySchema,
-	CreateAmenityInputSchema,
+	AmenityComputedSchema,
 	DeleteAmenityInputSchema,
 	GetAmenityInputSchema,
 	ListAmenitiesInputSchema,
-	UpdateAmenityInputSchema,
+	UpsertAmenityInputSchema,
 } from "./amenity.schemas";
 import {
 	createAmenity,
@@ -15,6 +15,8 @@ import {
 	listAmenities,
 	updateAmenity,
 } from "./amenity.store";
+import { computeAmenity } from "./computes/amenity-compute";
+import { computeUpsertAmenityInput } from "./computes/upsert-compute";
 
 export const listAmenitiesRoute = publicProcedure
 	.route({
@@ -24,9 +26,12 @@ export const listAmenitiesRoute = publicProcedure
 		tags: ["Amenity"],
 	})
 	.input(ListAmenitiesInputSchema)
-	.output(AmenitySchema.array())
+	.output(AmenityComputedSchema.array())
 	.handler(async ({ input }) => {
-		return listAmenities(input);
+		const amenities = await listAmenities(input);
+		console.log(amenities);
+
+		return amenities.map(computeAmenity);
 	});
 
 export const getAmenityRoute = publicProcedure
@@ -37,13 +42,13 @@ export const getAmenityRoute = publicProcedure
 		tags: ["Amenity"],
 	})
 	.input(GetAmenityInputSchema)
-	.output(AmenitySchema)
+	.output(AmenityComputedSchema)
 	.handler(async ({ input }) => {
 		const amenity = await getAmenityById(input.id);
 		if (!amenity) {
 			throw new ORPCError("NOT_FOUND");
 		}
-		return amenity;
+		return computeAmenity(amenity);
 	});
 
 export const createAmenityRoute = adminProcedure
@@ -53,10 +58,12 @@ export const createAmenityRoute = adminProcedure
 		summary: "Create an amenity",
 		tags: ["Amenity"],
 	})
-	.input(CreateAmenityInputSchema)
-	.output(AmenitySchema)
+	.input(UpsertAmenityInputSchema)
+	.output(AmenityComputedSchema)
 	.handler(async ({ input }) => {
-		return createAmenity(input);
+		const computedInput = await computeUpsertAmenityInput(input);
+		const created = await createAmenity(computedInput);
+		return computeAmenity(created);
 	});
 
 export const updateAmenityRoute = adminProcedure
@@ -66,14 +73,17 @@ export const updateAmenityRoute = adminProcedure
 		summary: "Update an amenity",
 		tags: ["Amenity"],
 	})
-	.input(UpdateAmenityInputSchema)
-	.output(AmenitySchema)
+	.input(
+		z.intersection(GetAmenityInputSchema, UpsertAmenityInputSchema.partial()),
+	)
+	.output(AmenityComputedSchema)
 	.handler(async ({ input }) => {
-		const updated = await updateAmenity(input);
+		const computedInput = await computeUpsertAmenityInput(input);
+		const updated = await updateAmenity(input.id, computedInput);
 		if (!updated) {
 			throw new ORPCError("NOT_FOUND");
 		}
-		return updated;
+		return computeAmenity(updated);
 	});
 
 export const deleteAmenityRoute = adminProcedure
@@ -84,13 +94,13 @@ export const deleteAmenityRoute = adminProcedure
 		tags: ["Amenity"],
 	})
 	.input(DeleteAmenityInputSchema)
-	.output(AmenitySchema)
+	.output(AmenityComputedSchema)
 	.handler(async ({ input }) => {
 		const deleted = await deleteAmenity(input);
 		if (!deleted) {
 			throw new ORPCError("NOT_FOUND");
 		}
-		return deleted;
+		return computeAmenity(deleted);
 	});
 
 export const amenityRouter = {

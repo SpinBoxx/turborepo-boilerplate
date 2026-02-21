@@ -1,9 +1,23 @@
 import * as z from "zod";
+import {
+	AmenityTranslationInputSchema,
+	AmenityTranslationSchema,
+} from "./amenity-translation.schemas";
 
 export const AmenitySchema = z.object({
 	id: z.string().min(1),
-	name: z.string().min(1),
+	slug: z.string().min(1),
 	icon: z.string().min(1),
+	translations: AmenityTranslationSchema,
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export const AmenityComputedSchema = z.object({
+	id: z.string().min(1),
+	slug: z.string().min(1),
+	icon: z.string().min(1),
+	translations: AmenityTranslationSchema,
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
@@ -19,23 +33,27 @@ export const ListAmenitiesInputSchema = z.object({
 	take: z.coerce.number().int().min(1).max(100).optional(),
 });
 
-export const CreateAmenityInputSchema = z.object({
-	name: z.string().min(1),
+export const UpsertAmenityInputSchema = z.object({
+	slug: z.string().min(1),
 	icon: z.string().min(1),
+	translations: z.array(AmenityTranslationInputSchema).min(1),
 });
 
-export const UpdateAmenityInputSchema = z.object({
-	id: z.string().min(1),
-	name: z.string().min(1).optional(),
-	icon: z.string().min(1).optional(),
+export const UpsertAmenityComputedInputSchema = z.object({
+	slug: z.string().min(1),
+	icon: z.string().min(1),
+	translations: AmenityTranslationSchema,
 });
 
 export const DeleteAmenityInputSchema = z.object({
 	id: z.string().min(1),
 });
 
-export type CreateAmenityInput = z.infer<typeof CreateAmenityInputSchema>;
 export type GetAmenityInput = z.infer<typeof GetAmenityInputSchema>;
 export type ListAmenitiesInput = z.infer<typeof ListAmenitiesInputSchema>;
-export type UpdateAmenityInput = z.infer<typeof UpdateAmenityInputSchema>;
+export type AmenityComputed = z.infer<typeof AmenityComputedSchema>;
+export type UpsertAmenityInput = z.infer<typeof UpsertAmenityInputSchema>;
+export type UpsertAmenityComputedInput = z.infer<
+	typeof UpsertAmenityComputedInputSchema
+>;
 export type DeleteAmenityInput = z.infer<typeof DeleteAmenityInputSchema>;
