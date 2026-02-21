@@ -1,0 +1,10 @@
+{
+	"typescript.preferences.autoImportSpecifierExcludeRegexes": [
+		"^@zanadeal/ui$",
+		"^@zanadeal/ui/.*$"
+	],
+	"javascript.preferences.autoImportSpecifierExcludeRegexes": [
+		"^@zanadeal/ui$",
+		"^@zanadeal/ui/.*$"
+	]
+}
