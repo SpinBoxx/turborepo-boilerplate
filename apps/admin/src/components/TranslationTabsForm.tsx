@@ -10,13 +10,23 @@ import {
 	TabsTrigger,
 } from "@zanadeal/ui";
 import { useCallback } from "react";
+import Editor from "./editor/Editor";
 
-interface Props {
-	value: AmenityTranslationInput[];
-	onChange: (value: AmenityTranslationInput[]) => void;
+type InputType = "text" | "code";
+
+interface Props<T> {
+	fieldKey: keyof Omit<T, "locale">;
+	value: T[];
+	onChange: (value: T[]) => void;
+	inputType?: InputType;
 }
 
-export function TranslationTabsForm({ value, onChange }: Props) {
+export function TranslationTabsForm<
+	T extends {
+		locale: AmenityTranslationInput["locale"];
+		[key: string]: string;
+	},
+>({ value, onChange, fieldKey, inputType = "text" }: Props<T>) {
 	const isTranslationSet = useCallback(
 		(locale: AmenityTranslationInput["locale"]) => {
 			const existingTranslation = value.find((t) => t.locale === locale);
@@ -25,7 +35,7 @@ export function TranslationTabsForm({ value, onChange }: Props) {
 		[value],
 	);
 
-	const _handleChange = (
+	const handleChange = (
 		locale: AmenityTranslationInput["locale"],
 		newValue: string,
 	) => {
@@ -35,17 +45,14 @@ export function TranslationTabsForm({ value, onChange }: Props) {
 				onChange(value.filter((t) => t.locale !== locale));
 				return;
 			}
+
 			onChange(
-				value.map((t) => (t.locale === locale ? { ...t, name: newValue } : t)),
+				value.map((t) =>
+					t.locale === locale ? { ...t, [fieldKey]: newValue } : t,
+				),
 			);
 		} else {
-			onChange([
-				...value,
-				{
-					locale: locale as AmenityTranslationInput["locale"],
-					name: newValue,
-				},
-			]);
+			onChange([...value, { locale, [fieldKey]: newValue } as T]);
 		}
 	};
 
@@ -63,14 +70,32 @@ export function TranslationTabsForm({ value, onChange }: Props) {
 			</TabsList>
 			{Object.values(LOCALES).map((locale) => (
 				<TabsContent key={locale} value={locale}>
-					<InputGroup>
-						<InputGroupAddon>{locale.toUpperCase()}</InputGroupAddon>
-						<InputGroupInput
-							placeholder={`Texte en ${locale.toUpperCase()}`}
-							value={value.find((t) => t.locale === locale)?.name || ""}
-							onChange={(e) => _handleChange(locale, e.target.value)}
-						/>
-					</InputGroup>
+					{
+						{
+							text: (
+								<InputGroup>
+									<InputGroupAddon>{locale.toUpperCase()}</InputGroupAddon>
+									<InputGroupInput
+										placeholder={`Texte en ${locale.toUpperCase()}`}
+										value={
+											value.find((t) => t.locale === locale)?.[fieldKey] || ""
+										}
+										onChange={(e) => handleChange(locale, e.target.value)}
+									/>
+								</InputGroup>
+							),
+							code: (
+								<Editor
+									value={
+										value.find((t) => t.locale === locale)?.[fieldKey] || ""
+									}
+									language="html"
+									className="overflow-x-auto"
+									setValue={(newValue) => handleChange(locale, newValue)}
+								/>
+							),
+						}[inputType]
+					}
 				</TabsContent>
 			))}
 		</Tabs>

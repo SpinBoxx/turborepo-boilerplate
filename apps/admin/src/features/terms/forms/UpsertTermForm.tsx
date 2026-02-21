@@ -1,15 +1,15 @@
-import type { Terms } from "@zanadeal/api/contracts";
+import type { TermsComputed } from "@zanadeal/api/features/terms/terms-schemas";
 import { cn } from "@zanadeal/ui";
 import { PlusCircle } from "lucide-react";
 import type { ComponentProps } from "react";
-import Editor from "@/components/editor/Editor";
+import { TranslationTabsForm } from "@/components/TranslationTabsForm";
 import { useAppForm } from "@/hooks/useAppForm";
 import { TermsType } from "../../../../../../packages/db/prisma/generated/enums";
 import { useCreateTerm } from "../terms.queries";
-import { getInitialTerm } from "./UpsertTermForm.config";
+import { getTermInitialValues } from "./UpsertTermForm.config";
 
 interface Props extends ComponentProps<"form"> {
-	term?: Terms;
+	term?: TermsComputed;
 }
 
 const UpsertTermForm = ({ term, className }: Props) => {
@@ -17,7 +17,7 @@ const UpsertTermForm = ({ term, className }: Props) => {
 	console.log(term);
 
 	const form = useAppForm({
-		defaultValues: getInitialTerm(term || undefined),
+		defaultValues: getTermInitialValues(term || null),
 		onSubmit: async ({ value }) => {
 			await createTerm.mutateAsync({ ...value });
 		},
@@ -55,13 +55,13 @@ const UpsertTermForm = ({ term, className }: Props) => {
 					</div>
 				)}
 			</form.AppField>
-			<form.AppField name="content">
+			<form.AppField name="translations">
 				{(field) => (
-					<Editor
+					<TranslationTabsForm
+						inputType="code"
+						fieldKey="content"
 						value={field.state.value}
-						language="html"
-						className="overflow-x-auto"
-						setValue={field.handleChange}
+						onChange={field.handleChange}
 					/>
 				)}
 			</form.AppField>

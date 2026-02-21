@@ -1,7 +1,7 @@
 model Terms {
   id        String @id @default(uuid()) 
   type      TermsType
-  content   String
+  translations Json
   version   String
   createdAt DateTime @default(now())
 }

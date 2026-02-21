@@ -1,13 +1,15 @@
 import prisma from "@zanadeal/db";
+import type { Terms } from "../../../../db/prisma/generated/client";
 import type {
-	CreateTermsInput,
+	DeleteTermsInput,
 	GetTermsInput,
 	ListTermsInput,
-	Terms,
-	UpdateTermsInput,
+	UpsertTermsComputedInput,
 } from "./terms-schemas";
 
-export async function createTerm(input: CreateTermsInput): Promise<Terms> {
+export async function createTerm(
+	input: UpsertTermsComputedInput,
+): Promise<Terms> {
 	return await prisma.terms.create({
 		data: input,
 	});
@@ -21,16 +23,7 @@ export async function getTerm(input: GetTermsInput): Promise<Terms | null> {
 	});
 }
 
-export async function updateTerm(input: UpdateTermsInput): Promise<Terms> {
-	return await prisma.terms.update({
-		where: {
-			id: input.id,
-		},
-		data: input,
-	});
-}
-
-export async function deleteTerm(input: UpdateTermsInput): Promise<Terms> {
+export async function deleteTerm(input: DeleteTermsInput): Promise<Terms> {
 	return await prisma.terms.delete({
 		where: {
 			id: input.id,

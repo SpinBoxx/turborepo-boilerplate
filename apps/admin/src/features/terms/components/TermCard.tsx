@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { Terms } from "@zanadeal/api/contracts";
+import type { TermsComputed } from "@zanadeal/api/features/terms/terms-schemas";
 import {
 	Button,
 	Card,
@@ -13,7 +13,7 @@ import type { ComponentProps } from "react";
 import DeleteTermButton from "./DeleteTermButton";
 
 interface Props extends ComponentProps<"div"> {
-	term: Terms;
+	term: TermsComputed;
 }
 
 const TermCard = ({ term, className, ...props }: Props) => {
@@ -29,7 +29,7 @@ const TermCard = ({ term, className, ...props }: Props) => {
 					className="line-clamp-13"
 					// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
 					dangerouslySetInnerHTML={{
-						__html: term.content,
+						__html: term.translations.fr?.content ?? "",
 					}}
 				/>
 				<Link to={"/dashboard/terms/$id/update-term"} params={{ id: term.id }}>

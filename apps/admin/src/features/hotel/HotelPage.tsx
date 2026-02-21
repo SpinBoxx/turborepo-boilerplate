@@ -1,4 +1,4 @@
-import type { Hotel } from "@zanadeal/api/contracts";
+import type { HotelComputed } from "@zanadeal/api/features/hotel/schemas/hotel.schema";
 import { Button, cn, Spinner } from "@zanadeal/ui";
 import { LayoutGrid, List, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -21,7 +21,7 @@ type ViewMode = "grid" | "list";
 export default function HotelsPage() {
 	const { data, isPending, isError, error } = useHotels({ take: 100 });
 	const [upsertOpen, setUpsertOpen] = useState(false);
-	const [selected, setSelected] = useState<Hotel | null>(null);
+	const [selected, setSelected] = useState<HotelComputed | null>(null);
 	const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
 	const hotels = useMemo(() => data ?? [], [data]);

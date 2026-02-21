@@ -1,16 +1,29 @@
 import * as z from "zod";
+import {
+	TermTranslationInputSchema,
+	TermTranslationSchema,
+} from "./terms-translation.schemas";
 
 export const TermsTypeSchema = z.enum(["CGU", "CGV", "PRIVACY_POLICY"]);
 
 export const TermsSchema = z.object({
 	id: z.string().min(1),
 	type: TermsTypeSchema,
-	content: z.string().min(1),
+	translations: TermTranslationSchema,
+	version: z.string().min(1),
+	createdAt: z.date(),
+});
+
+export const TermsComputedSchema = z.object({
+	id: z.string().min(1),
+	type: TermsTypeSchema,
+	translations: TermTranslationSchema,
 	version: z.string().min(1),
 	createdAt: z.date(),
 });
 
 export type Terms = z.infer<typeof TermsSchema>;
+export type TermsComputed = z.infer<typeof TermsComputedSchema>;
 export type TermsType = z.infer<typeof TermsTypeSchema>;
 
 export const GetTermsInputSchema = z.object({
@@ -30,25 +43,26 @@ export const ListTermsInputSchema = z.object({
 		.optional(),
 });
 
-export const CreateTermsInputSchema = z.object({
+export const UpsertTermsInputSchema = z.object({
 	type: TermsTypeSchema,
-	content: z.string().min(1),
+	translations: z.array(TermTranslationInputSchema),
 	version: z.string().min(1),
 });
 
-export const UpdateTermsInputSchema = z.object({
-	id: z.string().min(1),
-	type: TermsTypeSchema.optional(),
-	content: z.string().min(1).optional(),
-	version: z.string().min(1).optional(),
+export const UpsertTermsComputedInputSchema = z.object({
+	type: TermsTypeSchema,
+	translations: TermTranslationSchema,
+	version: z.string().min(1),
 });
 
 export const DeleteTermsInputSchema = z.object({
 	id: z.string().min(1),
 });
 
-export type CreateTermsInput = z.infer<typeof CreateTermsInputSchema>;
 export type GetTermsInput = z.infer<typeof GetTermsInputSchema>;
 export type ListTermsInput = z.infer<typeof ListTermsInputSchema>;
-export type UpdateTermsInput = z.infer<typeof UpdateTermsInputSchema>;
+export type UpsertTermsInput = z.infer<typeof UpsertTermsInputSchema>;
+export type UpsertTermsComputedInput = z.infer<
+	typeof UpsertTermsComputedInputSchema
+>;
 export type DeleteTermsInput = z.infer<typeof DeleteTermsInputSchema>;

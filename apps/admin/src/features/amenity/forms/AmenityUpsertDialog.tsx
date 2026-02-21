@@ -111,6 +111,7 @@ export default function AmenityUpsertDialog({
 					<form.AppField name="translations">
 						{(field) => (
 							<TranslationTabsForm
+								fieldKey="name"
 								value={field.state.value}
 								onChange={field.handleChange}
 							/>
