@@ -1,9 +1,11 @@
-import { Button, type ButtonVariants, cn, Spinner } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
 import { useFormContext } from "@/hooks/useFormContext";
+import { cn } from "@/lib/utils";
+import { Button, type ButtonProps } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 
 interface Props extends ComponentProps<"button"> {
-	variants?: ButtonVariants;
+	variants?: ButtonProps;
 	loadingLabel?: string;
 }
 

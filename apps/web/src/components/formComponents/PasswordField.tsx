@@ -45,7 +45,9 @@ export function PasswordField({ inputProps, label, prefix, className }: Props) {
 					{...inputProps}
 					id={inputId}
 					type={showPassword ? "text" : "password"}
-					aria-invalid={isInvalid}
+					{...(isInvalid && {
+						"aria-invalid": true,
+					})}
 					name={field.name}
 					value={field.state.value}
 					placeholder={inputProps?.placeholder || ""}

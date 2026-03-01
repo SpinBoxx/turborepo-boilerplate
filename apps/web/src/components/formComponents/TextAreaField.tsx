@@ -33,7 +33,9 @@ export function TextAreaField({ textareaProps, label, className }: Props) {
 				{...textareaProps}
 				size={textareaProps?.size}
 				id={textareaId}
-				aria-invalid={isInvalid}
+				{...(isInvalid && {
+					"aria-invalid": true,
+				})}
 				name={field.name}
 				value={field.state.value}
 				onBlur={field.handleBlur}

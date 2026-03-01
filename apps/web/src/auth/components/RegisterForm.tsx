@@ -1,4 +1,4 @@
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import type { UpsertUserInput } from "@zanadeal/api/features/user";
 import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
 import { useIntlayer } from "react-intlayer";
@@ -6,33 +6,28 @@ import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useAuth } from "../providers/AuthProvider";
 
-type LoginFormProps = Omit<ComponentProps<"form">, "onSubmit"> & {
+type RegisterFormProps = Omit<ComponentProps<"form">, "onSubmit"> & {
 	redirectTo?: string;
-	onCreateAccountClick: () => void;
+	onAlreadyHaveAccountClick: () => void;
 };
 
-export default function LoginForm({
+export default function RegisterForm({
 	className,
 	redirectTo = "/",
-	onCreateAccountClick,
+	onAlreadyHaveAccountClick,
 	...props
-}: LoginFormProps) {
-	const content = useIntlayer("login-form");
-	const { signInWithEmail } = useAuth();
-	const navigate = useNavigate();
-	const router = useRouter();
+}: RegisterFormProps) {
+	const content = useIntlayer("register-form");
+	const { signUpWithEmail } = useAuth();
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
 			password: "",
-		},
+			firstName: "",
+			lastName: "",
+		} satisfies UpsertUserInput,
 		onSubmit: async ({ value }) => {
-			await signInWithEmail(value, {
-				onSuccess: () => {
-					router.invalidate();
-					navigate({ to: redirectTo });
-				},
-			});
+			await signUpWithEmail(value, {});
 		},
 	});
 
@@ -85,32 +80,61 @@ export default function LoginForm({
 				>
 					{(field) => (
 						<field.PasswordField
-							label={content.password.value}
+							label="Password"
 							inputProps={{ placeholder: "••••••••" }}
 						/>
 					)}
 				</form.AppField>
 
-				<div className="text-right">
-					<Link to="/">
-						<p className="text-muted-foreground text-sm">
-							{content.forgotPassword.value}
-						</p>
-					</Link>
-				</div>
+				<form.AppField
+					name="firstName"
+					validators={{
+						onBlur: ({ value }) => {
+							if (!value || value.trim().length === 0) {
+								return content.firstNameIsRequired.value;
+							}
+							return undefined;
+						},
+					}}
+				>
+					{(field) => (
+						<field.TextField
+							label={content.firstName.value}
+							inputProps={{ type: "text", placeholder: "John" }}
+						/>
+					)}
+				</form.AppField>
+				<form.AppField
+					name="lastName"
+					validators={{
+						onBlur: ({ value }) => {
+							if (!value || value.trim().length === 0) {
+								return content.lastNameIsRequired.value;
+							}
+							return undefined;
+						},
+					}}
+				>
+					{(field) => (
+						<field.TextField
+							label={content.lastName.value}
+							inputProps={{ type: "text", placeholder: "Doe" }}
+						/>
+					)}
+				</form.AppField>
 				<form.AppForm>
 					<form.SubmitButton variants={{ variant: "default" }}>
-						{content.login.value}
+						Register
 					</form.SubmitButton>
 				</form.AppForm>
 			</form>
 			<div className="mt-4 text-center">
 				<Button
-					onClick={onCreateAccountClick}
+					onClick={onAlreadyHaveAccountClick}
 					variant={"link"}
 					className="text-muted-foreground text-sm"
 				>
-					{content.noAccountTextAction.value}
+					{content.alreadyHaveAnAccountSign}
 				</Button>
 			</div>
 		</div>

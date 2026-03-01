@@ -4,10 +4,13 @@ import { devtools } from "@tanstack/devtools-vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import { intlayer, intlayerCompiler } from "vite-intlayer";
 
 export default defineConfig(({ command }) => {
 	const plugins = [
 		tailwindcss(),
+		intlayer(),
+		intlayerCompiler(),
 		tanstackRouter({
 			target: "react",
 			autoCodeSplitting: true,

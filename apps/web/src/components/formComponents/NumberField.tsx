@@ -35,7 +35,12 @@ export function NumberField({ numberFieldProps, label, className }: Props) {
 					{label}
 				</Label>
 			)}
-			<NumberFieldComponent aria-invalid={isInvalid} defaultValue={0}>
+			<NumberFieldComponent
+				{...(isInvalid && {
+					"aria-invalid": true,
+				})}
+				defaultValue={0}
+			>
 				<NumberFieldGroup>
 					<NumberFieldDecrement />
 					<NumberFieldInput />

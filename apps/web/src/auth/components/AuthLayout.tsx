@@ -1,10 +1,9 @@
 import type { PropsWithChildren } from "react";
-import Navbar from "@/components/Navbar";
-
+import LoginNavbar from "@/components/navbar/LoginNavbar";
 export default function AuthLayout({ children }: PropsWithChildren) {
 	return (
-		<div>
-			<Navbar />
+		<div className="">
+			<LoginNavbar />
 			{children}
 		</div>
 	);

@@ -31,6 +31,7 @@ export function TextField({
 	const showErrors = field.state.meta.isTouched && errors.length > 0;
 	const inputId = inputProps?.id ?? field.name;
 	const isInvalid = showErrors;
+	console.log(isInvalid);
 
 	return (
 		<div className={cn("w-full", className)}>
@@ -44,7 +45,9 @@ export function TextField({
 				<InputGroupInput
 					{...inputProps}
 					id={inputId}
-					aria-invalid={isInvalid}
+					{...(isInvalid && {
+						"aria-invalid": true,
+					})}
 					name={field.name}
 					value={field.state.value}
 					placeholder={inputProps?.placeholder || ""}

@@ -32,7 +32,9 @@ export function SwitchField({ switchProps, label, className }: Props) {
 			<Switch
 				{...switchProps}
 				id={switchId}
-				aria-invalid={isInvalid}
+				{...(isInvalid && {
+					"aria-invalid": true,
+				})}
 				name={field.name}
 				checked={field.state.value}
 				onBlur={field.handleBlur}

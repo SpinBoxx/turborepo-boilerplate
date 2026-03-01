@@ -3,6 +3,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./styles.css";
+import { IntlayerProvider } from "react-intlayer";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./auth/providers/AuthProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -15,10 +16,8 @@ import { routeTree } from "./routeTree.gen";
 const router = createRouter({
 	routeTree,
 	context: {
-		user: null,
 		auth: {
-			getUser: () => null,
-			loadSession: async () => null,
+			loadSession: async () => undefined,
 		},
 	},
 	defaultPreloadStaleTime: 0,
@@ -38,15 +37,13 @@ if (!rootElement) {
 }
 
 const RouterProviderWithContext = () => {
-	const { user, getUser, loadSession } = useAuth();
+	const { loadSession } = useAuth();
 
 	return (
 		<RouterProvider
 			router={router}
 			context={{
-				user,
 				auth: {
-					getUser,
 					loadSession,
 				},
 			}}
@@ -60,12 +57,14 @@ if (!rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<QueryClientProvider client={queryClient}>
-				<ThemeProvider>
-					<AuthProvider>
-						<RouterProviderWithContext />
-					</AuthProvider>
-					<Toaster />
-				</ThemeProvider>
+				<IntlayerProvider>
+					<ThemeProvider>
+						<AuthProvider>
+							<RouterProviderWithContext />
+						</AuthProvider>
+						<Toaster />
+					</ThemeProvider>
+				</IntlayerProvider>
 			</QueryClientProvider>
 		</StrictMode>,
 	);

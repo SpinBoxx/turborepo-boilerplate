@@ -1,17 +1,15 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import type { AuthUser } from "@/auth/providers/AuthProvider";
+import type { User } from "../../../../packages/db/prisma/generated/client";
 
 const RootLayout = () => (
-	<div className="relative relative isolate flex min-h-svh flex-col">
+	<div className="relative isolate mx-auto min-h-svh max-w-7xl p-5.5">
 		<Outlet />
 	</div>
 );
 
 interface MyRouterContext {
-	user: AuthUser | null;
 	auth: {
-		getUser: () => AuthUser | null;
-		loadSession: () => Promise<AuthUser | null>;
+		loadSession: () => Promise<User | null | undefined>;
 	};
 }
 
