@@ -6,13 +6,20 @@ import { termsRouter } from "../features/terms/terms.router";
 import { protectedProcedure, publicProcedure } from "../index";
 
 export const appRouter = {
-	healthCheck: publicProcedure.handler(() => {
-		return "OK";
-	}),
-	privateData: protectedProcedure.handler(({ context }) => {
+	healthCheck: publicProcedure
+		.route({
+			method: "GET",
+			path: "/health",
+			summary: "Health check",
+			tags: ["General"],
+		})
+		.handler(() => {
+			return { status: "ok" };
+		}),
+	loadSession: protectedProcedure.handler(({ context }) => {
 		return {
 			message: "This is private",
-			user: context.session?.user,
+			session: context.session,
 		};
 	}),
 	hotel: hotelRouter,

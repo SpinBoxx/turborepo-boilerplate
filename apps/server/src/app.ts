@@ -45,10 +45,6 @@ export async function createApp() {
 
 	registerCsrfProtection(fastify, env);
 
-	fastify.get("/health", async () => {
-		return "OK";
-	});
-
 	fastify.all("/rpc/*", async (request, reply) => {
 		const result = await orpc.rpc.handle(request, reply, {
 			context: await createContext(request.headers, request.log),

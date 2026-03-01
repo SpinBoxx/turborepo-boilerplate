@@ -7,8 +7,8 @@
 		"./router": {
 			"default": "./src/router.ts"
 		},
-		"./contracts": {
-			"default": "./src/contracts.ts"
+		"./features/*": {
+			"default": "./src/features/*/index.ts"
 		},
 		"./*": {
 			"default": "./src/*.ts"
