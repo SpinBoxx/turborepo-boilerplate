@@ -4,7 +4,7 @@ import type { User } from "../../../../db/prisma/generated/client";
 import { adminProcedure, publicProcedure } from "../../index";
 import { computeHotel } from "./computes/hotel-compute";
 import { computeUpsertHotelInput } from "./computes/upsert-compute";
-import { getHotelByRole } from "./hotel.service";
+
 import {
 	createHotel,
 	deleteHotel,
@@ -35,7 +35,7 @@ export const listHotelsRoute = publicProcedure
 		return computedHotels;
 	});
 
-export const getHotel = publicProcedure
+export const getHotelRoute = publicProcedure
 	.route({
 		method: "GET",
 		path: "/hotels/{id}",
@@ -46,10 +46,7 @@ export const getHotel = publicProcedure
 	.input(GetHotelInputSchema)
 	.output(HotelComputedSchema)
 	.handler(async ({ input, context }) => {
-		const hotel = await getHotelByRole(
-			input.id,
-			context.session?.user as User | undefined,
-		);
+		const hotel = await getHotel(input.id);
 		if (!hotel) {
 			throw new ORPCError("NOT_FOUND");
 		}
@@ -114,7 +111,7 @@ export const deleteHotelRoute = adminProcedure
 
 export const hotelRouter = {
 	list: listHotelsRoute,
-	get: getHotel,
+	get: getHotelRoute,
 	create: createHotelRoute,
 	update: updateHotelRoute,
 	delete: deleteHotelRoute,

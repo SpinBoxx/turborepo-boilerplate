@@ -13,7 +13,6 @@ import {
 
 export default function NavbarAuthActions() {
 	const { user, signOut } = useAuth();
-
 	if (!user) {
 		return (
 			<div className="flex gap-2">
@@ -30,7 +29,7 @@ export default function NavbarAuthActions() {
 				<MenuTrigger render={<Button variant="outline" size={"icon-xl"} />}>
 					<User className="size-6" />
 				</MenuTrigger>
-				<MenuPopup>
+				<MenuPopup align="end">
 					<MenuGroup>
 						<MenuGroupLabel>Profile</MenuGroupLabel>
 						<MenuItem>

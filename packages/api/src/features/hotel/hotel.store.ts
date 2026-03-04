@@ -1,14 +1,12 @@
 import prisma from "@zanadeal/db";
 import type { Prisma } from "../../../../db/prisma/generated/client";
-import { computeAmenity } from "../amenity/computes/amenity-compute";
 import type {
 	DeleteHotelInput,
-	Hotel,
 	ListHotelsInput,
 	UpsertHotelComputedInput,
 } from "./schemas/hotel.schema";
 
-const hotelAdminIncludeBase = {
+const hotelIncludeBase = {
 	amenities: true,
 	images: true,
 	reviews: true,
@@ -21,20 +19,38 @@ const hotelAdminIncludeBase = {
 		},
 	},
 	bankAccount: true,
+	favorites: true,
 } satisfies Prisma.HotelInclude;
 
-const hotelUserIncludeBase = {
-	amenities: true,
-	images: true,
-	contacts: true,
-	rooms: {
-		include: {
-			images: true,
-			amenities: true,
-			prices: true,
+export type HotelDb = Prisma.HotelGetPayload<{
+	include: typeof hotelIncludeBase;
+}>;
+
+export async function listHotelsAdmin(
+	input: ListHotelsInput,
+): Promise<HotelDb[]> {
+	return await prisma.hotel.findMany({
+		where: {
+			name: input.where?.name
+				? { contains: input.where.name, mode: "insensitive" }
+				: undefined,
+			id: input.where?.id ? input.where.id : undefined,
 		},
-	},
-} satisfies Prisma.HotelInclude;
+		orderBy: {
+			name: input.orderBy?.name,
+			createdAt: input.orderBy?.createdAt,
+		},
+		take: input.take ?? 50,
+		include: hotelIncludeBase,
+	});
+}
+
+export async function getHotel(id: string): Promise<HotelDb | null> {
+	return await prisma.hotel.findUnique({
+		where: { id },
+		include: hotelIncludeBase,
+	});
+}
 
 export async function createHotel(input: UpsertHotelComputedInput) {
 	const { amenityIds, bankAccount, images, ...hotelData } = input;
@@ -59,35 +75,6 @@ export async function createHotel(input: UpsertHotelComputedInput) {
 	});
 
 	return hotel;
-}
-
-export async function getHotelAdmin(id: string) {
-	return await prisma.hotel.findUnique({
-		where: { id },
-		include: hotelAdminIncludeBase,
-	});
-}
-
-export async function getHotel(id: string): Promise<Hotel | null> {
-	const hotel = await prisma.hotel.findUnique({
-		where: { id },
-		include: hotelUserIncludeBase,
-	});
-
-	if (!hotel) {
-		return null;
-	}
-
-	const computedHotel = {
-		...hotel,
-		amenities: hotel.amenities.map(computeAmenity),
-		rooms: hotel.rooms.map((room) => ({
-			...room,
-			amenities: room.amenities.map(computeAmenity),
-		})),
-	};
-
-	return computedHotel as unknown as Hotel;
 }
 
 export async function updateHotel(
@@ -124,23 +111,6 @@ export async function updateHotel(
 	});
 
 	return hotel;
-}
-
-export async function listHotelsAdmin(input: ListHotelsInput) {
-	return await prisma.hotel.findMany({
-		where: {
-			name: input.where?.name
-				? { contains: input.where.name, mode: "insensitive" }
-				: undefined,
-			id: input.where?.id ? input.where.id : undefined,
-		},
-		orderBy: {
-			name: input.orderBy?.name,
-			createdAt: input.orderBy?.createdAt,
-		},
-		take: input.take ?? 50,
-		include: hotelAdminIncludeBase,
-	});
 }
 
 export async function deleteHotel(input: DeleteHotelInput) {

@@ -1,6 +1,6 @@
 import z from "zod";
-import { AmenitySchema } from "../../amenity/amenity.schemas";;
-import { RoomComputedSchema, RoomSchema } from "../../room/room.schemas";
+import { AmenityComputedSchema, AmenitySchema } from "../../amenity";
+import { RoomComputedSchema, RoomSchema } from "../../room";
 import {
 	BankAccountSchema,
 	UpsertBankAccountInputSchema,
@@ -44,7 +44,7 @@ export const HotelComputedSchema = z.object({
 	email: z.email().optional().nullable(),
 	phoneNumber: z.string().optional().nullable(),
 	bankAccount: BankAccountSchema.optional().nullable(), // Hotel may or may not have a bank account associated
-	amenities: z.array(AmenitySchema),
+	amenities: z.array(AmenityComputedSchema),
 	images: z.array(HotelImageSchema),
 	reviews: z.array(ReviewSchema).optional(), // Only include reviews for admin view
 	rating: z.number(),

@@ -1,4 +1,4 @@
-import type { Amenity } from "@zanadeal/api/features/amenity/amenity.schemas";
+import type { AmenityComputed } from "@zanadeal/api/features/amenity";
 import { Button, Card, CardContent, cn } from "@zanadeal/ui";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Check, Pencil, Trash2 } from "lucide-react";
@@ -141,7 +141,7 @@ const gapVariants = cva("flex items-start justify-between", {
 interface Props
 	extends ComponentProps<"div">,
 		VariantProps<typeof cardVariants> {
-	amenity: Amenity;
+	amenity: AmenityComputed;
 	onEdit?: () => void;
 	onDelete?: () => void;
 	isSelected?: boolean;

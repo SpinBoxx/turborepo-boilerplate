@@ -5,9 +5,9 @@ import type {
 	ListRoomsInput,
 	Room,
 	UpsertRoomComputedInput,
-} from "./room.schemas";
+} from "./schemas/room.schemas";
 
-export const listRooms = async (input: ListRoomsInput): Promise<Room[]> => {
+export async function listRooms(input: ListRoomsInput) {
 	return await prisma.room.findMany({
 		where: {
 			prices: {
@@ -35,7 +35,7 @@ export const listRooms = async (input: ListRoomsInput): Promise<Room[]> => {
 			hotel: true,
 		},
 	});
-};
+}
 
 export const createRoom = async (
 	input: UpsertRoomComputedInput,

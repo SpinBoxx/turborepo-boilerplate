@@ -4,44 +4,24 @@ import type {
 	DeleteAmenityInput,
 	ListAmenitiesInput,
 	UpsertAmenityComputedInput,
-} from "./amenity.schemas";
-
-const amenitySelect: Prisma.AmenitySelect = {
-	id: true,
-	slug: true,
-	icon: true,
-	translations: true,
-	createdAt: true,
-	updatedAt: true,
-} as const;
+} from "./schemas/amenity.schemas";
 
 export async function createAmenity(
 	input: UpsertAmenityComputedInput,
 ): Promise<Amenity> {
-	const { translations, ...amenityData } = input;
-
 	const created = await prisma.amenity.create({
 		data: {
-			...amenityData,
-			translations: translations as Prisma.InputJsonValue,
+			...input,
 		},
-		select: amenitySelect,
 	});
 
 	return created;
 }
 
 export async function getAmenityById(id: string): Promise<Amenity | null> {
-	const amenity = await prisma.amenity.findUnique({
+	return await prisma.amenity.findUnique({
 		where: { id },
-		select: amenitySelect,
 	});
-
-	if (!amenity) {
-		return null;
-	}
-
-	return amenity;
 }
 
 export async function listAmenities(
@@ -55,8 +35,6 @@ export async function listAmenities(
 					skip: 1,
 				}
 			: {}),
-		take: input.take ?? 50,
-		select: amenitySelect,
 	});
 
 	return amenities;

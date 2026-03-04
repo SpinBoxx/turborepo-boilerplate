@@ -1,11 +1,11 @@
 import * as z from "zod";
-import { RoomType } from "../../../../db/prisma/generated/enums";
-import { AmenitySchema } from "../amenity/amenity.schemas";
+import { RoomType } from "../../../../../db/prisma/generated/enums";
+import { AmenityComputedSchema, AmenitySchema } from "../../amenity";
 import {
 	CreateRoomImageComputedInputSchema,
 	CreateRoomImageInputSchema,
 	RoomImageSchema,
-} from "../room-image/room-image.schemas";
+} from "../../room-image/room-image.schemas";
 
 // Zod schema derived from the Prisma RoomType enum
 export const RoomTypeSchema = z.enum(Object.values(RoomType));
@@ -43,7 +43,7 @@ export const RoomComputedSchema = z.object({
 	capacity: z.number().int(),
 	quantity: z.number().int(),
 	images: z.array(RoomImageSchema),
-	amenities: z.array(AmenitySchema),
+	amenities: z.array(AmenityComputedSchema),
 	price: z.number(),
 	promoPrice: z.number(),
 	prices: z.array(RoomPriceSchema),
