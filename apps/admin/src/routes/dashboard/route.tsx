@@ -7,10 +7,7 @@ import SidebarNavbar from "@/components/sidebar/SidebarNavbar";
 export const Route = createFileRoute("/dashboard")({
 	component: RouteComponent,
 	beforeLoad: async ({ context }) => {
-		const user =
-			context.user ??
-			context.auth.getUser() ??
-			(await context.auth.loadSession());
+		const user = await context.auth.loadSession();
 		if (!isAdmin(user)) {
 			throw redirect({
 				to: "/login",

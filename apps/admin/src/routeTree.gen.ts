@@ -86,10 +86,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/dashboard/terms/create-term': typeof DashboardTermsCreateTermRoute
-  '/dashboard/amenities': typeof DashboardAmenitiesIndexRoute
-  '/dashboard/hotels': typeof DashboardHotelsIndexRoute
-  '/dashboard/rooms': typeof DashboardRoomsIndexRoute
-  '/dashboard/terms': typeof DashboardTermsIndexRoute
+  '/dashboard/amenities/': typeof DashboardAmenitiesIndexRoute
+  '/dashboard/hotels/': typeof DashboardHotelsIndexRoute
+  '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
+  '/dashboard/terms/': typeof DashboardTermsIndexRoute
   '/dashboard/terms/$id/update-term': typeof DashboardTermsIdUpdateTermRoute
 }
 export interface FileRoutesByTo {
@@ -126,10 +126,10 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/login/'
     | '/dashboard/terms/create-term'
-    | '/dashboard/amenities'
-    | '/dashboard/hotels'
-    | '/dashboard/rooms'
-    | '/dashboard/terms'
+    | '/dashboard/amenities/'
+    | '/dashboard/hotels/'
+    | '/dashboard/rooms/'
+    | '/dashboard/terms/'
     | '/dashboard/terms/$id/update-term'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -203,28 +203,28 @@ declare module '@tanstack/react-router' {
     '/dashboard/terms/': {
       id: '/dashboard/terms/'
       path: '/terms'
-      fullPath: '/dashboard/terms'
+      fullPath: '/dashboard/terms/'
       preLoaderRoute: typeof DashboardTermsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/rooms/': {
       id: '/dashboard/rooms/'
       path: '/rooms'
-      fullPath: '/dashboard/rooms'
+      fullPath: '/dashboard/rooms/'
       preLoaderRoute: typeof DashboardRoomsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/hotels/': {
       id: '/dashboard/hotels/'
       path: '/hotels'
-      fullPath: '/dashboard/hotels'
+      fullPath: '/dashboard/hotels/'
       preLoaderRoute: typeof DashboardHotelsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/amenities/': {
       id: '/dashboard/amenities/'
       path: '/amenities'
-      fullPath: '/dashboard/amenities'
+      fullPath: '/dashboard/amenities/'
       preLoaderRoute: typeof DashboardAmenitiesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }

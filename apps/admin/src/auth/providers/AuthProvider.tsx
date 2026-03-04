@@ -1,29 +1,21 @@
+import type { LoginInput, UpsertUserInput } from "@zanadeal/api/features/user";
 import {
 	createContext,
 	useCallback,
 	useContext,
 	useEffect,
 	useMemo,
-	useRef,
 	useState,
 } from "react";
 import { toast } from "sonner";
+import { $fetch } from "@/lib/fetch";
 import { orpc } from "@/lib/orpc";
-
-type PrivateDataOutput = Awaited<ReturnType<typeof orpc.privateData>>;
-type SessionUser = NonNullable<PrivateDataOutput["user"]>;
+import type { User } from "../../../../../packages/db/prisma/generated/client";
 
 type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
-export type SignInWithEmailInput = {
-	email: string;
-	password: string;
-};
-
-export type AuthUser = SessionUser;
-
-export type SignInOptions = {
-	onSuccess?: (user: SessionUser | null) => void | Promise<void>;
+export type LoginOptions = {
+	onSuccess?: (user: User | null) => void | Promise<void>;
 	onError?: (error: Error) => void | Promise<void>;
 };
 
@@ -32,192 +24,225 @@ export type SignOutOptions = {
 	onError?: (error: Error) => void | Promise<void>;
 };
 
+export type AuthResponseOK = {
+	token: string;
+	user: User;
+};
+
+export type AuthResponseKO = {
+	code: string;
+	message: string;
+};
+
+export type AuthResponse = AuthResponseOK | AuthResponseKO;
+
+const isAuthResponseOK = (
+	data: AuthResponse | null | undefined,
+): data is AuthResponseOK => {
+	return !!data && "user" in data;
+};
+
 type AuthContextValue = {
 	status: AuthStatus;
-	user: SessionUser | null;
-	getUser: () => SessionUser | null;
-	loadSession: () => Promise<SessionUser | null>;
+	user: User | null;
+	loadSession: () => Promise<User | null | undefined>;
 	refresh: () => Promise<void>;
 	signInWithEmail: (
-		input: SignInWithEmailInput,
-		options?: SignInOptions,
-	) => Promise<void>;
+		input: LoginInput,
+		options?: LoginOptions,
+	) => Promise<User | undefined>;
+	signUpWithEmail: (
+		input: UpsertUserInput,
+		options?: LoginOptions,
+	) => Promise<User | undefined>;
 	signOut: (options?: SignOutOptions) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function getApiBaseUrl() {
-	return (
-		import.meta.env.VITE_API_URL?.toString() ?? "http://localhost:8080" // apps/server default
-	);
-}
-
-function joinUrl(base: string, path: string) {
-	return `${base.replace(/\/$/, "")}${path}`;
-}
-
-function isUnauthorizedError(error: unknown): boolean {
-	if (!error || typeof error !== "object") return false;
-
-	const anyError = error as Record<string, unknown>;
-	const code = anyError.code;
-	if (code === "UNAUTHORIZED") return true;
-
-	const status = anyError.status;
-	if (typeof status === "number" && status === 401) return true;
-
-	const message = anyError.message;
-	if (
-		typeof message === "string" &&
-		message.toUpperCase().includes("UNAUTHORIZED")
-	) {
-		return true;
-	}
-
-	return false;
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [user, setUser] = useState<SessionUser | null>(null);
+	const [user, setUser] = useState<User | null>(null);
 	const [status, setStatus] = useState<AuthStatus>("loading");
-	const userRef = useRef<SessionUser | null>(null);
 
-	const loadSession = useCallback(async (): Promise<SessionUser | null> => {
+	const loadSession = useCallback(async (): Promise<
+		User | null | undefined
+	> => {
 		setStatus("loading");
 		try {
-			const data = await orpc.privateData();
-			const nextUser = data.user ?? null;
-			userRef.current = nextUser;
-			setUser(nextUser);
-			setStatus(nextUser ? "authenticated" : "unauthenticated");
-			return nextUser;
-		} catch (error) {
-			userRef.current = null;
+			const data = await orpc.loadSession();
+			if (!data?.session?.user) {
+				setUser(null);
+				setStatus("unauthenticated");
+				return null;
+			}
+			const user = data.session.user as User;
+			setUser(user);
+			setStatus(user ? "authenticated" : "unauthenticated");
+			return user;
+		} catch (_error) {
 			setUser(null);
 			setStatus("unauthenticated");
-			if (!isUnauthorizedError(error)) {
-				toast.error("Impossible de récupérer la session", {
-					description:
-						error instanceof Error
-							? error.message
-							: "Une erreur inattendue est survenue.",
-				});
-			}
 			return null;
 		}
 	}, []);
-
-	const getUser = useCallback(() => userRef.current, []);
 
 	const refresh = useCallback(async (): Promise<void> => {
 		await loadSession();
 	}, [loadSession]);
 
-	const signInWithEmail = useCallback(
-		async (
-			{ email, password }: SignInWithEmailInput,
-			options?: SignInOptions,
-		): Promise<void> => {
-			try {
-				const response = await fetch(
-					joinUrl(getApiBaseUrl(), "/api/auth/sign-in/email"),
-					{
-						method: "POST",
-						credentials: "include",
-						headers: {
-							"content-type": "application/json",
-						},
-						body: JSON.stringify({ email, password }),
-					},
-				);
-
-				if (!response.ok) {
-					// Do not display backend-provided details to avoid leaking whether an
-					// account exists or not.
-					const description =
-						response.status === 401
-							? "Identifiants invalides."
-							: "Connexion impossible.";
-					throw new Error(description);
-				}
-
-				const nextUser = await loadSession();
-				if (options?.onSuccess) {
-					await options.onSuccess(nextUser);
-				}
-				return;
-			} catch (error) {
-				const err =
-					error instanceof Error ? error : new Error("Connexion impossible.");
-
-				const description =
-					err.message && err.message.trim().length > 0
-						? err.message
-						: "Connexion impossible.";
-				toast.error("Connexion impossible", { description });
-
-				if (options?.onError) {
-					await options.onError(err);
-					return;
-				}
-				throw err;
-			}
-		},
-		[loadSession],
-	);
-
-	const signOut = useCallback(async (options?: SignOutOptions) => {
+	const signInWithEmail = async (
+		{ email, password }: LoginInput,
+		options?: LoginOptions,
+	): Promise<User | undefined> => {
 		try {
-			const response = await fetch(
-				joinUrl(getApiBaseUrl(), "/api/auth/sign-out"),
+			const response = await $fetch<AuthResponse>(
+				`${import.meta.env.VITE_API_URL}/api/auth/sign-in/email`,
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"content-type": "application/json",
+					},
+					body: JSON.stringify({ email, password }),
+				},
+			);
+
+			if (response.error) {
+				toast.error("Login failed", {
+					description: response.error.message || "Invalid email or password.",
+				});
+				return;
+			}
+
+			if (!isAuthResponseOK(response.data)) {
+				toast.error("Login failed", {
+					description: "Invalid response format.",
+				});
+				return;
+			}
+
+			setUser(response.data.user);
+			setStatus("authenticated");
+			options?.onSuccess?.(response.data.user);
+
+			return response.data.user;
+		} catch (error) {
+			toast.error("Login failed", {
+				description: "An unexpected error occurred. Please try again later.",
+			});
+
+			options?.onError?.(
+				error instanceof Error
+					? error
+					: new Error("An unexpected error occurred."),
+			);
+			return;
+		}
+	};
+
+	const signUpWithEmail = async (
+		body: UpsertUserInput,
+		options?: LoginOptions,
+	): Promise<User | undefined> => {
+		try {
+			const response = await $fetch<AuthResponse>(
+				`${import.meta.env.VITE_API_URL}/api/auth/sign-up/email`,
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"content-type": "application/json",
+					},
+					body: JSON.stringify(body),
+				},
+			);
+
+			if (response.error) {
+				toast.error("Account creation failed", {
+					description:
+						response.error.message ||
+						"Cannot create your account. Try again later.",
+				});
+				return;
+			}
+
+			if (!isAuthResponseOK(response.data)) {
+				toast.error("Account creation failed", {
+					description: "Invalid response format.",
+				});
+				return;
+			}
+
+			setUser(response.data.user);
+			setStatus("authenticated");
+			options?.onSuccess?.(response.data.user);
+
+			return response.data.user;
+		} catch (error) {
+			toast.error("Account creation failed", {
+				description: "An unexpected error occurred. Please try again later.",
+			});
+
+			options?.onError?.(
+				error instanceof Error
+					? error
+					: new Error("An unexpected error occurred."),
+			);
+			return;
+		}
+	};
+
+	const signOut = async (options?: SignOutOptions) => {
+		try {
+			const res = await $fetch(
+				`${import.meta.env.VITE_API_URL}/api/auth/sign-out`,
 				{
 					method: "POST",
 					credentials: "include",
 				},
 			);
-
-			if (!response.ok) {
-				const err = new Error("Déconnexion impossible");
-				toast.error(err.message);
-				if (options?.onError) {
-					await options.onError(err);
-					return;
-				}
-				throw err;
-			}
-
 			setUser(null);
-			userRef.current = null;
 			setStatus("unauthenticated");
-			if (options?.onSuccess) {
-				await options.onSuccess();
-			}
-		} catch (error) {
-			const err =
-				error instanceof Error
-					? error
-					: new Error("Une erreur inattendue est survenue.");
-			toast.error("Déconnexion impossible", { description: err.message });
-			if (options?.onError) {
-				await options.onError(err);
+
+			if (res.error) {
+				toast.error("Sign out failed", {
+					description:
+						res.error.message || "Unable to sign out. Try again later.",
+				});
 				return;
 			}
-			throw err;
+		} catch (error) {
+			toast.error("Sign out failed", {
+				description: "An unexpected error occurred. Please try again later.",
+			});
+			options?.onError?.(
+				error instanceof Error
+					? error
+					: new Error("An unexpected error occurred."),
+			);
+			return;
 		}
-	}, []);
+	};
 
 	const value = useMemo<AuthContextValue>(
 		() => ({
 			status,
 			user,
-			getUser,
 			loadSession,
 			refresh,
 			signInWithEmail,
+			signUpWithEmail,
 			signOut,
 		}),
-		[getUser, loadSession, refresh, signInWithEmail, signOut, status, user],
+		[
+			signOut,
+			signUpWithEmail,
+			status,
+			refresh,
+			user,
+			signInWithEmail,
+			loadSession,
+		],
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: refresh is stable (useCallback)
