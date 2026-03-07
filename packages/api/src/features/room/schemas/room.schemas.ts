@@ -1,41 +1,24 @@
 import * as z from "zod";
+import type { Room } from "../../../../../db/prisma/generated/client";
 import { RoomType } from "../../../../../db/prisma/generated/enums";
-import { AmenityComputedSchema, AmenitySchema } from "../../amenity";
+import { createListSchemaFor } from "../../../utils";
+import { AmenityComputedSchema } from "../../amenity";
 import {
 	CreateRoomImageComputedInputSchema,
 	CreateRoomImageInputSchema,
 	RoomImageSchema,
 } from "../../room-image/room-image.schemas";
+import {
+	RoomPriceSchema,
+	UpsertRoomPriceInputSchema,
+} from "./room-price.schema";
 
 // Zod schema derived from the Prisma RoomType enum
 export const RoomTypeSchema = z.enum(Object.values(RoomType));
 
-export const RoomPriceSchema = z.object({
-	id: z.string().min(1),
-	roomId: z.string().min(1),
-	price: z.number(),
-	promoPrice: z.number(),
-	startDate: z.date(),
-	endDate: z.date().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
-});
+// ─── Base computed schema ────────────────────────────────────────────
 
-export const RoomSchema = z.object({
-	id: z.string().min(1),
-	hotelId: z.string().min(1),
-	type: RoomTypeSchema,
-	description: z.string().min(1),
-	capacity: z.number().int(),
-	quantity: z.number().int(),
-	images: z.array(RoomImageSchema),
-	amenities: z.array(AmenitySchema),
-	prices: z.array(RoomPriceSchema),
-	createdAt: z.date(),
-	updatedAt: z.date(),
-});
-
-export const RoomComputedSchema = z.object({
+const RoomComputedSchemaBase = z.object({
 	id: z.string().min(1),
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
@@ -51,12 +34,17 @@ export const RoomComputedSchema = z.object({
 	updatedAt: z.date(),
 });
 
-export const CreateRoomPriceInputSchema = z.object({
-	price: z.number(),
-	promoPrice: z.number(),
-	startDate: z.date(),
-	endDate: z.date().nullable(),
-});
+// ─── Per-role schemas ───────────────────────────────────────────────
+
+export const RoomAdminComputedSchema = RoomComputedSchemaBase;
+
+export const RoomUserComputedSchema = RoomComputedSchemaBase;
+
+/** Union schema for output validation (accepts both shapes) */
+export const RoomComputedSchema = z.union([
+	RoomAdminComputedSchema,
+	RoomUserComputedSchema,
+]);
 
 export const UpsertRoomInputSchema = z.object({
 	hotelId: z.string().min(1),
@@ -64,7 +52,7 @@ export const UpsertRoomInputSchema = z.object({
 	description: z.string().min(1),
 	capacity: z.number().int(),
 	quantity: z.number().int(),
-	prices: z.array(CreateRoomPriceInputSchema),
+	prices: z.array(UpsertRoomPriceInputSchema),
 	amenityIds: z.array(z.string().min(1)),
 	images: z.array(CreateRoomImageInputSchema),
 });
@@ -75,7 +63,7 @@ export const UpsertRoomComputedInputSchema = z.object({
 	description: z.string().min(1),
 	capacity: z.number().int(),
 	quantity: z.number().int(),
-	prices: z.array(CreateRoomPriceInputSchema),
+	prices: z.array(UpsertRoomPriceInputSchema),
 	amenityIds: z.array(z.string().min(1)),
 	images: z.array(CreateRoomImageComputedInputSchema),
 });
@@ -88,23 +76,25 @@ export const DeleteRoomInputSchema = z.object({
 	id: z.string(),
 });
 
-export const ListRoomsInputSchema = z.object({
-	orderBy: z.object({
-		price: z.enum(["asc", "desc"]).optional(),
-	}),
-	where: z.object({
-		hotelId: z.string().min(1).optional(),
-		hotelName: z.string().optional(),
-		type: RoomTypeSchema.optional(),
-		startDate: z.date().default(new Date()),
-		endDate: z.date().nullable(),
-	}),
+export const ListRoomsInputSchema = createListSchemaFor<Room>()({
+	sort: {
+		default: {
+			direction: "desc",
+			field: "createdAt",
+		},
+		fields: ["createdAt", "capacity"],
+	},
+	filters: {
+		type: {
+			schema: RoomTypeSchema,
+			operators: ["equal"],
+		},
+	},
 });
 
 export type ListRoomsInput = z.infer<typeof ListRoomsInputSchema>;
-export type RoomPrice = z.infer<typeof RoomPriceSchema>;
-export type CreateRoomPriceInput = z.infer<typeof CreateRoomPriceInputSchema>;
-export type Room = z.infer<typeof RoomSchema>;
+export type RoomAdminComputed = z.infer<typeof RoomAdminComputedSchema>;
+export type RoomUserComputed = z.infer<typeof RoomUserComputedSchema>;
 export type RoomComputed = z.infer<typeof RoomComputedSchema>;
 export type UpsertRoomInput = z.infer<typeof UpsertRoomInputSchema>;
 export type UpsertRoomComputedInput = z.infer<

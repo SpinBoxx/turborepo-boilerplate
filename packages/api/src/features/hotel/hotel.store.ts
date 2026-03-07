@@ -6,7 +6,7 @@ import type {
 	UpsertHotelComputedInput,
 } from "./schemas/hotel.schema";
 
-const hotelIncludeBase = {
+const hotelInclude = {
 	amenities: true,
 	images: true,
 	reviews: true,
@@ -16,45 +16,45 @@ const hotelIncludeBase = {
 			images: true,
 			amenities: true,
 			prices: true,
+			hotel: true,
 		},
 	},
 	bankAccount: true,
 	favorites: true,
 } satisfies Prisma.HotelInclude;
 
-export type HotelDb = Prisma.HotelGetPayload<{
-	include: typeof hotelIncludeBase;
+export type HotelDB = Prisma.HotelGetPayload<{
+	include: typeof hotelInclude;
 }>;
 
-export async function listHotelsAdmin(
-	input: ListHotelsInput,
-): Promise<HotelDb[]> {
-	return await prisma.hotel.findMany({
-		where: {
-			name: input.where?.name
-				? { contains: input.where.name, mode: "insensitive" }
-				: undefined,
-			id: input.where?.id ? input.where.id : undefined,
-		},
-		orderBy: {
-			name: input.orderBy?.name,
-			createdAt: input.orderBy?.createdAt,
-		},
-		take: input.take ?? 50,
-		include: hotelIncludeBase,
+export async function getHotel(id: string): Promise<HotelDB | null> {
+	return await prisma.hotel.findUnique({
+		where: { id },
+		include: hotelInclude,
 	});
 }
 
-export async function getHotel(id: string): Promise<HotelDb | null> {
-	return await prisma.hotel.findUnique({
-		where: { id },
-		include: hotelIncludeBase,
+export async function listHotels(input: ListHotelsInput): Promise<HotelDB[]> {
+	return await prisma.hotel.findMany({
+		orderBy: { [input.sort.field]: input.sort.direction },
+		take: input.take,
+		skip: input.skip,
+		where: {
+			name: input.filters.name?.contains
+				? { contains: input.filters.name.contains, mode: "insensitive" }
+				: undefined,
+			updatedAt: {
+				gte: input.filters.updatedAt?.gte,
+				lte: input.filters.updatedAt?.lte,
+			},
+		},
+		include: hotelInclude,
 	});
 }
 
 export async function createHotel(input: UpsertHotelComputedInput) {
 	const { amenityIds, bankAccount, images, ...hotelData } = input;
-	const hotel = await prisma.hotel.create({
+	return await prisma.hotel.create({
 		data: {
 			...hotelData,
 			amenities: {
@@ -72,9 +72,8 @@ export async function createHotel(input: UpsertHotelComputedInput) {
 				})),
 			},
 		},
+		include: hotelInclude,
 	});
-
-	return hotel;
 }
 
 export async function updateHotel(
@@ -83,7 +82,7 @@ export async function updateHotel(
 ) {
 	const { amenityIds, bankAccount, images, ...hotelData } = input;
 
-	const hotel = await prisma.hotel.update({
+	return await prisma.hotel.update({
 		where: { id },
 		data: {
 			...hotelData,
@@ -100,7 +99,7 @@ export async function updateHotel(
 				: undefined,
 			images: images
 				? {
-						deleteMany: {}, // Supprime toutes les images existantes
+						deleteMany: {},
 						create: images?.map((img) => ({
 							url: img.url,
 							publicId: img.publicId,
@@ -108,15 +107,13 @@ export async function updateHotel(
 					}
 				: undefined,
 		},
+		include: hotelInclude,
 	});
-
-	return hotel;
 }
 
 export async function deleteHotel(input: DeleteHotelInput) {
-	const deleted = await prisma.hotel.delete({
+	return await prisma.hotel.delete({
 		where: { id: input.id },
+		include: hotelInclude,
 	});
-
-	return deleted;
 }

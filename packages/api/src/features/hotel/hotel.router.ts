@@ -1,14 +1,16 @@
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import type { User } from "../../../../db/prisma/generated/client";
+import { Role } from "../../../../db/prisma/generated/enums";
 import { adminProcedure, publicProcedure } from "../../index";
+import { getRolesByPriority } from "../user/user-roles";
 import { computeHotel } from "./computes/hotel-compute";
 import { computeUpsertHotelInput } from "./computes/upsert-compute";
 
 import {
 	createHotel,
 	deleteHotel,
-	listHotelsAdmin,
+	getHotel,
+	listHotels,
 	updateHotel,
 } from "./hotel.store";
 import {
@@ -27,12 +29,23 @@ export const listHotelsRoute = publicProcedure
 		tags: ["Hotel"],
 	})
 	.input(ListHotelsInputSchema)
-	.handler(async ({ input }) => {
-		const hotels = await listHotelsAdmin(input);
-		const computedHotels = await Promise.all(hotels.map(computeHotel));
-		console.log(computedHotels);
+	.output(HotelComputedSchema.array())
+	.handler(async ({ input, context }) => {
+		const hotels = await listHotels(input);
 
-		return computedHotels;
+		const rolesSortedByPriority = getRolesByPriority(context.user?.roles);
+		const highestRole = rolesSortedByPriority[0];
+		const isAdmin = highestRole === Role.ADMIN;
+
+		const filteredHotels = isAdmin
+			? hotels
+			: hotels.filter((h) => !h.isArchived);
+
+		return await Promise.all(
+			filteredHotels.map(
+				async (hotel) => await computeHotel(hotel, context.user),
+			),
+		);
 	});
 
 export const getHotelRoute = publicProcedure
@@ -41,7 +54,6 @@ export const getHotelRoute = publicProcedure
 		path: "/hotels/{id}",
 		summary: "Get a hotel by ID",
 		tags: ["Hotel"],
-		inputStructure: "detailed",
 	})
 	.input(GetHotelInputSchema)
 	.output(HotelComputedSchema)
@@ -50,13 +62,10 @@ export const getHotelRoute = publicProcedure
 		if (!hotel) {
 			throw new ORPCError("NOT_FOUND");
 		}
-
-		const computedHotel = await computeHotel(hotel);
-
-		return computedHotel;
+		return await computeHotel(hotel, context.user);
 	});
 
-export const createHotelRoute = publicProcedure
+export const createHotelRoute = adminProcedure
 	.route({
 		method: "POST",
 		path: "/hotels",
@@ -64,9 +73,11 @@ export const createHotelRoute = publicProcedure
 		tags: ["Hotel"],
 	})
 	.input(UpsertHotelInputSchema)
-	.handler(async ({ input }) => {
+	.output(HotelComputedSchema)
+	.handler(async ({ input, context }) => {
 		const computedInput = await computeUpsertHotelInput(input);
-		return createHotel(computedInput);
+		const created = await createHotel(computedInput);
+		return await computeHotel(created, context.user);
 	});
 
 export const updateHotelRoute = adminProcedure
@@ -77,20 +88,16 @@ export const updateHotelRoute = adminProcedure
 		tags: ["Hotel"],
 	})
 	.input(z.intersection(GetHotelInputSchema, UpsertHotelInputSchema.partial()))
+	.output(HotelComputedSchema)
 	.handler(async ({ input, context }) => {
-		const hotel = await getHotelByRole(
-			input.id,
-			context.session?.user as User | undefined,
-		);
-		if (!hotel) {
+		const existing = await getHotel(input.id);
+		if (!existing) {
 			throw new ORPCError("NOT_FOUND");
 		}
 
 		const computedInput = await computeUpsertHotelInput(input);
-
-		const updatedHotel = await updateHotel(input.id, computedInput);
-
-		return updatedHotel;
+		const updated = await updateHotel(input.id, computedInput);
+		return await computeHotel(updated, context.user);
 	});
 
 export const deleteHotelRoute = adminProcedure
@@ -101,12 +108,13 @@ export const deleteHotelRoute = adminProcedure
 		tags: ["Hotel"],
 	})
 	.input(DeleteHotelInputSchema)
+	.output(HotelComputedSchema)
 	.handler(async ({ input, context }) => {
-		const hotel = await deleteHotel(input);
-		if (!hotel) {
+		const deleted = await deleteHotel(input);
+		if (!deleted) {
 			throw new ORPCError("NOT_FOUND");
 		}
-		return hotel;
+		return await computeHotel(deleted, context.user);
 	});
 
 export const hotelRouter = {

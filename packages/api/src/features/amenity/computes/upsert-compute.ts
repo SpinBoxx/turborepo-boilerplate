@@ -1,7 +1,7 @@
 import type {
 	UpsertAmenityComputedInput,
 	UpsertAmenityInput,
-} from "../amenity.schemas";
+} from "../schemas/amenity.schemas";
 
 const computeAmenityTranslations = (
 	translations: UpsertAmenityInput["translations"],

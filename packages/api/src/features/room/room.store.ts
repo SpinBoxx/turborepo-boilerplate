@@ -1,45 +1,44 @@
 import prisma from "@zanadeal/db";
 
+import type { Prisma } from "../../../../db/prisma/generated/client";
 import type {
 	DeleteRoomInput,
 	ListRoomsInput,
-	Room,
 	UpsertRoomComputedInput,
 } from "./schemas/room.schemas";
 
-export async function listRooms(input: ListRoomsInput) {
+const roomInclude = {
+	images: true,
+	amenities: true,
+	prices: true,
+} satisfies Prisma.RoomInclude;
+
+export type RoomDB = Prisma.RoomGetPayload<{
+	include: typeof roomInclude;
+}>;
+
+export async function getRoomById(id: string): Promise<RoomDB | null> {
+	return await prisma.room.findUnique({
+		where: { id },
+		include: roomInclude,
+	});
+}
+
+export async function listRooms(input: ListRoomsInput): Promise<RoomDB[]> {
 	return await prisma.room.findMany({
+		orderBy: { [input.sort.field]: input.sort.direction },
+		take: input.take,
+		skip: input.skip,
 		where: {
-			prices: {
-				every: {
-					startDate: input.where.startDate,
-					endDate: input.where.endDate,
-				},
-			},
-			hotelId: input.where.hotelId,
-			hotel: {
-				name: {
-					contains: input.where.hotelName,
-				},
-			},
-			type: input.where.type,
+			type: input.filters.type?.equal,
 		},
-		include: {
-			images: true,
-			amenities: true,
-			prices: {
-				orderBy: {
-					price: input.orderBy?.price,
-				},
-			},
-			hotel: true,
-		},
+		include: roomInclude,
 	});
 }
 
 export const createRoom = async (
 	input: UpsertRoomComputedInput,
-): Promise<Room> => {
+): Promise<RoomDB> => {
 	const { images, amenityIds, prices, ...roomData } = input;
 
 	return await prisma.room.create({
@@ -64,20 +63,15 @@ export const createRoom = async (
 					}
 				: undefined,
 		},
-		include: {
-			images: true,
-			amenities: true,
-			prices: true,
-		},
+		include: roomInclude,
 	});
 };
 
 export const updateRoom = async (
 	roomId: string,
 	input: Partial<UpsertRoomComputedInput>,
-): Promise<Room> => {
+): Promise<RoomDB> => {
 	const { images, amenityIds, prices, ...roomData } = input;
-	console.log({ amenityIds });
 
 	return await prisma.room.update({
 		where: {
@@ -87,7 +81,7 @@ export const updateRoom = async (
 			...roomData,
 			images: images?.length
 				? {
-						deleteMany: {}, // Supprime les images existantes
+						deleteMany: {},
 						create: images.map((img) => ({
 							url: img.url ?? "",
 							publicId: img.publicId ?? "",
@@ -101,30 +95,22 @@ export const updateRoom = async (
 				: undefined,
 			prices: prices?.length
 				? {
-						deleteMany: {}, // Supprime les prix existants
+						deleteMany: {},
 						createMany: {
 							data: prices,
 						},
 					}
 				: undefined,
 		},
-		include: {
-			images: true,
-			amenities: true,
-			prices: true,
-		},
+		include: roomInclude,
 	});
 };
 
-export const deleteRoom = async (input: DeleteRoomInput): Promise<Room> => {
+export const deleteRoom = async (input: DeleteRoomInput): Promise<RoomDB> => {
 	return await prisma.room.delete({
 		where: {
 			id: input.id,
 		},
-		include: {
-			images: true,
-			amenities: true,
-			prices: true,
-		},
+		include: roomInclude,
 	});
 };

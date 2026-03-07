@@ -1,4 +1,4 @@
-import type { Hotel } from "@zanadeal/api/contracts";
+import type { HotelAdminComputed } from "@zanadeal/api/features/hotel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@zanadeal/ui";
 import HotelUpsertForm from "../forms/UpsertForm/HotelUpsertForm";
 
@@ -9,7 +9,7 @@ export default function HotelUpsertDialog({
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	hotel: Hotel | null;
+	hotel: HotelAdminComputed | null;
 }) {
 	return (
 		<Dialog

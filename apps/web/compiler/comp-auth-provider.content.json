@@ -1,0 +1,60 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-auth-provider",
+  "content": {
+    "loginFailed": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Login failed"
+      }
+    },
+    "invalidEmailOrPassword": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Invalid email or password."
+      }
+    },
+    "invalidResponseFormat": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Invalid response format."
+      }
+    },
+    "anUnexpectedErrorOccurredPlease": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "An unexpected error occurred. Please try again later."
+      }
+    },
+    "anUnexpectedErrorOccurred": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "An unexpected error occurred."
+      }
+    },
+    "accountCreationFailed": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Account creation failed"
+      }
+    },
+    "cannotCreateYourAccountTry": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Cannot create your account. Try again later."
+      }
+    },
+    "signOutFailed": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Sign out failed"
+      }
+    },
+    "unableToSignOutTry": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Unable to sign out. Try again later."
+      }
+    }
+  }
+}

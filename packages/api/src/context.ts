@@ -1,6 +1,7 @@
 import type { IncomingHttpHeaders } from "node:http";
 import { auth } from "@zanadeal/auth";
 import { fromNodeHeaders } from "better-auth/node";
+import type { UserComputed } from "./features/user";
 
 export type LoggerLike = {
 	info: (...args: unknown[]) => void;
@@ -16,8 +17,10 @@ export async function createContext(
 	const session = await auth.api.getSession({
 		headers: fromNodeHeaders(req),
 	});
+
 	return {
 		session,
+		user: session?.user as UserComputed | undefined | null,
 		logger,
 	};
 }

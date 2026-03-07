@@ -1,39 +1,24 @@
-import { computeRoom } from "../../room/computes/room-compute";
-import type { Hotel, HotelComputed } from "../schemas/hotel.schema";
+import { Role } from "../../../../../db/prisma/generated/enums";
+import type { UserComputed } from "../../user";
+import { getRolesByPriority } from "../../user/user-roles";
+import type { HotelDB } from "../hotel.store";
+import type { HotelComputed } from "../schemas/hotel.schema";
+import { hotelAdminCompute } from "./computeByRole/hotel-admin-compute";
+import { hotelUserCompute } from "./computeByRole/hotel-user-compute";
 
-const computeRating = (hotel: Hotel): number => {
-	// Placeholder logic for computing rating based on reviews.
-	if (!hotel.reviews || hotel.reviews.length === 0) {
-		return 0;
-	}
-	const totalRating = hotel.reviews.reduce(
-		(sum, review) => sum + review.rating,
-		0,
-	);
-	return totalRating / hotel.reviews.length;
-};
-
-const computeStartingPrice = (hotel: Hotel): number => {
-	// Placeholder logic for computing starting price based on rooms.
-	if (!hotel.rooms || hotel.rooms.length === 0) {
-		return 0;
-	}
-	return Math.min(
-		...hotel.rooms.flatMap((room) => room.prices.map((price) => price.price)),
-	);
-};
-
-export const computeHotel = async (hotels: Hotel): Promise<HotelComputed> => {
-	const computedRating = computeRating(hotels);
-	const computedStartingPrice = computeStartingPrice(hotels);
-
-	const rooms = await Promise.all(hotels.rooms.map(computeRoom));
-
-	return {
-		...hotels,
-		rooms,
-		rating: computedRating,
-		isUserFavorite: false, // Placeholder, should be computed based on user's favorites
-		startingPrice: computedStartingPrice,
+export const computeHotel = async (
+	hotel: HotelDB,
+	user: UserComputed | null | undefined,
+): Promise<HotelComputed> => {
+	const rolesSortedByPriority = getRolesByPriority(user?.roles);
+	const highestRole = rolesSortedByPriority[0];
+	const compute = {
+		[Role.ADMIN]: async () => await hotelAdminCompute(hotel, user),
+		[Role.USER]: async () => await hotelUserCompute(hotel, user),
 	};
+
+	if (!highestRole) {
+		return await compute[Role.USER].call(hotel);
+	}
+	return await compute[highestRole].call(hotel);
 };

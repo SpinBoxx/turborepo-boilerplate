@@ -1,0 +1,12 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-number-field",
+  "content": {
+    "numberfieldscrubareaMustBeUsedWithin": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "NumberFieldScrubArea must be used within a NumberField component for accessibility."
+      }
+    }
+  }
+}
