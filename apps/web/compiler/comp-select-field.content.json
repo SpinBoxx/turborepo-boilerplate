@@ -1,0 +1,12 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-select-field",
+  "content": {
+    "selectFrameworkWithIcon": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Select framework with icon"
+      }
+    }
+  }
+}

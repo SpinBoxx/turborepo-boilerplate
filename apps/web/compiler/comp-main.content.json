@@ -1,0 +1,12 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-main",
+  "content": {
+    "missingRootElementWithIdroot": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Missing root element with id=\"root\""
+      }
+    }
+  }
+}

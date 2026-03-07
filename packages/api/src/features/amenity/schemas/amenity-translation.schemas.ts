@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { LOCALES } from "../../constants";
+import { LOCALES } from "../../../constants";
 
 export const AmenityTranslationItemSchema = z.object({
 	name: z.string().min(1),

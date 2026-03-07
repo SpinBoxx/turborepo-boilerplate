@@ -1,17 +1,10 @@
 import * as z from "zod";
+import type { Amenity } from "../../../../../db/prisma/generated/client";
+import { createListSchemaFor } from "../../../utils";
 import {
 	AmenityTranslationInputSchema,
 	AmenityTranslationSchema,
 } from "./amenity-translation.schemas";
-
-export const AmenitySchema = z.object({
-	id: z.string().min(1),
-	slug: z.string().min(1),
-	icon: z.string().min(1),
-	translations: AmenityTranslationSchema,
-	createdAt: z.date(),
-	updatedAt: z.date(),
-});
 
 export const AmenityComputedSchema = z.object({
 	id: z.string().min(1),
@@ -22,15 +15,24 @@ export const AmenityComputedSchema = z.object({
 	updatedAt: z.date(),
 });
 
-export type Amenity = z.infer<typeof AmenitySchema>;
-
 export const GetAmenityInputSchema = z.object({
 	id: z.string(),
 });
 
-export const ListAmenitiesInputSchema = z.object({
-	cursor: z.string().optional(),
-	take: z.coerce.number().int().min(1).max(100).optional(),
+export const ListAmenitiesInputSchema = createListSchemaFor<Amenity>()({
+	sort: {
+		default: {
+			direction: "desc",
+			field: "createdAt",
+		},
+		fields: ["createdAt", "slug"],
+	},
+	filters: {
+		createdAt: {
+			schema: z.date(),
+			operators: ["lt"],
+		},
+	},
 });
 
 export const UpsertAmenityInputSchema = z.object({

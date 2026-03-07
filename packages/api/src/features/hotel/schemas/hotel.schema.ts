@@ -1,6 +1,8 @@
 import z from "zod";
-import { AmenitySchema } from "../../amenity/amenity.schemas";;
-import { RoomComputedSchema, RoomSchema } from "../../room/room.schemas";
+import type { Hotel as PrismaHotel } from "../../../../../db/prisma/generated/client";
+import { createListSchemaFor } from "../../../utils";
+import { AmenityComputedSchema } from "../../amenity";
+import { RoomComputedSchema } from "../../room";
 import {
 	BankAccountSchema,
 	UpsertBankAccountInputSchema,
@@ -12,27 +14,9 @@ import {
 } from "./hotel-images.schemas";
 import { ReviewSchema } from "./hotel-reviews.schemas";
 
-export const HotelSchema = z.object({
-	id: z.string().min(1),
-	name: z.string().min(1),
-	description: z.string().min(1),
-	address: z.string().min(1),
-	mapLink: z.string().min(1),
-	isArchived: z.boolean(),
-	latitude: z.string().min(1),
-	longitude: z.string().min(1),
-	email: z.email().optional().nullable(),
-	phoneNumber: z.string().optional().nullable(),
-	bankAccount: BankAccountSchema.optional().nullable(), // Hotel may or may not have a bank account associated
-	amenities: z.array(AmenitySchema),
-	images: z.array(HotelImageSchema),
-	reviews: z.array(ReviewSchema).optional(), // Only include reviews for admin view
-	rooms: z.array(RoomSchema),
-	createdAt: z.date(),
-	updatedAt: z.date(),
-});
+// ─── Base computed schema (all fields) ──────────────────────────────
 
-export const HotelComputedSchema = z.object({
+const HotelComputedSchemaBase = z.object({
 	id: z.string().min(1),
 	name: z.string().min(1),
 	description: z.string().min(1),
@@ -43,17 +27,32 @@ export const HotelComputedSchema = z.object({
 	longitude: z.string().min(1),
 	email: z.email().optional().nullable(),
 	phoneNumber: z.string().optional().nullable(),
-	bankAccount: BankAccountSchema.optional().nullable(), // Hotel may or may not have a bank account associated
-	amenities: z.array(AmenitySchema),
+	bankAccount: BankAccountSchema.optional().nullable(),
+	amenities: z.array(AmenityComputedSchema),
 	images: z.array(HotelImageSchema),
-	reviews: z.array(ReviewSchema).optional(), // Only include reviews for admin view
+	reviews: z.array(ReviewSchema),
 	rating: z.number(),
-	isUserFavorite: z.boolean(),
 	startingPrice: z.number(),
 	rooms: z.array(RoomComputedSchema),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
+
+// ─── Per-role schemas ───────────────────────────────────────────────
+
+export const HotelAdminComputedSchema = HotelComputedSchemaBase;
+
+export const HotelUserComputedSchema = HotelComputedSchemaBase.omit({
+	isArchived: true,
+	bankAccount: true,
+	reviews: true,
+});
+
+/** Union schema for output validation (accepts both shapes) */
+export const HotelComputedSchema = z.union([
+	HotelAdminComputedSchema,
+	HotelUserComputedSchema,
+]);
 
 export const UpsertHotelInputSchema = z.object({
 	name: z.string().min(1),
@@ -65,7 +64,6 @@ export const UpsertHotelInputSchema = z.object({
 	longitude: z.string().min(1),
 	email: z.email().optional(),
 	phoneNumber: z.string().optional(),
-	// Full list of amenity ids to associate with the hotel.
 	amenityIds: z.array(z.string().min(1)),
 	bankAccount: UpsertBankAccountInputSchema.optional(),
 	images: z.array(CreateHotelImageInputSchema),
@@ -90,21 +88,24 @@ export const GetHotelInputSchema = z.object({
 	id: z.string(),
 });
 
-export const ListHotelsInputSchema = z.object({
-	where: z
-		.object({
-			name: z.string().optional(),
-			id: z.string().optional(),
-		})
-		.optional(),
-	orderBy: z
-		.object({
-			name: z.enum(["asc", "desc"]).optional(),
-			createdAt: z.enum(["asc", "desc"]).optional(),
-		})
-		.optional(),
-	cursor: z.string().optional(),
-	take: z.coerce.number().int().min(1).max(100).optional(),
+export const ListHotelsInputSchema = createListSchemaFor<PrismaHotel>()({
+	sort: {
+		default: {
+			direction: "desc",
+			field: "updatedAt",
+		},
+		fields: ["name", "updatedAt"],
+	},
+	filters: {
+		name: {
+			schema: z.string(),
+			operators: ["contains"],
+		},
+		updatedAt: {
+			schema: z.date(),
+			operators: ["gte", "lte"],
+		},
+	},
 });
 
 export const DeleteHotelInputSchema = z.object({
@@ -115,8 +116,11 @@ export const ToggleIsArchivedHotelInputSchema = z.object({
 	id: z.string().min(1),
 });
 
-export type Hotel = z.infer<typeof HotelSchema>;
+export type HotelAdminComputed = z.infer<typeof HotelAdminComputedSchema>;
+export type HotelUserComputed = z.infer<typeof HotelUserComputedSchema>;
 export type HotelComputed = z.infer<typeof HotelComputedSchema>;
+/** @deprecated Use HotelComputed instead */
+export type Hotel = HotelComputed;
 export type UpsertHotelInput = z.infer<typeof UpsertHotelInputSchema>;
 export type UpsertHotelComputedInput = z.infer<
 	typeof UpsertHotelComputedInputSchema

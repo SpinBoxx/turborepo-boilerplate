@@ -1,12 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
-	CreateHotelInput,
-	ListHotelsInput,
-} from "@zanadeal/api/contracts";
-import type {
 	DeleteHotelInput,
+	ListHotelsInput,
 	UpsertHotelInput,
-} from "@zanadeal/api/features/hotel/schemas/hotel.schema";
+} from "@zanadeal/api/features/hotel";
 import { toast } from "sonner";
 import { getErrorMessage } from "../amenity/amenity.queries";
 import {
@@ -17,16 +14,17 @@ import {
 	updateHotel,
 } from "./hotel.api";
 
+type ListHotelsClientInput = Omit<ListHotelsInput, "take" | "skip">;
+
 export function hotelKeys() {
 	return {
 		all: ["hotel"] as const,
-		list: (input: ListHotelsInput) =>
-			["hotel", "list", input.cursor ?? null, input.take ?? null] as const,
+		list: (input: ListHotelsClientInput) => ["hotel", "list", input] as const,
 		byId: (id: string) => ["hotel", "byId", id] as const,
 	};
 }
 
-export function useHotels(input: ListHotelsInput = {}) {
+export function useHotels(input: ListHotelsClientInput) {
 	return useQuery({
 		queryKey: hotelKeys().list(input),
 		queryFn: () => listHotels(input),
@@ -47,7 +45,7 @@ export function useHotel(id: string | null) {
 export function useCreateHotel() {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (input: CreateHotelInput) => createHotel(input),
+		mutationFn: (input: UpsertHotelInput) => createHotel(input),
 		onError: (error) => {
 			toast.error("Création impossible", {
 				description: getErrorMessage(error),
