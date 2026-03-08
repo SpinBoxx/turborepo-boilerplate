@@ -1,0 +1,12 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-page",
+  "content": {
+    "helloApphotelidroomspage": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Hello \"/_app/hotelId/rooms/page\"!"
+      }
+    }
+  }
+}
