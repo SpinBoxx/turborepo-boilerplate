@@ -16,6 +16,7 @@ export function HotelImage({
 }: Props) {
 	const { hotel } = useHotelContext();
 	const image = hotel.images[0];
+	if (!image) return null;
 	const transformed = buildCloudinaryImage(image, {
 		variant,
 		responsiveWidths: responsiveWidths ?? [320, 480, 600, 900],

@@ -1,8 +1,8 @@
-import type { Hotel } from "@zanadeal/api/contracts";
+import type { HotelAdminComputed } from "@zanadeal/api/features/hotel";
 import { createContext, useContext } from "react";
 
 type HotelContextValue = {
-	hotel: Hotel;
+	hotel: HotelAdminComputed;
 };
 
 export const HotelContext = createContext<HotelContextValue>(
@@ -13,7 +13,7 @@ export function HotelProvider({
 	hotel,
 	children,
 }: {
-	hotel: Hotel;
+	hotel: HotelAdminComputed;
 	children: React.ReactNode;
 }) {
 	const context = {

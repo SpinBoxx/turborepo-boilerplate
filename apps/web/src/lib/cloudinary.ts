@@ -4,8 +4,6 @@ export type CloudinaryVariant =
 	| "thumbnail"
 	| "gallery";
 
-const DEFAULT_CLOUDINARY_VARIANT: CloudinaryVariant = "listing-card";
-
 type CloudinaryImageRef = {
 	publicId?: string | null;
 };
@@ -21,14 +19,6 @@ const VARIANT_TRANSFORMATIONS: Record<CloudinaryVariant, string> = {
 	thumbnail: "c_fill,g_auto:subject,w_400,h_400,q_auto,f_auto",
 	gallery: "c_fill,g_auto:subject,w_1200,h_900,q_auto,f_auto",
 };
-
-function getVariantTransformation(variant: CloudinaryVariant | undefined): string {
-	if (!variant) {
-		return VARIANT_TRANSFORMATIONS[DEFAULT_CLOUDINARY_VARIANT];
-	}
-
-	return VARIANT_TRANSFORMATIONS[variant] ?? VARIANT_TRANSFORMATIONS[DEFAULT_CLOUDINARY_VARIANT];
-}
 
 function getCloudinaryCloudName(): string | undefined {
 	return (
@@ -49,14 +39,6 @@ function buildDeliveryUrl(
 }
 
 function withWidth(transformation: string, width: number): string {
-	if (!transformation) {
-		return "";
-	}
-
-	if (!/w_\d+/.test(transformation)) {
-		return `w_${width},${transformation}`;
-	}
-
 	return transformation.replace(/w_\d+/, `w_${width}`);
 }
 
@@ -83,7 +65,7 @@ export function buildCloudinaryImage(
 		return {};
 	}
 
-	const baseTransformation = getVariantTransformation(variant);
+	const baseTransformation = VARIANT_TRANSFORMATIONS[variant];
 	const src = buildDeliveryUrl(image.publicId, baseTransformation);
 	if (!src) {
 		return {};
@@ -96,6 +78,8 @@ export function buildCloudinaryImage(
 
 	const srcSet = widths
 		.map((width) => {
+			console.log({ width });
+
 			const transformation = withWidth(baseTransformation, width);
 			return `${buildDeliveryUrl(image.publicId as string, transformation)} ${width}w`;
 		})

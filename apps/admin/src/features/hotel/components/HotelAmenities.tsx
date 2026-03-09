@@ -15,7 +15,7 @@ export function HotelAmenities({ max = 3, className, ...props }: Props) {
 		<div className={cn("flex flex-wrap gap-2", className)} {...props}>
 			{amenities.slice(0, max).map((a) => (
 				<Badge key={a.id} variant="secondary" className="truncate rounded-full">
-					{a.name.toUpperCase()}
+					{a.slug}
 				</Badge>
 			))}
 			{amenities.length > max ? (
