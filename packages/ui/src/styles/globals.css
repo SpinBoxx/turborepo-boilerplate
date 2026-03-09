@@ -62,15 +62,6 @@
 	--shadow-offset-x: 0px;
 	--shadow-offset-y: 2px;
 	--letter-spacing: -0.025em;
-
-	/* COSS UI */
-	--cossui-destructive: oklch(0.704 0.191 22.216);
-	--cossui-info: lab(54.1736% 13.3369 -74.6839);
-	--cossui-info-foreground: oklch(0.707 0.165 254.624);
-	--cossui-success: oklch(0.696 0.17 162.48);
-	--cossui-success-foreground: oklch(0.765 0.177 163.223);
-	--cossui-warning: oklch(0.769 0.188 70.08);
-	--cossui-warning-foreground: oklch(0.828 0.189 84.429);
 }
 
 .dark {

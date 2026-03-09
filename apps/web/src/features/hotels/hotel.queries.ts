@@ -5,13 +5,12 @@ import { getHotelById, listHotels } from "./hotel.api";
 export function hotelKeys() {
 	return {
 		all: ["hotel"] as const,
-		list: (input: ListHotelsInput) =>
-			["hotel", "list", input.cursor ?? null, input.take ?? null] as const,
+		list: (input: ListHotelsInput) => ["hotel", "list", input] as const,
 		byId: (id: string) => ["hotel", "byId", id] as const,
 	};
 }
 
-export function useHotels(input: ListHotelsInput = {}) {
+export function useHotels(input: ListHotelsInput) {
 	return useQuery({
 		queryKey: hotelKeys().list(input),
 		queryFn: () => listHotels(input),

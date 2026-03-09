@@ -6,9 +6,6 @@ interface BookingState {
 	guestCount: number;
 	maxGuests: number;
 
-	// Guest information
-	isShowAddGuestForm: boolean;
-
 	// Booking details
 	checkInDate: string;
 	checkOutDate: string;
@@ -17,7 +14,6 @@ interface BookingState {
 	// Actions for guest count
 	increaseGuests: () => void;
 	decreaseGuests: () => void;
-	setGuestCount: (count: number) => void;
 	setMaxGuests: (max: number) => void;
 	setShowAddGuestForm: (show: boolean) => void;
 
@@ -29,16 +25,20 @@ interface BookingState {
 
 	// Utility actions
 	resetBooking: () => void;
+	hasGuest: () => boolean;
+	hasAllInfo: () => boolean;
+	hasMaxGuests: () => boolean;
 }
+
+const DEFAULT_MAX_GUESTS = 6;
 
 export const useBookingStore = create<BookingState>()((set, get) => ({
 	// Initial state
 	guestCount: 1,
-	maxGuests: 4,
+	maxGuests: DEFAULT_MAX_GUESTS,
 	checkInDate: todayDateOnly(),
 	checkOutDate: tomorrowDateOnly(),
 	roomId: null,
-	isShowAddGuestForm: false,
 
 	// Guest count actions
 	increaseGuests: () =>
@@ -49,16 +49,11 @@ export const useBookingStore = create<BookingState>()((set, get) => ({
 					: state.guestCount,
 		})),
 
-	setShowAddGuestForm: (show: boolean) => set({ isShowAddGuestForm: show }),
+	setShowAddGuestForm: (_show: boolean) => {},
 	decreaseGuests: () =>
 		set((state) => ({
 			guestCount:
 				state.guestCount > 1 ? state.guestCount - 1 : state.guestCount,
-		})),
-
-	setGuestCount: (count: number) =>
-		set((state) => ({
-			guestCount: Math.min(Math.max(1, count), state.maxGuests),
 		})),
 
 	setMaxGuests: (max: number) =>
@@ -90,7 +85,19 @@ export const useBookingStore = create<BookingState>()((set, get) => ({
 			checkOutDate: tomorrowDateOnly(),
 			roomId: null,
 		}),
-}));
 
-// Legacy export for backward compatibility
-export const useGuestNumberStore = useBookingStore;
+	hasGuest: () => {
+		const state = get();
+		return state.guestCount > 0;
+	},
+
+	hasMaxGuests: () => {
+		const state = get();
+		return state.guestCount >= state.maxGuests;
+	},
+
+	hasAllInfo: () => {
+		const state = get();
+		return !!(state.guestCount > 1 && state.checkInDate && state.checkOutDate);
+	},
+}));

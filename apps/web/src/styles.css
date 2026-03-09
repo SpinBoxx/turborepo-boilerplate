@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@source "../../../packages/ui";
+
 @custom-variant dark (&:is(.dark *));
 
 /* ======================
@@ -11,14 +13,14 @@
 /* 100 - Thin */
 @font-face {
 	font-family: "Lufga";
-	src: url("../fonts/Lufga/LufgaThin.woff2") format("woff2");
+	src: url("./fonts/Lufga/LufgaThin.woff2") format("woff2");
 	font-weight: 100;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
 	font-family: "Lufga";
-	src: url("../fonts/Lufga/LufgaThinItalic.woff2") format("woff2");
+	src: url("./fonts/Lufga/LufgaThinItalic.woff2") format("woff2");
 	font-weight: 100;
 	font-style: italic;
 	font-display: swap;
@@ -27,14 +29,14 @@
 /* 200 - ExtraLight */
 @font-face {
 	font-family: "Lufga";
-	src: url("../fonts/Lufga/LufgaExtraLight.woff2") format("woff2");
+	src: url("./fonts/Lufga/LufgaExtraLight.woff2") format("woff2");
 	font-weight: 200;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
 	font-family: "Lufga";
-	src: url("../fonts/Lufga/LufgaExtraLightItalic.woff2") format("woff2");
+	src: url("./fonts/Lufga/LufgaExtraLightItalic.woff2") format("woff2");
 	font-weight: 200;
 	font-style: italic;
 	font-display: swap;
@@ -43,14 +45,14 @@
 /* 300 - Light */
 @font-face {
 	font-family: "Lufga";
-	src: url("../fonts/Lufga/LufgaLight.woff2") format("woff2");
+	src: url("./fonts/Lufga/LufgaLight.woff2") format("woff2");
 	font-weight: 300;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
 	font-family: "Lufga";
-	src: url("/srcssets/fonts/LufgaLightItalic.woff2") format("woff2");
+	src: url("./fonts/Lufga/LufgaLightItalic.woff2") format("woff2");
 	font-weight: 300;
 	font-style: italic;
 	font-display: swap;
