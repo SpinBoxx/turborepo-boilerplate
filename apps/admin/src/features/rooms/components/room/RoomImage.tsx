@@ -28,7 +28,7 @@ export default function RoomImage({ className, ...props }: Props) {
 
 	return (
 		<img
-			src={transformed.src ?? image.url}
+			src={transformed.src}
 			srcSet={transformed.srcSet}
 			sizes={props.sizes ?? "(max-width: 768px) 100vw, 33vw"}
 			alt={`Room #${room.quantity}`}

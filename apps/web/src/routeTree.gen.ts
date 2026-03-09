@@ -13,6 +13,8 @@ import { Route as LoginRouteRouteImport } from './routes/login/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppHotelIdIndexRouteImport } from './routes/_app/$hotelId/index'
+import { Route as AppHotelIdRoomsPageRouteImport } from './routes/_app/$hotelId/rooms/page'
 
 const LoginRouteRoute = LoginRouteRouteImport.update({
   id: '/login',
@@ -33,15 +35,29 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppHotelIdIndexRoute = AppHotelIdIndexRouteImport.update({
+  id: '/$hotelId/',
+  path: '/$hotelId/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppHotelIdRoomsPageRoute = AppHotelIdRoomsPageRouteImport.update({
+  id: '/$hotelId/rooms/page',
+  path: '/$hotelId/rooms/page',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRouteRouteWithChildren
   '/login/': typeof LoginIndexRoute
+  '/$hotelId/': typeof AppHotelIdIndexRoute
+  '/$hotelId/rooms/page': typeof AppHotelIdRoomsPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/login': typeof LoginIndexRoute
+  '/$hotelId': typeof AppHotelIdIndexRoute
+  '/$hotelId/rooms/page': typeof AppHotelIdRoomsPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -49,13 +65,22 @@ export interface FileRoutesById {
   '/login': typeof LoginRouteRouteWithChildren
   '/_app/': typeof AppIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/_app/$hotelId/': typeof AppHotelIdIndexRoute
+  '/_app/$hotelId/rooms/page': typeof AppHotelIdRoomsPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/login/'
+  fullPaths: '/' | '/login' | '/login/' | '/$hotelId/' | '/$hotelId/rooms/page'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/_app' | '/login' | '/_app/' | '/login/'
+  to: '/' | '/login' | '/$hotelId' | '/$hotelId/rooms/page'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/_app/'
+    | '/login/'
+    | '/_app/$hotelId/'
+    | '/_app/$hotelId/rooms/page'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,15 +118,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/$hotelId/': {
+      id: '/_app/$hotelId/'
+      path: '/$hotelId'
+      fullPath: '/$hotelId/'
+      preLoaderRoute: typeof AppHotelIdIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/$hotelId/rooms/page': {
+      id: '/_app/$hotelId/rooms/page'
+      path: '/$hotelId/rooms/page'
+      fullPath: '/$hotelId/rooms/page'
+      preLoaderRoute: typeof AppHotelIdRoomsPageRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppHotelIdIndexRoute: typeof AppHotelIdIndexRoute
+  AppHotelIdRoomsPageRoute: typeof AppHotelIdRoomsPageRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppHotelIdIndexRoute: AppHotelIdIndexRoute,
+  AppHotelIdRoomsPageRoute: AppHotelIdRoomsPageRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

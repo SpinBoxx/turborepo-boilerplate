@@ -1,4 +1,4 @@
-import type { Hotel } from "@zanadeal/api/features/hotel/schemas/hotel.schema";
+import type { HotelAdminComputed } from "@zanadeal/api/features/hotel";
 import { cn } from "@zanadeal/ui";
 import { fileToBase64, urlToFile } from "@zanadeal/utils";
 import { CreditCard, ForkKnife, Image, Info, Save } from "lucide-react";
@@ -20,7 +20,7 @@ import HotelInformationsStep from "./HotelInformationStep";
 import { getHotelInitValues } from "./hotelUpsertForm.defaults";
 
 interface Props extends ComponentProps<"div"> {
-	hotel: Hotel | null;
+	hotel: HotelAdminComputed | null;
 }
 
 export default function HotelUpsertForm({ hotel, className }: Props) {

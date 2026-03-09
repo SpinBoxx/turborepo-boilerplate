@@ -8,6 +8,6 @@ export async function getHotelById(input: GetHotelInput) {
 	return orpc.hotel.get({ id: input.id });
 }
 
-export async function listHotels(input: ListHotelsInput = {}) {
+export async function listHotels(input: ListHotelsInput) {
 	return orpc.hotel.list(input);
 }

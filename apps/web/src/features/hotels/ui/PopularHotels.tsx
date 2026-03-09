@@ -1,7 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHotels } from "../hotel.queries";
-import HotelsList from "./HotelList";
+import HotelsCardList from "./HotelsCardList";
 
 export default function PopularHotels() {
 	const hotels = useHotels();
@@ -19,9 +19,9 @@ export default function PopularHotels() {
 				</Button>
 			</div>
 			{hotels.isLoading && !hotels.data ? (
-				<HotelsList.Skeleton className="mt-4" />
+				<HotelsCardList.Skeleton className="mt-4" />
 			) : hotels.data ? (
-				<HotelsList hotels={hotels.data} className="mt-4" />
+				<HotelsCardList hotels={hotels.data} className="mt-4" />
 			) : null}
 		</div>
 	);

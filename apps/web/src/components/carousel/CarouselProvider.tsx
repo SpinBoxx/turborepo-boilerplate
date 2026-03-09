@@ -8,7 +8,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { buildCloudinaryImage } from "@/lib/cloudinary";
+import { buildCloudinaryImage, type CloudinaryVariant } from "@/lib/cloudinary";
 
 // ─── Image types ────────────────────────────────────────────────────
 
@@ -22,12 +22,6 @@ export interface CarouselImage {
 	srcSet?: string;
 	alt?: string;
 }
-
-type CloudinaryVariant =
-	| "hero"
-	| "listing-card"
-	| "room-thumbnail"
-	| "room-gallery";
 
 // ─── Props ──────────────────────────────────────────────────────────
 
@@ -93,7 +87,7 @@ const DEFAULT_WIDTHS = [400, 800, 1200] as const;
 
 export default function CarouselProvider({
 	images: rawImages,
-	variant = "room-gallery",
+	variant = "gallery",
 	responsiveWidths = DEFAULT_WIDTHS,
 	alt = "Photo",
 	children,

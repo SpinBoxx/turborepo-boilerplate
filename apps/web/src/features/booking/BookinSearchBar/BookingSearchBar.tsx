@@ -27,6 +27,7 @@ export default function BookingSearchBar({ className, ...props }: Props) {
 						<CalendarWithComboBox
 							placeholder="Arrival"
 							triggerProps={{
+								className: "!font-normal !text-base !text-muted-foreground",
 								size: "xl",
 							}}
 						/>
@@ -37,10 +38,11 @@ export default function BookingSearchBar({ className, ...props }: Props) {
 							placeholder="Departure"
 							triggerProps={{
 								size: "xl",
+								className: "!font-normal !text-base !text-muted-foreground",
 							}}
 						/>
 					</div>
-					<div className="flex-none sm:w-32">
+					<div className="flex-none font-no sm:w-32">
 						<p className="font-semibold text-lg">Guests</p>
 						<NumberField defaultValue={1} min={1} max={5} size="xl">
 							<NumberFieldGroup>

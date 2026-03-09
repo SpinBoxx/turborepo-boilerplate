@@ -1,4 +1,4 @@
-import type { Room } from "@zanadeal/api/features/room/room.schemas";
+import type { RoomAdminComputed } from "@zanadeal/api/features/room";
 import { fileToBase64, urlToFile } from "@zanadeal/utils";
 import { Euro, ForkKnife, Image, Info, Save } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ import RoomPricesFormStep from "./steps/RoomPricesFormStep/RoomPricesFormStep";
 import { getInitValues } from "./upsertRoom.config";
 
 interface Props {
-	room?: Room;
+	room?: RoomAdminComputed;
 	hotelId: string;
 }
 
@@ -32,17 +32,11 @@ export default function UpsertRoomForm({ room, hotelId }: Props) {
 		onSubmit: async ({ value }) => {
 			const imagesBase64 = await Promise.all(files.map(fileToBase64));
 
-			if (room) {
-				await updateRoom.mutateAsync({
-					...value,
-					images: imagesBase64.map((base64) => ({ base64 })),
-				});
-			} else {
-				await createRoom.mutateAsync({
-					...value,
-					images: imagesBase64.map((base64) => ({ base64 })),
-				});
-			}
+			await (room ? updateRoom : createRoom).mutateAsync({
+				...value,
+				images: imagesBase64.map((base64) => ({ base64 })),
+				capacity: Number(value.capacity),
+			});
 		},
 	});
 

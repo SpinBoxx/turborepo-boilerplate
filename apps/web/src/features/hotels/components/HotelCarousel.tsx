@@ -8,7 +8,7 @@ export default function HotelCarousel() {
 	return (
 		<CarouselProvider
 			images={hotel.images}
-			variant="room-gallery"
+			variant="gallery"
 			responsiveWidths={[600, 900, 1200]}
 			alt={hotel.name}
 		>

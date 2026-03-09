@@ -1,7 +1,7 @@
+import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
 import { buildCloudinaryImage } from "@/lib/cloudinary";
 import { useHotelContext } from "./HotelProvider";
-import { cn } from "@zanadeal/ui";
 
 interface Props extends ComponentProps<"img"> {
 	variant?: "hero" | "listing-card" | "room-thumbnail" | "room-gallery";
@@ -24,11 +24,11 @@ export function HotelImage({
 	return (
 		<img
 			{...props}
-			src={transformed.src ?? image?.url}
+			src={transformed.src}
 			srcSet={transformed.srcSet}
 			sizes={props.sizes ?? "(max-width: 768px) 100vw, 50vw"}
 			alt={hotel.name}
-			className={cn("w-full h-full", className)}
+			className={cn("h-full w-full", className)}
 			loading="lazy"
 			decoding="async"
 		/>

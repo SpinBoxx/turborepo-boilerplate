@@ -95,9 +95,9 @@ export default function CalendarWithComboBox({
 					render={
 						<Button
 							{...triggerProps}
-							className={cn("w-full justify-start", triggerProps?.className)}
 							variant={triggerProps?.variant ?? "outline"}
 							size={triggerProps?.size ?? "xl"}
+							className={cn("w-full justify-start", triggerProps?.className)}
 						/>
 					}
 				>

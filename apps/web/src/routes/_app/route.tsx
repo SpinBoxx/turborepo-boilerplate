@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
 	return (
-		<div className="mx-auto max-w-7xl space-y-5">
+		<div className="mx-auto max-w-7xl">
 			<Navbar />
 			<Outlet />
 		</div>

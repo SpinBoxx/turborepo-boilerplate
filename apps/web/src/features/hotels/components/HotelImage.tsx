@@ -1,11 +1,16 @@
 import type { ComponentProps } from "react";
-import { buildCloudinaryImage } from "@/lib/cloudinary";
+import { buildCloudinaryImage, type CloudinaryVariant } from "@/lib/cloudinary";
 import { useHotelContext } from "./HotelProvider";
+
+interface Props extends ComponentProps<"img"> {
+	variant?: CloudinaryVariant;
+}
 
 export default function HotelImage({
 	className,
+	variant = "listing-card",
 	...props
-}: ComponentProps<"img">) {
+}: Props) {
 	const { hotel } = useHotelContext();
 	const image = hotel.images?.[0];
 
@@ -16,9 +21,9 @@ export default function HotelImage({
 	}
 
 	const { src, srcSet } = buildCloudinaryImage(
-		{ url: image.url, publicId: image.publicId },
+		{ publicId: image.publicId },
 		{
-			variant: "listing-card",
+			variant,
 			responsiveWidths: [400, 600, 800],
 		},
 	);

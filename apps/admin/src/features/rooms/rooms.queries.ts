@@ -3,7 +3,7 @@ import type {
 	DeleteRoomInput,
 	ListRoomsInput,
 	UpsertRoomInput,
-} from "@zanadeal/api/features/room/room.schemas";
+} from "@zanadeal/api/features/room";
 import { toast } from "sonner";
 import { getErrorMessage } from "../amenity/amenity.queries";
 import { hotelKeys } from "../hotel/hotel.queries";
@@ -12,16 +12,7 @@ import { createRoom, deleteRoom, listRooms, updateRoom } from "./room.api";
 export function roomKeys() {
 	return {
 		all: ["room"] as const,
-		list: (input: ListRoomsInput) =>
-			[
-				"room",
-				"list",
-				input.where.hotelId ?? null,
-				input.where.type ?? null,
-				input.where.startDate?.toISOString() ?? null,
-				input.where.endDate?.toISOString() ?? null,
-				input.orderBy?.price ?? null,
-			] as const,
+		list: (input: ListRoomsInput) => ["room", "list", input] as const,
 	};
 }
 
