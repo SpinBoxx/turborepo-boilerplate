@@ -47,7 +47,6 @@ export const createRoom = async (
 			images: images.length
 				? {
 						create: images.map((img) => ({
-							url: img.url ?? "",
 							publicId: img.publicId ?? "",
 						})),
 					}
@@ -83,7 +82,6 @@ export const updateRoom = async (
 				? {
 						deleteMany: {},
 						create: images.map((img) => ({
-							url: img.url ?? "",
 							publicId: img.publicId ?? "",
 						})),
 					}

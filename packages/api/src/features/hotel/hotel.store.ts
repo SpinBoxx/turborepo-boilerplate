@@ -67,7 +67,6 @@ export async function createHotel(input: UpsertHotelComputedInput) {
 				: undefined,
 			images: {
 				create: images?.map((img) => ({
-					url: img.url,
 					publicId: img.publicId,
 				})),
 			},
@@ -101,7 +100,6 @@ export async function updateHotel(
 				? {
 						deleteMany: {},
 						create: images?.map((img) => ({
-							url: img.url,
 							publicId: img.publicId,
 						})),
 					}

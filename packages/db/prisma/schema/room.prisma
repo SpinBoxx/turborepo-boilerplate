@@ -35,7 +35,6 @@ enum RoomType {
 
 model RoomImage {
   id      String @id @default(cuid())
-  url     String
   publicId String
   room    Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
   roomId  String

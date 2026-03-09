@@ -2,7 +2,6 @@ import z from "zod";
 
 export const HotelImageSchema = z.object({
 	id: z.string().min(1),
-	url: z.string().min(1),
 	publicId: z.string().min(1),
 	hotelId: z.string().min(1),
 	createdAt: z.date(),
@@ -20,7 +19,6 @@ export const CreateHotelImageInputSchema = z.object({
 });
 
 export const CreateHotelImageComputedInputSchema = z.object({
-	url: z.string().min(1),
 	publicId: z.string().min(1),
 });
 
