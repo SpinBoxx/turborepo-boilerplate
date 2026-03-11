@@ -1,4 +1,9 @@
-import { getNights, todayDateOnly, tomorrowDateOnly } from "@zanadeal/utils";
+import {
+	dateToString,
+	getNights,
+	todayDateOnly,
+	tomorrowDateOnly,
+} from "@zanadeal/utils";
 import { create } from "zustand";
 
 interface BookingState {
@@ -19,8 +24,8 @@ interface BookingState {
 
 	// Actions for booking details
 	getNights: () => number;
-	setCheckInDate: (date: string) => void;
-	setCheckOutDate: (date: string) => void;
+	setCheckInDate: (date: Date) => void;
+	setCheckOutDate: (date: Date) => void;
 	setRoomId: (roomId: string | null) => void;
 
 	// Utility actions
@@ -63,11 +68,11 @@ export const useBookingStore = create<BookingState>()((set, get) => ({
 		})),
 
 	// Booking details actions
-	setCheckInDate: (date: string) => {
-		set({ checkInDate: date });
+	setCheckInDate: (date: Date) => {
+		set({ checkInDate: dateToString(date) });
 	},
-	setCheckOutDate: (date: string) => {
-		set({ checkOutDate: date });
+	setCheckOutDate: (date: Date) => {
+		set({ checkOutDate: dateToString(date) });
 	},
 
 	setRoomId: (roomId: string | null) => set({ roomId }),

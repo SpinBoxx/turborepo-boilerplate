@@ -1,9 +1,7 @@
 import type { HotelAdminComputed } from "@zanadeal/api/features/hotel";
-import { Button } from "@zanadeal/ui";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import H1 from "@/components/H1";
-import { BookingInfoDrawer } from "./DrawerT";
 import {
 	HotelListProvider,
 	useHotelListContext,
@@ -51,9 +49,6 @@ function HotelsPageContent() {
 					Gérez votre portefeuille d'établissements : informations, services,
 					coordonnées, photos et informations bancaires.
 				</p>
-				<BookingInfoDrawer>
-					<Button>Test drawer</Button>
-				</BookingInfoDrawer>
 			</div>
 
 			<HotelToolbar onAdd={handleAdd} />

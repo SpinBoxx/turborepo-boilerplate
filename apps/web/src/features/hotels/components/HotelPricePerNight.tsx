@@ -16,7 +16,7 @@ export default function HotelPricePerNight({
 }: Props) {
 	const { hotel } = useHotelContext();
 	return (
-		<div className={cn("flex items-end gap-1", className)}>
+		<div className={cn("flex items-center gap-1", className)}>
 			<span
 				className={cn("font-bold text-primary text-xl", priceClassName)}
 				{...props}

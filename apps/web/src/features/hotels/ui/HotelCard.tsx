@@ -2,11 +2,13 @@ import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardPanel } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import HotelAddress from "../components/HotelAddress";
 import HotelDescription from "../components/HotelDescription";
 import HotelImage from "../components/HotelImage";
 import HotelName from "../components/HotelName";
 import HotelPrice from "../components/HotelPrice";
+import HotelPricePerNight from "../components/HotelPricePerNight";
 import { useHotelContext } from "../components/HotelProvider";
 
 export default function HotelCard() {
@@ -42,7 +44,7 @@ export default function HotelCard() {
 				</div>
 
 				{/* Content */}
-				<div className="flex flex-col gap-1 p-6">
+				<div className="flex flex-col gap-2 p-4">
 					<div className="flex">
 						<div className="flex flex-col gap-0.5">
 							<HotelName className="line-clamp-1 font-semibold text-lg" />
@@ -51,6 +53,19 @@ export default function HotelCard() {
 						<HotelPrice className="h-fit shrink-0 whitespace-nowrap rounded-full bg-muted px-3 py-1 font-medium text-sm" />
 					</div>
 					<HotelDescription className="line-clamp-3 font-light text-muted-foreground text-sm" />
+					<Separator />
+					<div className="flex items-center justify-between">
+						<div>
+							<span className="flex translate-y-0.5 text-muted-foreground text-xs uppercase">
+								Starting from
+							</span>
+							<HotelPricePerNight />
+						</div>
+						<Button type="button">
+							View details
+							<ArrowRight className="size-4" />
+						</Button>
+					</div>
 				</div>
 			</CardPanel>
 			{/* Image */}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-hotel-card",
+  "content": {
+    "startingFrom": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Starting from"
+      }
+    },
+    "viewDetails": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "View details"
+      }
+    }
+  }
+}

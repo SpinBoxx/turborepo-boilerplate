@@ -4,7 +4,14 @@ import { useHotels } from "../hotel.queries";
 import HotelsCardList from "./HotelsCardList";
 
 export default function PopularHotels() {
-	const hotels = useHotels();
+	const hotels = useHotels({
+		take: 50,
+		skip: 0,
+		filters: {},
+		sort: { field: "updatedAt", direction: "desc" },
+		limit: 50,
+		page: 1,
+	});
 
 	return (
 		<div>

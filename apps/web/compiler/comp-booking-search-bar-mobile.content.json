@@ -1,0 +1,30 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-booking-search-bar-mobile",
+  "content": {
+    "whenAreYouGoing": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "When are you going?"
+      }
+    },
+    "lllDdY": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "LLL dd, y"
+      }
+    },
+    "selectYourTravelDates": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Select your travel dates"
+      }
+    },
+    "saveMyDates": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Save my dates"
+      }
+    }
+  }
+}

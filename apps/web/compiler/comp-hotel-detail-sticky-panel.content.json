@@ -1,0 +1,18 @@
+{
+  "$schema": "https://intlayer.org/schema.json",
+  "key": "comp-hotel-detail-sticky-panel",
+  "content": {
+    "addDate": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Add date"
+      }
+    },
+    "selectRooms": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Select Rooms"
+      }
+    }
+  }
+}
