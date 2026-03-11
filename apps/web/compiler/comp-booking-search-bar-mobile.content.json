@@ -25,6 +25,24 @@
       "translation": {
         "fr": "Save my dates"
       }
+    },
+    "selectYourGuestsCount": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Select your guests count"
+      }
+    },
+    "saveMyGuests": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Save my guests"
+      }
+    },
+    "updateMyDates": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Update my dates"
+      }
     }
   }
 }
