@@ -17,10 +17,14 @@ export default function BookingSearchBar({
 	return (
 		<div className={cn("flex flex-col justify-center", className)} {...props}>
 			<BookingSearchBarMobile
-				className={cn("flex md:hidden", mobileClassName)}
+				className={cn("flex sm:hidden", mobileClassName)}
 			/>
 			<BookingSearchBarDesktop
-				className={cn("hidden md:mx-auto md:block", desktopClassName)}
+				className={cn(
+					"hidden sm:mx-auto sm:block sm:w-[calc(100vw-4rem)] lg:w-4/5",
+					desktopClassName,
+				)}
+				guestsInputClassName=""
 			/>
 		</div>
 	);

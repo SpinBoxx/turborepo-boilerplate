@@ -10,13 +10,15 @@ const NumberFieldContext = React.createContext<{
 	fieldId: string;
 } | null>(null);
 
+type NumberFieldSize = "sm" | "default" | "lg" | "xl";
+
 function NumberField({
 	id,
 	className,
 	size = "default",
 	...props
 }: NumberFieldPrimitive.Root.Props & {
-	size?: "sm" | "default" | "lg" | "xl";
+	size?: NumberFieldSize;
 }) {
 	const generatedId = React.useId();
 	const fieldId = id ?? generatedId;
@@ -156,4 +158,5 @@ export {
 	NumberFieldIncrement,
 	NumberFieldGroup,
 	NumberFieldInput,
+	type NumberFieldSize,
 };

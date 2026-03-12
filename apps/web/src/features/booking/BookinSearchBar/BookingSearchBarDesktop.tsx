@@ -54,10 +54,13 @@ export default function BookingSearchBarDesktop({
 						/>
 					</div>
 					<div
-						className={cn("flex-none font-no sm:w-32", guestsInputClassName)}
+						className={cn(
+							"max-w-48 font-normal sm:w-32 sm:flex-none md:flex-1",
+							guestsInputClassName,
+						)}
 					>
 						<p className="font-semibold text-lg">Guests</p>
-						<BookingGuestCountInput />
+						<BookingGuestCountInput size="xl" />
 					</div>
 					<Button
 						className={cn("mt-2 sm:mt-0 sm:self-end", actionButtonClassName)}
