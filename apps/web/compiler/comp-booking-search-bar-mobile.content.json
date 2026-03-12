@@ -14,34 +14,34 @@
         "fr": "LLL dd, y"
       }
     },
+    "whereTo": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "Where to?"
+      }
+    },
+    "whenWillYouBeThere": {
+      "nodeType": "translation",
+      "translation": {
+        "fr": "When will you be there?"
+      }
+    },
     "selectYourTravelDates": {
       "nodeType": "translation",
       "translation": {
         "fr": "Select your travel dates"
       }
     },
-    "saveMyDates": {
+    "whoIsComing": {
       "nodeType": "translation",
       "translation": {
-        "fr": "Save my dates"
+        "fr": "Who is coming?"
       }
     },
     "selectYourGuestsCount": {
       "nodeType": "translation",
       "translation": {
         "fr": "Select your guests count"
-      }
-    },
-    "saveMyGuests": {
-      "nodeType": "translation",
-      "translation": {
-        "fr": "Save my guests"
-      }
-    },
-    "updateMyDates": {
-      "nodeType": "translation",
-      "translation": {
-        "fr": "Update my dates"
       }
     }
   }
