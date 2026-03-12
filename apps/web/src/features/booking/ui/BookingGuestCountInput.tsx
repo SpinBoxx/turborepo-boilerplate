@@ -13,14 +13,15 @@ interface Props extends ComponentProps<"div"> {
 }
 
 const BookingGuestCountInput = ({ max }: Props) => {
-	const { guestCount, maxGuests } = useBookingStore();
+	const { guestCount, maxGuests, increaseGuests, decreaseGuests } =
+		useBookingStore();
 
 	return (
 		<NumberField defaultValue={guestCount} min={1} max={max || maxGuests}>
 			<NumberFieldGroup>
-				<NumberFieldDecrement />
+				<NumberFieldDecrement onClick={decreaseGuests} />
 				<NumberFieldInput className="text-center" />
-				<NumberFieldIncrement />
+				<NumberFieldIncrement onClick={increaseGuests} />
 			</NumberFieldGroup>
 		</NumberField>
 	);

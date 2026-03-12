@@ -103,6 +103,7 @@ export const useBookingStore = create<BookingState>()((set, get) => ({
 
 	hasAllInfo: () => {
 		const state = get();
-		return !!(state.guestCount > 1 && state.checkInDate && state.checkOutDate);
+
+		return !!(state.checkInDate && state.checkOutDate);
 	},
 }));

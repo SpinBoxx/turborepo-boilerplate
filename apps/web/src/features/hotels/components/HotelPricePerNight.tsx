@@ -18,14 +18,14 @@ export default function HotelPricePerNight({
 	return (
 		<div className={cn("flex items-center gap-1", className)}>
 			<span
-				className={cn("font-bold text-primary text-xl", priceClassName)}
+				className={cn("font-bold text-2xl text-primary", priceClassName)}
 				{...props}
 			>
 				{formatPrice(hotel.startingPrice)}
 			</span>
 			<span
 				className={cn(
-					"font-normal text-muted-foreground text-sm",
+					"translate-y-0.5 font-normal text-muted-foreground text-sm",
 					nightClassName,
 				)}
 			>

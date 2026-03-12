@@ -3,21 +3,29 @@ import type { ComponentProps } from "react";
 import CalendarWithComboBox from "@/components/calendar/CalendarWithComboBox";
 import { Button } from "@/components/ui/button";
 import { Card, CardPanel } from "@/components/ui/card";
-import {
-	NumberField,
-	NumberFieldDecrement,
-	NumberFieldGroup,
-	NumberFieldIncrement,
-	NumberFieldInput,
-} from "@/components/ui/number-field";
 import { cn } from "@/lib/utils";
+import BookingGuestCountInput from "../ui/BookingGuestCountInput";
 
-interface Props extends ComponentProps<"div"> {}
+interface Props extends ComponentProps<"div"> {
+	guestsInputClassName?: string;
+	actionButton?: {
+		label?: string;
+		className?: string;
+		onClick?: () => void;
+	};
+}
 
 export default function BookingSearchBarDesktop({
 	className,
+	guestsInputClassName,
+	actionButton,
 	...props
 }: Props) {
+	const {
+		className: actionButtonClassName,
+		label,
+		onClick,
+	} = actionButton || {};
 	return (
 		<Card
 			className={cn("flex flex-col sm:w-4/5 sm:flex-row", className)}
@@ -45,19 +53,19 @@ export default function BookingSearchBarDesktop({
 							}}
 						/>
 					</div>
-					<div className="flex-none font-no sm:w-32">
+					<div
+						className={cn("flex-none font-no sm:w-32", guestsInputClassName)}
+					>
 						<p className="font-semibold text-lg">Guests</p>
-						<NumberField defaultValue={1} min={1} max={5} size="xl">
-							<NumberFieldGroup>
-								<NumberFieldDecrement />
-								<NumberFieldInput />
-								<NumberFieldIncrement />
-							</NumberFieldGroup>
-						</NumberField>
+						<BookingGuestCountInput />
 					</div>
-					<Button className="mt-2 sm:mt-0 sm:self-end" size={"xl"}>
+					<Button
+						className={cn("mt-2 sm:mt-0 sm:self-end", actionButtonClassName)}
+						size={"xl"}
+						onClick={onClick}
+					>
 						<Search className="hidden text-white opacity-100 md:block md:size-6" />
-						Search
+						{label || "Search"}
 					</Button>
 				</div>
 			</CardPanel>

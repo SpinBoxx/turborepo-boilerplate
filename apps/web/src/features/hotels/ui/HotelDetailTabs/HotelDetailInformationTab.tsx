@@ -1,9 +1,7 @@
-import { HotelIcon, type LucideIcon, MailIcon, PhoneIcon } from "lucide-react";
+import { type LucideIcon, MailIcon, PhoneIcon } from "lucide-react";
 import CopyButton from "@/components/buttons/CopyButton";
 import { Card, CardContent } from "@/components/ui/card";
 import HotelDescription from "../../components/HotelDescription";
-import HotelEmail from "../../components/HotelEmail";
-import HotelPhoneNumber from "../../components/HotelPhoneNumber";
 import { useHotelContext } from "../../components/HotelProvider";
 import HotelDetailSectionTitle from "./HotelDetailSectionTitle";
 

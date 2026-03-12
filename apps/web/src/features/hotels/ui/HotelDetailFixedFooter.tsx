@@ -1,3 +1,4 @@
+import { Link, useParams } from "@tanstack/react-router";
 import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,9 @@ import HotelPricePerNight from "../components/HotelPricePerNight";
 interface Props extends ComponentProps<"div"> {}
 
 const HotelDetailFixedFooter = ({ className, ...props }: Props) => {
+	const { hotelId } = useParams({
+		from: "/_app/$hotelId/",
+	});
 	const { hasAllInfo } = useBookingStore();
 	return (
 		<div
@@ -25,7 +29,14 @@ const HotelDetailFixedFooter = ({ className, ...props }: Props) => {
 					<HotelPricePerNight />
 				</div>
 				{hasAllInfo() ? (
-					<Button size="xl">Select rooms</Button>
+					<Link
+						to={"/$hotelId/rooms"}
+						params={{
+							hotelId,
+						}}
+					>
+						<Button size="xl">Select rooms</Button>
+					</Link>
 				) : (
 					<BookingInfoDrawer>
 						<Button size="xl">Select dates</Button>

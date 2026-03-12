@@ -14,7 +14,7 @@ import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppHotelIdIndexRouteImport } from './routes/_app/$hotelId/index'
-import { Route as AppHotelIdRoomsPageRouteImport } from './routes/_app/$hotelId/rooms/page'
+import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId/rooms/index'
 
 const LoginRouteRoute = LoginRouteRouteImport.update({
   id: '/login',
@@ -40,9 +40,9 @@ const AppHotelIdIndexRoute = AppHotelIdIndexRouteImport.update({
   path: '/$hotelId/',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppHotelIdRoomsPageRoute = AppHotelIdRoomsPageRouteImport.update({
-  id: '/$hotelId/rooms/page',
-  path: '/$hotelId/rooms/page',
+const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
+  id: '/$hotelId/rooms/',
+  path: '/$hotelId/rooms/',
   getParentRoute: () => AppRouteRoute,
 } as any)
 
@@ -51,13 +51,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRouteRouteWithChildren
   '/login/': typeof LoginIndexRoute
   '/$hotelId/': typeof AppHotelIdIndexRoute
-  '/$hotelId/rooms/page': typeof AppHotelIdRoomsPageRoute
+  '/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/login': typeof LoginIndexRoute
   '/$hotelId': typeof AppHotelIdIndexRoute
-  '/$hotelId/rooms/page': typeof AppHotelIdRoomsPageRoute
+  '/$hotelId/rooms': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -66,13 +66,13 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/login/': typeof LoginIndexRoute
   '/_app/$hotelId/': typeof AppHotelIdIndexRoute
-  '/_app/$hotelId/rooms/page': typeof AppHotelIdRoomsPageRoute
+  '/_app/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/login/' | '/$hotelId/' | '/$hotelId/rooms/page'
+  fullPaths: '/' | '/login' | '/login/' | '/$hotelId/' | '/$hotelId/rooms/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/$hotelId' | '/$hotelId/rooms/page'
+  to: '/' | '/login' | '/$hotelId' | '/$hotelId/rooms'
   id:
     | '__root__'
     | '/_app'
@@ -80,7 +80,7 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/login/'
     | '/_app/$hotelId/'
-    | '/_app/$hotelId/rooms/page'
+    | '/_app/$hotelId/rooms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -125,11 +125,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHotelIdIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/$hotelId/rooms/page': {
-      id: '/_app/$hotelId/rooms/page'
-      path: '/$hotelId/rooms/page'
-      fullPath: '/$hotelId/rooms/page'
-      preLoaderRoute: typeof AppHotelIdRoomsPageRouteImport
+    '/_app/$hotelId/rooms/': {
+      id: '/_app/$hotelId/rooms/'
+      path: '/$hotelId/rooms'
+      fullPath: '/$hotelId/rooms/'
+      preLoaderRoute: typeof AppHotelIdRoomsIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
   }
@@ -138,13 +138,13 @@ declare module '@tanstack/react-router' {
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppHotelIdIndexRoute: typeof AppHotelIdIndexRoute
-  AppHotelIdRoomsPageRoute: typeof AppHotelIdRoomsPageRoute
+  AppHotelIdRoomsIndexRoute: typeof AppHotelIdRoomsIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppHotelIdIndexRoute: AppHotelIdIndexRoute,
-  AppHotelIdRoomsPageRoute: AppHotelIdRoomsPageRoute,
+  AppHotelIdRoomsIndexRoute: AppHotelIdRoomsIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

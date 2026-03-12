@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { getHotelById } from "@/features/hotels/hotel.api";
-import HotelPage from "@/features/hotels/pages/HotelPage";
+import HotelRoomsPage from "@/features/hotels/pages/HotelRoomsPage";
 
-export const Route = createFileRoute("/_app/$hotelId/")({
+export const Route = createFileRoute("/_app/$hotelId/rooms/")({
 	component: RouteComponent,
 	beforeLoad: async ({ params }) => {
 		const { hotelId } = params;
@@ -24,5 +24,5 @@ export const Route = createFileRoute("/_app/$hotelId/")({
 
 function RouteComponent() {
 	const { hotel } = Route.useRouteContext();
-	return <HotelPage hotel={hotel} />;
+	return <HotelRoomsPage hotel={hotel} />;
 }

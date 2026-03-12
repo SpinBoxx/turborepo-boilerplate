@@ -1,5 +1,6 @@
 import { cn } from "@zanadeal/ui";
-import { Locales } from "intlayer";
+import { uppercaseFirstLetter } from "@zanadeal/utils";
+import { getLocaleName, Locales } from "intlayer";
 import { Globe } from "lucide-react";
 import { useIntlayerContext } from "react-intlayer";
 import { Button } from "./ui/button";
@@ -16,13 +17,27 @@ interface Props {
 }
 
 const LangPopover = ({ className }: Props) => {
-	const languages = [
-		{ code: Locales.FRENCH, label: "Français", flag: "🇫🇷" },
-		{ code: Locales.ENGLISH, label: "English", flag: "🇺🇸" },
-		{ code: Locales.MALAGASY_MADAGASCAR, label: "Malagasy", flag: "🇲🇬" },
-	];
-
 	const { setLocale, locale } = useIntlayerContext();
+
+	const languages = [
+		{
+			code: Locales.FRENCH,
+			label: uppercaseFirstLetter(getLocaleName(Locales.FRENCH, locale)),
+			flag: "🇫🇷",
+		},
+		{
+			code: Locales.ENGLISH,
+			label: uppercaseFirstLetter(getLocaleName(Locales.ENGLISH, locale)),
+			flag: "🇺🇸",
+		},
+		{
+			code: Locales.MALAGASY_MADAGASCAR,
+			label: uppercaseFirstLetter(
+				getLocaleName(Locales.MALAGASY_MADAGASCAR, locale),
+			),
+			flag: "🇲🇬",
+		},
+	];
 
 	return (
 		<Menu>
@@ -41,7 +56,7 @@ const LangPopover = ({ className }: Props) => {
 			<MenuPopup className="">
 				<MenuRadioGroup value={locale} onValueChange={setLocale}>
 					{languages.map((lang) => (
-						<MenuRadioItem key={lang.code} value={lang.code}>
+						<MenuRadioItem key={lang.code} value={lang.code} closeOnClick>
 							<span className="mr-2">{lang.flag}</span>
 							{lang.label}
 						</MenuRadioItem>

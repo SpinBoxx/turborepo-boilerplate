@@ -49,7 +49,7 @@ export default function BookingSearchBarMobile({ className }: Props) {
 							setIsOpen(true);
 						}}
 						className={cn(
-							"flex h-14 w-full items-center justify-start rounded-full border px-4 font-normal text-sm shadow-sm",
+							"flex h-14! w-full items-center justify-start rounded-full border px-4 font-normal text-sm shadow-sm",
 							className,
 						)}
 						variant="secondary"
@@ -61,7 +61,7 @@ export default function BookingSearchBarMobile({ className }: Props) {
 				</div>
 				<div className="flex flex-1 flex-col items-start">
 					<span className="font-semibold text-foreground">
-						{t.whereTo.value}
+						{t.selectTravelDates.value}
 					</span>
 					<span className="text-muted-foreground text-xs">{formatDate}</span>
 				</div>
@@ -141,7 +141,7 @@ const PopoverGuestsContent = ({
 			exit={{ opacity: 0, x: -20 }}
 			transition={{ duration: 0.3, ease: "easeInOut" }}
 		>
-			<div className="border-b bg-muted/50 p-4">
+			<div className="rounded-t-lg border-b bg-muted/50 p-4">
 				<PopoverTitle className="font-semibold text-foreground text-lg tracking-tight">
 					{t.whosComing.value}
 				</PopoverTitle>

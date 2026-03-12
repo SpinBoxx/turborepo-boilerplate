@@ -1,16 +1,22 @@
 import { Move } from "lucide-react";
-import type { ComponentProps } from "react";
-import { useRoomContext } from "./RoomProvider";
+import type { ComponentProps, ReactNode } from "react";
+import RoomInfoItem from "./RoomInfoItem";
 
-export default function RoomArea({
-	className,
-	...props
-}: ComponentProps<"span">) {
-	const { room } = useRoomContext();
+interface Props
+	extends Omit<
+		ComponentProps<typeof RoomInfoItem>,
+		"icon" | "label" | "value"
+	> {
+	label?: ReactNode;
+	value?: ReactNode;
+}
+
+export default function RoomArea({ label, value, ...props }: Props) {
+	if (value == null) {
+		return null;
+	}
 
 	return (
-		<span className={className} {...props}>
-			<Move className="inline size-4" /> 44 m²
-		</span>
+		<RoomInfoItem icon={Move} label={label ?? "m²"} value={value} {...props} />
 	);
 }

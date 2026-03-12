@@ -1,16 +1,27 @@
 import { BedDouble } from "lucide-react";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
+import RoomInfoItem from "./RoomInfoItem";
 import { useRoomContext } from "./RoomProvider";
 
-export default function RoomBeds({
-	className,
-	...props
-}: ComponentProps<"span">) {
+interface Props
+	extends Omit<
+		ComponentProps<typeof RoomInfoItem>,
+		"icon" | "label" | "value"
+	> {
+	label?: ReactNode;
+	value?: ReactNode;
+}
+
+export default function RoomBeds({ label, value, ...props }: Props) {
 	const { room } = useRoomContext();
+	const resolvedValue = value ?? room.capacity;
 
 	return (
-		<span className={className} {...props}>
-			<BedDouble className="inline size-4" /> 2 Beds
-		</span>
+		<RoomInfoItem
+			icon={BedDouble}
+			label={label ?? (room.capacity > 1 ? "Beds" : "Bed")}
+			value={resolvedValue}
+			{...props}
+		/>
 	);
 }

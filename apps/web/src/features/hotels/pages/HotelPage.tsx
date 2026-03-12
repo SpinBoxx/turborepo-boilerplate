@@ -1,12 +1,12 @@
 import type { HotelUserComputed } from "@zanadeal/api/features/hotel";
-import HotelAddress from "./components/HotelAddress";
-import HotelBreadcrumb from "./components/HotelBreadCrumb";
-import HotelCarousel from "./components/HotelCarousel";
-import HotelName from "./components/HotelName";
-import HotelProvider from "./components/HotelProvider";
-import HotelDetailFixedFooter from "./ui/HotelDetailFixedFooter";
-import HotelDetailStickyPanel from "./ui/HotelDetailStickyPanel";
-import HotelDetailTabs from "./ui/HotelDetailTabs/HotelDetailTabs";
+import HotelAddress from "../components/HotelAddress";
+import HotelBreadcrumb from "../components/HotelBreadCrumb";
+import HotelCarousel from "../components/HotelCarousel";
+import HotelName from "../components/HotelName";
+import HotelProvider from "../components/HotelProvider";
+import HotelDetailFixedFooter from "../ui/HotelDetailFixedFooter";
+import HotelDetailStickyPanel from "../ui/HotelDetailStickyPanel";
+import HotelDetailTabs from "../ui/HotelDetailTabs/HotelDetailTabs";
 
 interface Props {
 	hotel: HotelUserComputed;
