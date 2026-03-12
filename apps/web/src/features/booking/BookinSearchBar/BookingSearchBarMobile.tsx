@@ -1,7 +1,9 @@
 import { format } from "date-fns";
 import { motion } from "framer-motion";
+import { date } from "intlayer";
 import { CalendarIcon, ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useIntlayer, useIntlayerContext } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import {
 	Popover,
@@ -21,17 +23,21 @@ interface Props {
 
 export default function BookingSearchBarMobile({ className }: Props) {
 	const { checkInDate, checkOutDate } = useBookingStore();
-
+	const { locale } = useIntlayerContext();
 	const [isOpen, setIsOpen] = useState(false);
 	const [step, setStep] = useState<"dates" | "guests">("dates");
 
+	const t = useIntlayer("booking-search-bar-mobile");
+
 	const formatDate = useMemo(() => {
-		if (!checkInDate) return "When are you going?";
-		if (checkInDate && !checkOutDate) return format(checkInDate, "LLL dd, y");
+		if (!checkInDate) return t.whenAreYouGoing.value;
+		if (checkInDate && !checkOutDate)
+			return date(checkInDate, { dateStyle: "medium", locale });
 		if (checkInDate && checkOutDate)
-			return `${format(checkInDate, "LLL dd, y")} - ${format(checkOutDate, "LLL dd, y")}`;
+			return `${date(checkInDate, { dateStyle: "medium", locale })} - ${date(checkOutDate, { dateStyle: "medium", locale })}`;
+
 		return "";
-	}, [checkInDate, checkOutDate]);
+	}, [checkInDate, checkOutDate, locale]);
 
 	return (
 		<Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -50,11 +56,13 @@ export default function BookingSearchBarMobile({ className }: Props) {
 					/>
 				}
 			>
-				<div className="mr-3 flex rounded-full bg-background p-2 shadow-sm">
+				<div className="grid size-9 flex-none place-items-center rounded-full bg-background p-2 shadow-sm">
 					<CalendarIcon className="h-5 w-5 text-primary" aria-hidden="true" />
 				</div>
 				<div className="flex flex-1 flex-col items-start">
-					<span className="font-semibold text-foreground">Where to?</span>
+					<span className="font-semibold text-foreground">
+						{t.whereTo.value}
+					</span>
 					<span className="text-muted-foreground text-xs">{formatDate}</span>
 				</div>
 				<ChevronDown
@@ -86,6 +94,7 @@ const PopoverDatesContent = ({
 	className?: string;
 	onNext: () => void;
 }) => {
+	const t = useIntlayer("booking-search-bar-mobile");
 	return (
 		<motion.div
 			className={cn("flex flex-col", className)}
@@ -96,10 +105,10 @@ const PopoverDatesContent = ({
 		>
 			<div className="rounded-t-lg border-b bg-muted/50 p-4">
 				<PopoverTitle className="font-semibold text-foreground text-lg tracking-tight">
-					When will you be there?
+					{t.whenAreYouGoing.value}
 				</PopoverTitle>
 				<p className="mt-1 text-muted-foreground text-sm">
-					Select your travel dates
+					{t.selectYourTravelDates.value}
 				</p>
 			</div>
 			<div className="p-4">
@@ -107,7 +116,7 @@ const PopoverDatesContent = ({
 			</div>
 			<div className="flex justify-end border-t bg-muted/20 p-4">
 				<Button className="w-full sm:w-auto" onClick={onNext}>
-					Next
+					{t.next.value}
 				</Button>
 			</div>
 		</motion.div>
@@ -123,6 +132,7 @@ const PopoverGuestsContent = ({
 	onSave: () => void;
 	onBack: () => void;
 }) => {
+	const t = useIntlayer("booking-search-bar-mobile");
 	return (
 		<motion.div
 			className={cn("flex flex-col", className)}
@@ -133,10 +143,10 @@ const PopoverGuestsContent = ({
 		>
 			<div className="border-b bg-muted/50 p-4">
 				<PopoverTitle className="font-semibold text-foreground text-lg tracking-tight">
-					Who is coming?
+					{t.whosComing.value}
 				</PopoverTitle>
 				<p className="mt-1 text-muted-foreground text-sm">
-					Select your guests count
+					{t.selectYourGuestsCount.value}
 				</p>
 			</div>
 			<div className="p-6">
@@ -144,9 +154,11 @@ const PopoverGuestsContent = ({
 			</div>
 			<div className="flex justify-between gap-4 border-t bg-muted/20 p-4">
 				<Button variant="ghost" onClick={onBack}>
-					Back
+					{t.back.value}
 				</Button>
-				<PopoverClose render={<Button onClick={onSave} />}>Search</PopoverClose>
+				<PopoverClose render={<Button onClick={onSave} />}>
+					{t.search.value}
+				</PopoverClose>
 			</div>
 		</motion.div>
 	);

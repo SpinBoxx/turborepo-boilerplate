@@ -1,20 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useIntlayer } from "react-intlayer";
 import BookingSearchBar from "@/features/booking/BookinSearchBar/BookingSearchBar";
 import PopularHotels from "@/features/hotels/ui/PopularHotels";
-import { orpc } from "@/lib/orpc";
 
 export const Route = createFileRoute("/_app/")({
 	component: RouteComponent,
-	loader: async ({ context }) => {
-		const user = await context.auth.loadSession();
-		console.log(user);
-
-		const data = await orpc.amenity.list({});
-		console.log(data);
-	},
 });
 
 function RouteComponent() {
+	const t = useIntlayer("homepage");
 	return (
 		<div className="space-y-4">
 			<div className="relative left-1/2 hidden w-screen -translate-x-1/2 sm:block">
@@ -25,7 +19,7 @@ function RouteComponent() {
 				/>
 			</div>
 			<h1 className="text-balance font-semibold text-3xl sm:hidden">
-				Book Your Perfect Stay
+				{t.bookYourPerfectStay.value}
 			</h1>
 
 			<div className="space-y-4 sm:-translate-y-20 sm:space-y-18">

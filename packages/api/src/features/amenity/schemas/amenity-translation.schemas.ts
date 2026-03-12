@@ -5,7 +5,7 @@ export const AmenityTranslationItemSchema = z.object({
 	name: z.string().min(1),
 });
 
-export const AmenityTranslationSchema = z.partialRecord(
+export const AmenityTranslationSchema = z.record(
 	z.enum(LOCALES),
 	AmenityTranslationItemSchema,
 );

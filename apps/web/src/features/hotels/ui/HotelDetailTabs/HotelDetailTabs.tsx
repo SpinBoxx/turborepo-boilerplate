@@ -7,7 +7,7 @@ import HotelDetailMapsTab from "./HotelDetailMapsTab";
 export default function HotelDetailTabs() {
 	return (
 		<Tabs defaultValue="tab-1">
-			<div className="w-fit border-b">
+			<div className="border-b">
 				<TabsList variant="underline">
 					<TabsTab value="tab-1">
 						<InfoIcon />
@@ -23,7 +23,7 @@ export default function HotelDetailTabs() {
 					</TabsTab>
 				</TabsList>
 			</div>
-			<div className="mt-2">
+			<div className="mt-2 md:pl-3">
 				<TabsPanel value="tab-1">
 					<HotelDetailInformationTab />
 				</TabsPanel>

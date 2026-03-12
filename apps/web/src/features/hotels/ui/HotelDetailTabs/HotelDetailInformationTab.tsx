@@ -5,17 +5,18 @@ import HotelDescription from "../../components/HotelDescription";
 import HotelEmail from "../../components/HotelEmail";
 import HotelPhoneNumber from "../../components/HotelPhoneNumber";
 import { useHotelContext } from "../../components/HotelProvider";
+import HotelDetailSectionTitle from "./HotelDetailSectionTitle";
 
 const HotelDetailInformationTab = () => {
 	const { hotel } = useHotelContext();
 	return (
-		<div className="space-y-2.5">
+		<div className="space-y-5">
 			<div className="space-y-2">
-				<p className="font-medium text-base">Description</p>
+				<HotelDetailSectionTitle>À propos de l'hôtel</HotelDetailSectionTitle>
 				<HotelDescription className="text-muted-foreground" />
 			</div>
 			<div className="flex flex-col gap-3">
-				<p className="font-medium text-base">Contact</p>
+				<HotelDetailSectionTitle>Contact</HotelDetailSectionTitle>
 				{hotel.email && (
 					<ContactInfo
 						icon={MailIcon}

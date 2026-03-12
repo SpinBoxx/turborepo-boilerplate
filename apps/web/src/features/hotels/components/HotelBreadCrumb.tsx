@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useIntlayer } from "react-intlayer";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -10,6 +11,7 @@ import {
 import { useHotelContext } from "./HotelProvider";
 
 export default function HotelBreadcrumb() {
+	const t = useIntlayer("hotelBreadcrumb");
 	const {
 		hotel: { name },
 	} = useHotelContext();
@@ -17,7 +19,9 @@ export default function HotelBreadcrumb() {
 		<Breadcrumb>
 			<BreadcrumbList>
 				<BreadcrumbItem>
-					<BreadcrumbLink render={<Link to={"/"} />}>Home</BreadcrumbLink>
+					<BreadcrumbLink render={<Link to={"/"} />}>
+						{t.home.value}
+					</BreadcrumbLink>
 				</BreadcrumbItem>
 				<BreadcrumbSeparator> / </BreadcrumbSeparator>
 				<BreadcrumbItem>

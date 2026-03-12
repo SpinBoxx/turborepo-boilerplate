@@ -91,8 +91,9 @@ function validateBase64Image(
 }
 
 function buildUploadOptions(options: UploadOptions): UploadApiOptions {
+	const env = process.env.NODE_ENV || "development";
 	const uploadOptions: UploadApiOptions = {
-		folder: options.folder ?? "hotels",
+		folder: `${env.slice(0, 3)}/${options.folder ?? "hotels"}`,
 		resource_type: "image",
 		overwrite: options.overwrite ?? false,
 		unique_filename: !options.publicId,
