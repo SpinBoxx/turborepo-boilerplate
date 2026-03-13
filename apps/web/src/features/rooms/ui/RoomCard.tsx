@@ -10,7 +10,7 @@ import RoomBeds from "../components/RoomBeds";
 import RoomDescription from "../components/RoomDescription";
 import RoomImage from "../components/RoomImage";
 import RoomPriceBadge from "../components/RoomPriceBadge";
-import RoomTitle from "../components/RoomTitle";
+import RoomType from "../components/RoomType";
 
 interface Props {
 	className?: string;
@@ -26,17 +26,17 @@ const RoomCard = ({ className, onViewDetails }: Props) => {
 			)}
 		>
 			<CardPanel className="p-0">
-				<div className="overflow-hidden">
+				<div className="relative overflow-hidden">
 					<RoomImage
 						variant="listing-card"
 						className="aspect-[1.65/1] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
 					/>
+					<RoomType className="absolute top-3 right-3" display={"badge"} />
 				</div>
 
 				<div className="space-y-5 px-5 py-5 md:px-6 md:py-6">
 					<div className="flex flex-col gap-4">
 						<div className="items-start-safe flex justify-between gap-3">
-							<RoomTitle />
 							<RoomPriceBadge className="py-0.5" />
 						</div>
 						<RoomDescription />

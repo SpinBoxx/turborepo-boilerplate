@@ -4,6 +4,7 @@ import {
 	todayDateOnly,
 	tomorrowDateOnly,
 } from "@zanadeal/utils";
+import z from "zod";
 import { create } from "zustand";
 
 interface BookingState {
@@ -29,6 +30,10 @@ interface BookingState {
 	setRoomId: (roomId: string | null) => void;
 
 	// Utility actions
+	validateBooking: () => {
+		success: boolean;
+		error?: string;
+	};
 	resetBooking: () => void;
 	hasGuest: () => boolean;
 	hasAllInfo: () => boolean;
@@ -99,6 +104,37 @@ export const useBookingStore = create<BookingState>()((set, get) => ({
 	hasMaxGuests: () => {
 		const state = get();
 		return state.guestCount >= state.maxGuests;
+	},
+	validateBooking: () => {
+		const state = get();
+
+		const bookingSchema = z.object({
+			checkInDate: z.string().refine((date) => {
+				const today = new Date();
+				const checkIn = new Date(date);
+				return checkIn >= today;
+			}, "Check-in date cannot be in the past"),
+
+			checkOutDate: z.string().refine((date) => {
+				const state = get();
+				const checkIn = new Date(state.checkInDate);
+				const checkOut = new Date(date);
+				return checkOut > checkIn;
+			}, "Check-out date must be after check-in date"),
+
+			guestCount: z.number().min(1, "At least one guest is required"),
+		});
+
+		const result = bookingSchema.safeParse({
+			checkInDate: state.checkInDate,
+			checkOutDate: state.checkOutDate,
+			guestCount: state.guestCount,
+		});
+
+		return {
+			success: result.success,
+			error: result.success ? undefined : result.error.issues[0]?.message,
+		};
 	},
 
 	hasAllInfo: () => {

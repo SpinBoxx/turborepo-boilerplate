@@ -1,8 +1,9 @@
 import { cn } from "@zanadeal/ui";
+import { ChevronRight } from "lucide-react";
 import type { ComponentProps } from "react";
-import CalendarWithComboBox from "@/components/calendar/CalendarWithComboBox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { BookingSearchBarCalendarPopover } from "@/features/booking/BookinSearchBar/BookingSearchBarCalendarPopover";
 import BookingGuestCountInput from "@/features/booking/ui/BookingGuestCountInput";
 import { useHotelContext } from "../components/HotelProvider";
 
@@ -14,7 +15,7 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 	return (
 		<div
 			className={cn(
-				"md:sticky md:top-4 md:h-fit md:w-80 md:self-start md:rounded-xl md:bg-transparent md:p-0 md:shadow-none",
+				"md:sticky md:top-4 md:h-fit md:min-w-60 md:max-w-86 md:self-start md:rounded-xl md:bg-transparent md:p-0 md:shadow-none lg:min-w-70 xl:min-w-80",
 				className,
 			)}
 			{...props}
@@ -28,38 +29,28 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 						<span className="mb-1 text-muted-foreground text-sm">/ night</span>
 					</div>
 
-					<div className="hidden md:block">
-						<div className="flex gap-2">
-							<div className="flex-1 space-y-1.5">
-								<p className="font-medium text-sm">Check-in</p>
-								<CalendarWithComboBox
-									placeholder="Add date"
-									triggerProps={{
-										className:
-											"w-full text-sm! font-light focus:ring-1 focus:ring-primary",
-									}}
-								/>
-							</div>
-							<div className="flex-1 space-y-1.5">
-								<p className="font-medium text-sm">Check-out</p>
-								<CalendarWithComboBox
-									placeholder="Add date"
-									triggerProps={{
-										className:
-											"w-full text-sm! font-light focus:ring-1 focus:ring-primary",
-									}}
-								/>
-							</div>
+					<div className="hidden md:flex md:flex-col md:gap-4">
+						<div className="space-y-1.5">
+							<p className="font-medium text-sm">Date de séjour</p>
+							<BookingSearchBarCalendarPopover
+								buttonsProps={{
+									size: "lg",
+								}}
+							/>
 						</div>
 
 						<div className="space-y-1.5">
 							<p className="font-medium text-sm">Guests</p>
-							<BookingGuestCountInput />
+							<BookingGuestCountInput size="lg" />
 						</div>
 					</div>
 
-					<Button size="lg" className="mt-2 w-full font-bold md:text-base">
+					<Button
+						size="lg"
+						className="group mt-2 w-full font-bold md:text-base"
+					>
 						Select Rooms
+						<ChevronRight className="transition-all group-hover:translate-x-2" />
 					</Button>
 				</CardContent>
 			</Card>

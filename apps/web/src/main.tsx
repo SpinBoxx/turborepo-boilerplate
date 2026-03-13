@@ -51,21 +51,19 @@ const RouterProviderWithContext = () => {
 	);
 };
 
-if (!rootElement.innerHTML) {
-	const root = ReactDOM.createRoot(rootElement);
-	const queryClient = createQueryClient();
-	root.render(
-		<StrictMode>
-			<QueryClientProvider client={queryClient}>
-				<IntlayerProvider>
-					<ThemeProvider>
-						<AuthProvider>
-							<RouterProviderWithContext />
-						</AuthProvider>
-						<Toaster />
-					</ThemeProvider>
-				</IntlayerProvider>
-			</QueryClientProvider>
-		</StrictMode>,
-	);
-}
+const root = ReactDOM.createRoot(rootElement);
+const queryClient = createQueryClient();
+root.render(
+	<StrictMode>
+		<QueryClientProvider client={queryClient}>
+			<IntlayerProvider>
+				<ThemeProvider>
+					<AuthProvider>
+						<RouterProviderWithContext />
+					</AuthProvider>
+					<Toaster />
+				</ThemeProvider>
+			</IntlayerProvider>
+		</QueryClientProvider>
+	</StrictMode>,
+);

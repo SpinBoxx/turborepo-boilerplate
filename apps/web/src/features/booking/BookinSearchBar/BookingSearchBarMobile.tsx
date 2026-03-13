@@ -4,6 +4,7 @@ import { date } from "intlayer";
 import { CalendarIcon, ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useIntlayer, useIntlayerContext } from "react-intlayer";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	Popover,
@@ -22,7 +23,7 @@ interface Props {
 }
 
 export default function BookingSearchBarMobile({ className }: Props) {
-	const { checkInDate, checkOutDate } = useBookingStore();
+	const { checkInDate, checkOutDate, validateBooking } = useBookingStore();
 	const { locale } = useIntlayerContext();
 	const [isOpen, setIsOpen] = useState(false);
 	const [step, setStep] = useState<"dates" | "guests">("dates");
@@ -78,7 +79,14 @@ export default function BookingSearchBarMobile({ className }: Props) {
 					<PopoverDatesContent onNext={() => setStep("guests")} />
 				) : (
 					<PopoverGuestsContent
-						onSave={() => setIsOpen(false)}
+						onSave={() => {
+							const result = validateBooking();
+							if (result.success) {
+								setIsOpen(false);
+							} else {
+								toast.error(result.error);
+							}
+						}}
 						onBack={() => setStep("dates")}
 					/>
 				)}

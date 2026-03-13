@@ -1,9 +1,10 @@
 import { Search } from "lucide-react";
-import type { ComponentProps } from "react";
+import { type ComponentProps, useState } from "react";
 import CalendarWithComboBox from "@/components/calendar/CalendarWithComboBox";
 import { Button } from "@/components/ui/button";
 import { Card, CardPanel } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useBookingStore } from "../hooks/useBookingHook";
 import BookingGuestCountInput from "../ui/BookingGuestCountInput";
 
 interface Props extends ComponentProps<"div"> {
@@ -26,6 +27,10 @@ export default function BookingSearchBarDesktop({
 		label,
 		onClick,
 	} = actionButton || {};
+
+	const { validateBooking } = useBookingStore();
+	const [error, setError] = useState<string | null>(null);
+
 	return (
 		<Card
 			className={cn("flex flex-col sm:w-4/5 sm:flex-row", className)}
@@ -36,6 +41,7 @@ export default function BookingSearchBarDesktop({
 					<div className="flex-1">
 						<p className="font-semibold text-lg">Check-in</p>
 						<CalendarWithComboBox
+							type="checkIn"
 							placeholder="Arrival"
 							triggerProps={{
 								className: "!font-normal !text-base !text-muted-foreground",
@@ -46,6 +52,7 @@ export default function BookingSearchBarDesktop({
 					<div className="flex-1">
 						<p className="font-semibold text-lg">Check-out</p>
 						<CalendarWithComboBox
+							type="checkOut"
 							placeholder="Departure"
 							triggerProps={{
 								size: "xl",
@@ -65,12 +72,22 @@ export default function BookingSearchBarDesktop({
 					<Button
 						className={cn("mt-2 sm:mt-0 sm:self-end", actionButtonClassName)}
 						size={"xl"}
-						onClick={onClick}
+						onClick={() => {
+							setError(null);
+							const result = validateBooking();
+							if (!result.success) {
+								setError(result.error || null);
+							} else {
+								onClick?.();
+							}
+						}}
 					>
 						<Search className="hidden text-white opacity-100 md:block md:size-6" />
 						{label || "Search"}
 					</Button>
 				</div>
+
+				<p className="mt-2 text-destructive text-sm">{error}</p>
 			</CardPanel>
 		</Card>
 	);
