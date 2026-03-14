@@ -16,7 +16,7 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 	return (
 		<div
 			className={cn(
-				"md:sticky md:top-4 md:h-fit md:min-w-60 md:max-w-86 md:self-start md:rounded-xl md:bg-transparent md:p-0 md:shadow-none lg:min-w-70 xl:min-w-80",
+				"md:sticky md:top-4 md:h-fit md:min-w-fit md:max-w-86 md:self-start md:rounded-xl md:bg-transparent md:p-0 md:shadow-none lg:min-w-70 xl:min-w-80",
 				className,
 			)}
 			{...props}

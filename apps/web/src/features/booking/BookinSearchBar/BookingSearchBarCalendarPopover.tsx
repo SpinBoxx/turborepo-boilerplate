@@ -13,6 +13,7 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { useBookingStore } from "../hooks/useBookingHook";
+import BookingSearchBarCalendar from "./BookingSearchBarCalendar";
 
 interface Props {
 	className?: string;
@@ -20,12 +21,8 @@ interface Props {
 	buttonsProps?: ButtonProps;
 }
 
-export function BookingSearchBarCalendarPopover({
-	className,
-	buttonsProps,
-}: Props) {
-	const { checkInDate, checkOutDate, setCheckInDate, setCheckOutDate } =
-		useBookingStore();
+export function BookingSearchBarCalendarPopover({ buttonsProps }: Props) {
+	const { checkInDate, checkOutDate } = useBookingStore();
 	const { locale } = useIntlayerContext();
 
 	const t = useIntlayer("booking-search-bar-calendar-popover");
@@ -46,7 +43,7 @@ export function BookingSearchBarCalendarPopover({
 				render={
 					<Button
 						variant={"outline"}
-						className="w-full justify-start"
+						className="w-full justify-start font-normal text-base"
 						{...buttonsProps}
 					/>
 				}
@@ -55,21 +52,7 @@ export function BookingSearchBarCalendarPopover({
 				{formatDate}
 			</PopoverTrigger>
 			<PopoverContent>
-				<Calendar
-					className={cn("flex w-full justify-center", className)}
-					mode="range"
-					disabled={{ before: new Date() }}
-					selected={{
-						from: stringToDate(checkInDate),
-						to: stringToDate(checkOutDate),
-					}}
-					onSelect={(dateRange: DateRange) => {
-						if (!dateRange.from || !dateRange.to) return;
-						setCheckInDate(dateRange.from);
-						setCheckOutDate(dateRange.to);
-					}}
-					required
-				/>
+				<BookingSearchBarCalendar />
 			</PopoverContent>
 		</Popover>
 	);

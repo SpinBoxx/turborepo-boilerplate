@@ -1,7 +1,14 @@
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { date } from "intlayer";
-import { CalendarIcon, ChevronDown } from "lucide-react";
+import {
+	CalendarIcon,
+	ChevronDown,
+	ChevronLast,
+	ChevronLeft,
+	ChevronRight,
+	Search,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { useIntlayer, useIntlayerContext } from "react-intlayer";
 import { toast } from "sonner";
@@ -16,7 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useBookingStore } from "../hooks/useBookingHook";
 import BookingGuestCountInput from "../ui/BookingGuestCountInput";
-import { BookingSearchBarCalendar } from "./BookingSearchBarCalendar";
+import BookingSearchBarCalendar from "./BookingSearchBarCalendar";
 
 interface Props {
 	className?: string;
@@ -74,7 +81,7 @@ export default function BookingSearchBarMobile({ className }: Props) {
 					)}
 				/>
 			</PopoverTrigger>
-			<PopoverPopup className="w-[calc(100vw-2rem)] overflow-hidden rounded-2xl p-0 sm:w-96">
+			<PopoverPopup className="w-fit overflow-hidden rounded-2xl p-0">
 				{step === "dates" ? (
 					<PopoverDatesContent onNext={() => setStep("guests")} />
 				) : (
@@ -120,11 +127,12 @@ const PopoverDatesContent = ({
 				</p>
 			</div>
 			<div className="p-4">
-				<BookingSearchBarCalendar className="w-full" />
+				<BookingSearchBarCalendar />
 			</div>
 			<div className="flex justify-end border-t bg-muted/20 p-4">
 				<Button className="w-full sm:w-auto" onClick={onNext}>
 					{t.next.value}
+					<ChevronRight />
 				</Button>
 			</div>
 		</motion.div>
@@ -162,9 +170,11 @@ const PopoverGuestsContent = ({
 			</div>
 			<div className="flex justify-between gap-4 border-t bg-muted/20 p-4">
 				<Button variant="ghost" onClick={onBack}>
+					<ChevronLeft />
 					{t.back.value}
 				</Button>
 				<PopoverClose render={<Button onClick={onSave} />}>
+					<Search />
 					{t.search.value}
 				</PopoverClose>
 			</div>

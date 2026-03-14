@@ -1,20 +1,21 @@
-import { cn } from "@zanadeal/ui";
 import { stringToDate } from "@zanadeal/utils";
 import type { DateRange } from "react-day-picker";
 import { Calendar } from "@/components/ui/calendar";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 import { useBookingStore } from "../hooks/useBookingHook";
 
-interface Props {
-	className?: string;
-}
-
-export function BookingSearchBarCalendar({ className }: Props) {
+const BookingSearchBarCalendar = () => {
 	const { checkInDate, checkOutDate, setCheckInDate, setCheckOutDate } =
 		useBookingStore();
 
+	const isMobile = useIsMobile(650);
+
 	return (
 		<Calendar
-			className={cn("flex w-full justify-center", className)}
+			numberOfMonths={isMobile ? 1 : 2}
+			pagedNavigation
+			className={cn("flex w-full justify-center")}
 			mode="range"
 			disabled={{ before: new Date() }}
 			selected={{
@@ -29,4 +30,6 @@ export function BookingSearchBarCalendar({ className }: Props) {
 			required
 		/>
 	);
-}
+};
+
+export default BookingSearchBarCalendar;

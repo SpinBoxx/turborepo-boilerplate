@@ -6,6 +6,7 @@ import { Card, CardPanel } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useBookingStore } from "../hooks/useBookingHook";
 import BookingGuestCountInput from "../ui/BookingGuestCountInput";
+import { BookingSearchBarCalendarPopover } from "./BookingSearchBarCalendarPopover";
 
 interface Props extends ComponentProps<"div"> {
 	guestsInputClassName?: string;
@@ -40,23 +41,9 @@ export default function BookingSearchBarDesktop({
 				<div className="flex flex-col gap-2 sm:w-full sm:flex-row">
 					<div className="flex-1">
 						<p className="font-semibold text-lg">Check-in</p>
-						<CalendarWithComboBox
-							type="checkIn"
-							placeholder="Arrival"
-							triggerProps={{
-								className: "!font-normal !text-base !text-muted-foreground",
+						<BookingSearchBarCalendarPopover
+							buttonsProps={{
 								size: "xl",
-							}}
-						/>
-					</div>
-					<div className="flex-1">
-						<p className="font-semibold text-lg">Check-out</p>
-						<CalendarWithComboBox
-							type="checkOut"
-							placeholder="Departure"
-							triggerProps={{
-								size: "xl",
-								className: "!font-normal !text-base !text-muted-foreground",
 							}}
 						/>
 					</div>
