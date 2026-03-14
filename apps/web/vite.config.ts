@@ -53,10 +53,14 @@ export default defineConfig(({ command }) => {
 			host: "0.0.0.0",
 			allowedHosts: true,
 		},
-
 		build: {
 			modulePreload: {
 				polyfill: true,
+			},
+			rollupOptions: {
+				output: {
+					manualChunks: undefined, // Let Vite handle code splitting based on dynamic imports and other heuristics
+				},
 			},
 			target: "es2020",
 			cssTarget: "safari13",
