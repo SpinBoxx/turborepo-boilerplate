@@ -42,6 +42,7 @@ const RouterProviderWithContext = () => {
 	return (
 		<RouterProvider
 			router={router}
+			basepath="/"
 			context={{
 				auth: {
 					loadSession,
