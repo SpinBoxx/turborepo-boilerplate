@@ -62,7 +62,7 @@ export default defineConfig(({ command }) => {
 					manualChunks: undefined, // Let Vite handle code splitting based on dynamic imports and other heuristics
 				},
 			},
-			target: "es2019",
+			target: "es2015",
 			cssTarget: "safari13",
 			sourcemap: false,
 			minify: "esbuild",
