@@ -9,10 +9,20 @@ const RoomInformationsFormStep = withForm({
 		// const name = useStore(form.store, (state) => state.values.name);
 		return (
 			<div className="w-full space-y-4">
+				<form.AppField name="title">
+					{(field) => (
+						<field.TextField
+							label="Titre"
+							inputProps={{
+								placeholder: "Ex: Suite vue mer",
+							}}
+						/>
+					)}
+				</form.AppField>
 				<form.AppField name="type">
 					{(field) => (
 						<field.Select
-							label="Adresse"
+							label="Type"
 							values={Object.values(RoomType).map((roomType) => ({
 								label: roomType,
 								value: roomType,
@@ -28,23 +38,64 @@ const RoomInformationsFormStep = withForm({
 						/>
 					)}
 				</form.AppField>
-				<div className="grid grid-cols-2 gap-5">
-					<form.AppField name="capacity">
+				<div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
+					<form.AppField name="beds">
 						{(field) => (
 							<div className="flex flex-col gap-1">
 								<field.TextField
-									label="Capacité"
+									label="Lits"
 									inputProps={{
 										type: "number",
 										min: 1,
-										placeholder:
-											"Nombre de personnes pouvant occuper la chambre",
+										placeholder: "Nombre de lits",
 									}}
 								/>
 								<small className="text-muted-foreground">
-									Nombre de personnes pouvant occuper la chambre
+									Nombre de lits disponibles dans la chambre
 								</small>
 							</div>
+						)}
+					</form.AppField>
+					<form.AppField name="maxGuests">
+						{(field) => (
+							<div className="flex flex-col gap-1">
+								<field.TextField
+									label="Voyageurs max"
+									inputProps={{
+										type: "number",
+										min: 1,
+										placeholder: "Capacité maximale",
+									}}
+								/>
+								<small className="text-muted-foreground">
+									Nombre maximal de voyageurs pour cette chambre
+								</small>
+							</div>
+						)}
+					</form.AppField>
+					<form.AppField name="baths">
+						{(field) => (
+							<field.TextField
+								label="Salles de bain"
+								inputProps={{
+									type: "number",
+									min: 1,
+									placeholder: "Nombre de salles de bain",
+								}}
+							/>
+						)}
+					</form.AppField>
+					<form.AppField name="areaM2">
+						{(field) => (
+							<field.TextField
+								label="Surface (m²)"
+								inputProps={{
+									type: "number",
+									min: 1,
+									step: "0.1",
+									placeholder: "Surface de la chambre",
+								}}
+							/>
 						)}
 					</form.AppField>
 					<form.AppField name="quantity">

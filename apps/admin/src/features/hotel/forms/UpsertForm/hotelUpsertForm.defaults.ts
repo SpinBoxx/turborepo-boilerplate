@@ -1,7 +1,7 @@
 import type {
-	Hotel,
+	HotelAdminComputed,
 	UpsertHotelInput,
-} from "@zanadeal/api/features/hotel/schemas/hotel.schema";
+} from "@zanadeal/api/features/hotel";
 
 export const HOTEL_UPSERT_DEFAULT_VALUES: UpsertHotelInput = {
 	amenityIds: [],
@@ -15,7 +15,9 @@ export const HOTEL_UPSERT_DEFAULT_VALUES: UpsertHotelInput = {
 	isArchived: false,
 };
 
-const mapHotelToUpsertHotelInput = (hotel: Hotel): UpsertHotelInput => {
+const mapHotelToUpsertHotelInput = (
+	hotel: HotelAdminComputed,
+): UpsertHotelInput => {
 	return {
 		...hotel,
 		email: hotel.email ?? undefined,
@@ -30,7 +32,9 @@ const mapHotelToUpsertHotelInput = (hotel: Hotel): UpsertHotelInput => {
 	};
 };
 
-export const getHotelInitValues = (hotel?: Hotel): UpsertHotelInput => {
+export const getHotelInitValues = (
+	hotel?: HotelAdminComputed,
+): UpsertHotelInput => {
 	return hotel
 		? mapHotelToUpsertHotelInput(hotel)
 		: { ...HOTEL_UPSERT_DEFAULT_VALUES };

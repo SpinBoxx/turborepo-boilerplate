@@ -42,6 +42,11 @@
 			"passThroughEnv": ["DATABASE_URL"],
 			"cache": false,
 			"persistent": false
+		},
+		"db:seed": {
+			"passThroughEnv": ["DATABASE_URL"],
+			"cache": false,
+			"persistent": false
 		}
 	}
 }

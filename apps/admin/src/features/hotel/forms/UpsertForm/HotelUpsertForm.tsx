@@ -12,6 +12,7 @@ import {
 	StepperPanel,
 } from "@/components/stepper/FormStepper/FormStepperProvider";
 import { useAppForm } from "@/hooks/useAppForm";
+import { buildCloudinaryImage } from "@/lib/cloudinary";
 import { useCreateHotel, useUpdateHotel } from "../../hotel.queries";
 import HotelAmenitiesStep from "./HotelAmenitiesStep";
 import HotelBankAccountStep from "./HotelBankAccountStep";
@@ -46,9 +47,15 @@ export default function HotelUpsertForm({ hotel, className }: Props) {
 	useEffect(() => {
 		if (hotel?.images.length) {
 			Promise.all(
-				hotel.images.map((image, index) =>
-					urlToFile(image.url, `hotel-image-${index}.jpg`, "image/jpeg"),
-				),
+				hotel.images.map((image, index) => {
+					const img = buildCloudinaryImage(
+						{ publicId: image.publicId },
+						{
+							variant: "listing-card",
+						},
+					);
+					return urlToFile(img.src!, `room-img-${index}.jpg`, "image/jpeg");
+				}),
 			).then((files) => {
 				setFiles(files);
 			});

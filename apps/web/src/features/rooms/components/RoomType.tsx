@@ -55,6 +55,10 @@ export default function RoomType({ className, display, ...props }: Props) {
 
 	const isPremiumBadge = display === "badge" && room.type === "PREMIUM";
 
+	if (!isPremiumBadge) {
+		return null;
+	}
+
 	return (
 		<h3
 			className={cn(
@@ -63,7 +67,6 @@ export default function RoomType({ className, display, ...props }: Props) {
 			)}
 			{...props}
 		>
-			{isPremiumBadge ? <Stars className="size-4 fill-current" /> : null}
 			{formatRoomTypeLabel(room.type)}
 		</h3>
 	);

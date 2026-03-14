@@ -1,4 +1,4 @@
-import type { Room } from "@zanadeal/api/features/room/room.schemas";
+import type { RoomAdminComputed } from "@zanadeal/api/features/room";
 import {
 	Dialog,
 	DialogContent,
@@ -11,7 +11,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import UpsertRoomForm from "../../forms/UpsertRoom/UpsertRoomForm";
 
 interface Props {
-	room?: Room;
+	room?: RoomAdminComputed;
 	hotelId: string;
 	children?: ReactNode;
 	open?: boolean;

@@ -4,7 +4,11 @@ model Room {
   hotelId     String
   type        RoomType
   description String
-  capacity    Int
+  title       String
+  beds        Int
+  maxGuests   Int
+  baths       Int
+  areaM2      Float
   quantity    Int
   bookings    Booking[]
   amenities   Amenity[] 

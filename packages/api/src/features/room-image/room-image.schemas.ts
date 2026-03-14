@@ -16,6 +16,7 @@ export const GetRoomImageInputSchema = z.object({
 
 export const CreateRoomImageInputSchema = z.object({
 	base64: z.string().min(1),
+	publicId: z.string().min(1).optional(),
 });
 
 export const CreateRoomImageComputedInputSchema = z.object({

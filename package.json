@@ -20,7 +20,8 @@
 		"db:push": "turbo -F @zanadeal/db db:push",
 		"db:studio": "turbo -F @zanadeal/db db:studio",
 		"db:generate": "turbo -F @zanadeal/db db:generate",
-		"db:migrate": "turbo -F @zanadeal/db db:migrate"
+		"db:migrate": "turbo -F @zanadeal/db db:migrate",
+		"db:seed": "turbo -F @zanadeal/db db:seed"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.1.0",

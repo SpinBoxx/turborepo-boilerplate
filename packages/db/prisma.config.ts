@@ -1,10 +1,8 @@
 import path from "node:path";
 import { defineConfig, env } from "prisma/config";
-import dotenv from "dotenv";
+import { loadDbEnv } from "./src/load-env";
 
-dotenv.config({
-	path: "../../apps/server/.env",
-});
+loadDbEnv();
 
 export default defineConfig({
 	schema: path.join("prisma", "schema"),

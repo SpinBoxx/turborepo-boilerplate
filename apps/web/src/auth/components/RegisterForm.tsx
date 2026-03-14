@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import type { UpsertUserInput } from "@zanadeal/api/features/user";
 import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
@@ -19,6 +20,7 @@ export default function RegisterForm({
 }: RegisterFormProps) {
 	const content = useIntlayer("register-form");
 	const { signUpWithEmail } = useAuth();
+	const navigate = useNavigate();
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
@@ -27,7 +29,11 @@ export default function RegisterForm({
 			lastName: "",
 		} satisfies UpsertUserInput,
 		onSubmit: async ({ value }) => {
-			await signUpWithEmail(value, {});
+			const user = await signUpWithEmail(value, {});
+
+			if (user) {
+				navigate({ to: redirectTo || "/" });
+			}
 		},
 	});
 

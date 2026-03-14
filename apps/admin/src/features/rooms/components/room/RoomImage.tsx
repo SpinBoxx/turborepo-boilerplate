@@ -8,10 +8,6 @@ interface Props extends ComponentProps<"img"> {}
 export default function RoomImage({ className, ...props }: Props) {
 	const { room } = useRoomContext();
 	const image = room.images[0];
-	const transformed = buildCloudinaryImage(image, {
-		variant: "room-thumbnail",
-		responsiveWidths: [200, 300, 400, 600],
-	});
 
 	if (!image) {
 		return (
@@ -25,6 +21,10 @@ export default function RoomImage({ className, ...props }: Props) {
 			</div>
 		);
 	}
+	const transformed = buildCloudinaryImage(image, {
+		variant: "room-thumbnail",
+		responsiveWidths: [200, 300, 400, 600],
+	});
 
 	return (
 		<img

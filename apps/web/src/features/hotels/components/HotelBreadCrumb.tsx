@@ -42,7 +42,9 @@ export default function HotelBreadcrumb() {
 						<BreadcrumbSeparator key={`separator-${index}`} />
 						<BreadcrumbItem key={`item-${index}`}>
 							<BreadcrumbLink
-								render={<Link to={pages.slice(0, index + 1).join("/")} />}
+								render={
+									<Link to={pages.slice(0, index + 1).join("/")} from="/" />
+								}
 							>
 								{page}
 							</BreadcrumbLink>

@@ -1,5 +1,6 @@
 import {
 	Badge,
+	Button,
 	Empty,
 	EmptyDescription,
 	EmptyHeader,
@@ -7,8 +8,9 @@ import {
 	EmptyTitle,
 	Spinner,
 } from "@zanadeal/ui";
-import { BedDouble } from "lucide-react";
+import { BedDouble, PlusCircleIcon, PlusIcon } from "lucide-react";
 import { RoomCard } from "@/features/rooms/components/room";
+import UpsertRoomDialog from "../../components/dialogs/UpsertRoomDialog";
 import { useRoomListContext } from "../../hooks/useRoomListParams";
 
 export default function DisplayRoomsByHotel() {
@@ -55,6 +57,11 @@ export default function DisplayRoomsByHotel() {
 					<h2 className="relative flex items-center gap-3 pl-4 font-semibold text-lg after:absolute after:top-1/2 after:left-0 after:h-6 after:w-1.5 after:-translate-y-1/2 after:rounded-full after:bg-indigo-500 after:content-['']">
 						{hotel.name}
 						<Badge variant={"outline"}>{hotel.rooms.length}</Badge>
+						<UpsertRoomDialog hotelId={hotel.id}>
+							<Button size={"icon"} variant={"outline"}>
+								<PlusIcon className="size-6" />
+							</Button>
+						</UpsertRoomDialog>
 					</h2>
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 						{hotel.rooms.map((room) => (

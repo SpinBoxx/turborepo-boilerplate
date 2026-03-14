@@ -11,6 +11,7 @@ import {
 	StepperPanel,
 } from "@/components/stepper/FormStepper/FormStepperProvider";
 import { useAppForm } from "@/hooks/useAppForm";
+import { buildCloudinaryImage } from "@/lib/cloudinary";
 import { useCreateRoom, useUpdateRoom } from "../../rooms.queries";
 import RoomAmenitiesStep from "./steps/RoomAmenitiesStep";
 import RoomImagesStep from "./steps/RoomImagesStep";
@@ -32,20 +33,29 @@ export default function UpsertRoomForm({ room, hotelId }: Props) {
 		onSubmit: async ({ value }) => {
 			const imagesBase64 = await Promise.all(files.map(fileToBase64));
 
-			await (room ? updateRoom : createRoom).mutateAsync({
-				...value,
-				images: imagesBase64.map((base64) => ({ base64 })),
-				capacity: Number(value.capacity),
-			});
+			await (room ? updateRoom : createRoom)
+				.mutateAsync({
+					...value,
+					images: imagesBase64.map((base64) => ({ base64 })),
+				})
+				.then(() => {
+					setFiles([]);
+				});
 		},
 	});
 
 	useEffect(() => {
 		if (room?.images.length) {
 			Promise.all(
-				room.images.map((image, index) =>
-					urlToFile(image.url, `room-image-${index}.jpg`, "image/jpeg"),
-				),
+				room.images.map((image, index) => {
+					const img = buildCloudinaryImage(
+						{ publicId: image.publicId },
+						{
+							variant: "listing-card",
+						},
+					);
+					return urlToFile(img.src!, `room-img-${index}.jpg`, "image/jpeg");
+				}),
 			).then((files) => {
 				setFiles(files);
 			});

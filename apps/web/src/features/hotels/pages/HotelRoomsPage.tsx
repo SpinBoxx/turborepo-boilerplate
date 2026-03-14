@@ -21,7 +21,7 @@ const HotelRoomsPage = ({ hotel }: Props) => {
 					className="hidden md:block md:w-full"
 					actionButton={{ label: "Filter rooms", className: "lg:px-8" }}
 				/>
-				<div className="space-y-1.5">
+				<div className="mt-7 space-y-1.5">
 					<HotelName className="font-semibold text-xl" />
 					<p className="max-w-2xl text-muted-foreground text-sm leading-relaxed">
 						Choisissez la chambre qui vous convient le mieux parmi notre

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "zod";
 import type { Room } from "../../../../../db/prisma/generated/client";
 import { RoomType } from "../../../../../db/prisma/generated/enums";
 import { createListSchemaFor } from "../../../utils";
@@ -14,7 +14,7 @@ import {
 } from "./room-price.schema";
 
 // Zod schema derived from the Prisma RoomType enum
-export const RoomTypeSchema = z.enum(Object.values(RoomType));
+export const RoomTypeSchema = z.enum(RoomType);
 
 // ─── Base computed schema ────────────────────────────────────────────
 
@@ -22,8 +22,12 @@ const RoomComputedSchemaBase = z.object({
 	id: z.string().min(1),
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
+	title: z.string().min(1),
 	description: z.string().min(1),
-	capacity: z.number().int(),
+	beds: z.number().int(),
+	maxGuests: z.number().int(),
+	baths: z.number().int(),
+	areaM2: z.number(),
 	quantity: z.number().int(),
 	images: z.array(RoomImageSchema),
 	amenities: z.array(AmenityComputedSchema),
@@ -49,9 +53,13 @@ export const RoomComputedSchema = z.union([
 export const UpsertRoomInputSchema = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
+	title: z.string().min(1),
 	description: z.string().min(1),
-	capacity: z.number().int(),
-	quantity: z.number().int(),
+	beds: z.string().or(z.number().int()),
+	maxGuests: z.string().or(z.number().int()),
+	baths: z.string().or(z.number().int()),
+	areaM2: z.string().or(z.number()),
+	quantity: z.string().or(z.number().int()),
 	prices: z.array(UpsertRoomPriceInputSchema),
 	amenityIds: z.array(z.string().min(1)),
 	images: z.array(CreateRoomImageInputSchema),
@@ -60,8 +68,12 @@ export const UpsertRoomInputSchema = z.object({
 export const UpsertRoomComputedInputSchema = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
+	title: z.string().min(1),
 	description: z.string().min(1),
-	capacity: z.number().int(),
+	beds: z.number().int(),
+	maxGuests: z.number().int(),
+	baths: z.number().int(),
+	areaM2: z.number(),
 	quantity: z.number().int(),
 	prices: z.array(UpsertRoomPriceInputSchema),
 	amenityIds: z.array(z.string().min(1)),
@@ -82,7 +94,7 @@ export const ListRoomsInputSchema = createListSchemaFor<Room>()({
 			direction: "desc",
 			field: "createdAt",
 		},
-		fields: ["createdAt", "capacity"],
+		fields: ["createdAt", "maxGuests"],
 	},
 	filters: {
 		type: {

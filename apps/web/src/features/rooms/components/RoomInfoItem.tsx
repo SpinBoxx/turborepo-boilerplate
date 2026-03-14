@@ -26,14 +26,14 @@ export default function RoomInfoItem({
 	return (
 		<div
 			className={cn(
-				"flex min-w-0 items-center gap-3 text-[1.05rem] text-foreground",
+				"flex min-w-0 items-center gap-2.5 text-[1.05rem] text-foreground",
 				className,
 			)}
 			{...props}
 		>
 			<Icon
 				className={cn(
-					"size-6 shrink-0 stroke-[2.1] text-foreground",
+					"size-5 shrink-0 stroke-2 text-foreground",
 					iconClassName,
 				)}
 			/>
@@ -41,11 +41,19 @@ export default function RoomInfoItem({
 				className={cn("flex min-w-0 items-baseline gap-1.5", contentClassName)}
 			>
 				<span
-					className={cn("font-semibold tracking-[-0.03em]", valueClassName)}
+					className={cn(
+						"font-medium text-base tracking-[-0.03em] md:text-lg",
+						valueClassName,
+					)}
 				>
 					{value}
 				</span>
-				<span className={cn("font-medium text-foreground/80", labelClassName)}>
+				<span
+					className={cn(
+						"font-normal text-foreground/80 text-sm md:text-base",
+						labelClassName,
+					)}
+				>
 					{label}
 				</span>
 			</div>

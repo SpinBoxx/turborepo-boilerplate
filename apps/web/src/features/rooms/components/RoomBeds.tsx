@@ -14,12 +14,12 @@ interface Props
 
 export default function RoomBeds({ label, value, ...props }: Props) {
 	const { room } = useRoomContext();
-	const resolvedValue = value ?? room.capacity;
+	const resolvedValue = value ?? room.beds;
 
 	return (
 		<RoomInfoItem
 			icon={BedDouble}
-			label={label ?? (room.capacity > 1 ? "Beds" : "Bed")}
+			label={label ?? (room.beds > 1 ? "Beds" : "Bed")}
 			value={resolvedValue}
 			{...props}
 		/>

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { cn } from "@zanadeal/ui";
 import { ChevronRight } from "lucide-react";
 import type { ComponentProps } from "react";
@@ -44,14 +45,15 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 							<BookingGuestCountInput size="lg" />
 						</div>
 					</div>
-
-					<Button
-						size="lg"
-						className="group mt-2 w-full font-bold md:text-base"
-					>
-						Select Rooms
-						<ChevronRight className="transition-all group-hover:translate-x-2" />
-					</Button>
+					<Link to={"/$hotelId/rooms"} params={{ hotelId: hotel.id }}>
+						<Button
+							size="lg"
+							className="group mt-2 w-full font-bold md:text-base"
+						>
+							Select Rooms
+							<ChevronRight className="transition-all group-hover:translate-x-2" />
+						</Button>
+					</Link>
 				</CardContent>
 			</Card>
 		</div>

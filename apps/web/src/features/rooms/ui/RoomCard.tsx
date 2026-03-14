@@ -9,7 +9,7 @@ import RoomBaths from "../components/RoomBaths";
 import RoomBeds from "../components/RoomBeds";
 import RoomDescription from "../components/RoomDescription";
 import RoomImage from "../components/RoomImage";
-import RoomPriceBadge from "../components/RoomPriceBadge";
+import RoomTitle from "../components/RoomTitle";
 import RoomType from "../components/RoomType";
 
 interface Props {
@@ -31,37 +31,24 @@ const RoomCard = ({ className, onViewDetails }: Props) => {
 						variant="listing-card"
 						className="aspect-[1.65/1] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
 					/>
-					<RoomType className="absolute top-3 right-3" display={"badge"} />
+
+					<RoomType className="absolute top-3 right-4" display={"badge"} />
 				</div>
 
-				<div className="space-y-5 px-5 py-5 md:px-6 md:py-6">
-					<div className="flex flex-col gap-4">
+				<div className="space-y-4 px-5 py-5 md:px-6 md:py-6">
+					<div className="flex flex-col gap-1">
 						<div className="items-start-safe flex justify-between gap-3">
-							<RoomPriceBadge className="py-0.5" />
+							<RoomTitle className="font-semibold text-xl" />
 						</div>
-						<RoomDescription />
+						<RoomDescription className="text-muted-foreground text-sm" />
 					</div>
 
-					<div className="flex flex-row flex-wrap items-center gap-3">
-						<RoomBeds
-							iconClassName="size-6 stroke-[2]"
-							valueClassName="text-[1rem] md:text-[1.15rem]"
-							labelClassName="text-[1rem] md:text-[1.15rem]"
-						/>
+					<div className="flex flex-row flex-wrap items-center gap-2.5">
+						<RoomBeds />
 						<Separator orientation="vertical" />
-						<RoomBaths
-							value={2}
-							iconClassName="size-6 stroke-[2]"
-							valueClassName="text-[1rem] md:text-[1.15rem]"
-							labelClassName="text-[1rem] md:text-[1.15rem]"
-						/>
+						<RoomBaths />
 						<Separator orientation="vertical" />
-						<RoomArea
-							value={35}
-							iconClassName="size-6 stroke-[2]"
-							valueClassName="text-[1rem] md:text-[1.15rem]"
-							labelClassName="text-[1rem] md:text-[1.15rem]"
-						/>
+						<RoomArea />
 					</div>
 
 					<Separator className="bg-border/80" />
