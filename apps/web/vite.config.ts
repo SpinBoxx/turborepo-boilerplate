@@ -48,11 +48,16 @@ export default defineConfig(({ command }) => {
 				"@": fileURLToPath(new URL("./src", import.meta.url)),
 			},
 		},
+		base: "/",
 		server: {
 			host: "0.0.0.0",
 			allowedHosts: true,
 		},
+
 		build: {
+			modulePreload: {
+				polyfill: true,
+			},
 			target: "es2020",
 			cssTarget: "safari13",
 			sourcemap: false,
