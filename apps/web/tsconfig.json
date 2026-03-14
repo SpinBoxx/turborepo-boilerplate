@@ -2,7 +2,7 @@
 	"files": [],
 	"extends": "@zanadeal/config/tsconfig.base.json",
 	"compilerOptions": {
-		"target": "es2020",
+		"target": "es2019",
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"jsx": "react-jsx",
