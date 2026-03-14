@@ -1,4 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
+import { Fragment } from "react/jsx-runtime";
 import { useIntlayer } from "react-intlayer";
 import {
 	Breadcrumb,
@@ -38,8 +39,8 @@ export default function HotelBreadcrumb() {
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 				{formatedPages.map((page, index) => (
-					<>
-						<BreadcrumbSeparator key={`separator-${index}`} />
+					<Fragment key={index}>
+						<BreadcrumbSeparator />
 						<BreadcrumbItem key={`item-${index}`}>
 							<BreadcrumbLink
 								render={
@@ -49,7 +50,7 @@ export default function HotelBreadcrumb() {
 								{page}
 							</BreadcrumbLink>
 						</BreadcrumbItem>
-					</>
+					</Fragment>
 				))}
 			</BreadcrumbList>
 		</Breadcrumb>
