@@ -1,13 +1,19 @@
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import { BookingInfoDrawer } from "@/features/booking/ui/BookingInfoDrawer";
+import {
+	createRootRouteWithContext,
+	HeadContent,
+	Outlet,
+} from "@tanstack/react-router";
 import type { User } from "../../../../packages/db/prisma/generated/client";
 
 export const containerClassName = "mx-auto px-5.5 sm:px-8 max-w-7xl";
 
 const RootLayout = () => (
-	<div className="relative isolate mx-auto min-h-dvh max-w-7xl px-5.5 pb-3.5 sm:px-8">
-		<Outlet />
-	</div>
+	<>
+		<HeadContent />
+		<div className="relative isolate mx-auto min-h-dvh max-w-7xl px-5.5 pb-3.5 sm:px-8">
+			<Outlet />
+		</div>
+	</>
 );
 
 interface MyRouterContext {

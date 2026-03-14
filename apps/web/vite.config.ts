@@ -52,6 +52,12 @@ export default defineConfig(({ command }) => {
 			host: "0.0.0.0",
 			allowedHosts: true,
 		},
+		build: {
+			target: "es2020",
+			cssTarget: "safari13",
+			sourcemap: false,
+			minify: "esbuild",
+		},
 		preview: {
 			allowedHosts: true,
 			host: "0.0.0.0",

@@ -5,6 +5,16 @@ import PopularHotels from "@/features/hotels/ui/PopularHotels";
 
 export const Route = createFileRoute("/_app/")({
 	component: RouteComponent,
+	head: () => ({
+		meta: [
+			{
+				title: "Zanadeal - Book your perfect stay",
+				name: "Zanadeal - Book your perfect stay",
+				content:
+					"Discover and book your perfect stay in Madagascar with Zanadeal. Explore a wide range of hotels, compare prices, and find the best deals for your next trip.",
+			},
+		],
+	}),
 });
 
 function RouteComponent() {
