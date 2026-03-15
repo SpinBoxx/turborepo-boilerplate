@@ -1,6 +1,5 @@
 {
-	"files": [],
-	"extends": "@zanadeal/config/tsconfig.base.json",
+	// "extends": "@zanadeal/config/tsconfig.base.json",
 	"compilerOptions": {
 		"target": "es2019",
 		"module": "esnext",
