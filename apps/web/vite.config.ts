@@ -1,8 +1,7 @@
-import { fileURLToPath, URL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
-import { devtools } from "@tanstack/devtools-vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import path from "path";
 import { defineConfig } from "vite";
 import { intlayer, intlayerCompiler } from "vite-intlayer";
 
@@ -15,37 +14,13 @@ export default defineConfig(({ command }) => {
 			target: "react",
 			autoCodeSplitting: true,
 		}),
-		viteReact({
-			// https://react.dev/learn/react-compiler
-			babel: {
-				plugins: [
-					[
-						"babel-plugin-react-compiler",
-						{
-							target: "19",
-						},
-					],
-				],
-			},
-		}),
+		viteReact(),
 	];
-
-	if (command === "serve") {
-		plugins.splice(
-			1,
-			0,
-			devtools({
-				eventBusConfig: {
-					enabled: false,
-				},
-			}),
-		);
-	}
 
 	return {
 		resolve: {
 			alias: {
-				"@": fileURLToPath(new URL("./src", import.meta.url)),
+				"@": path.resolve(__dirname, "./src"),
 			},
 		},
 		base: "/",
