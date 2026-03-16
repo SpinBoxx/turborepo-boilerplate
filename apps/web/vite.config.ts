@@ -11,9 +11,7 @@ export default defineConfig(({ command }) => {
 		tailwindcss(),
 		intlayer(),
 		intlayerCompiler(),
-		legacy({
-			targets: ["defaults", "not IE 11"],
-		}),
+		legacy({ targets: ["iOS >= 13"] }),
 		tanstackRouter({
 			target: "react",
 		}),
