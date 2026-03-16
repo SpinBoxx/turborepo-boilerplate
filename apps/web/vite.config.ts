@@ -1,7 +1,8 @@
+import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import legacy from "@vitejs/plugin-legacy";
 import viteReact from "@vitejs/plugin-react";
-import path from "path";
 import { defineConfig } from "vite";
 import { intlayer, intlayerCompiler } from "vite-intlayer";
 
@@ -10,9 +11,11 @@ export default defineConfig(({ command }) => {
 		tailwindcss(),
 		intlayer(),
 		intlayerCompiler(),
+		legacy({
+			targets: ["defaults", "not IE 11"],
+		}),
 		tanstackRouter({
 			target: "react",
-			autoCodeSplitting: true,
 		}),
 		viteReact(),
 	];
@@ -27,20 +30,6 @@ export default defineConfig(({ command }) => {
 		server: {
 			host: "0.0.0.0",
 			allowedHosts: true,
-		},
-		build: {
-			modulePreload: {
-				polyfill: true,
-			},
-			rollupOptions: {
-				output: {
-					manualChunks: undefined, // Let Vite handle code splitting based on dynamic imports and other heuristics
-				},
-			},
-			target: "es2015",
-			cssTarget: "safari13",
-			sourcemap: false,
-			minify: "esbuild",
 		},
 		preview: {
 			allowedHosts: true,
