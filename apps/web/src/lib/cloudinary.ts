@@ -20,6 +20,17 @@ const VARIANT_TRANSFORMATIONS: Record<CloudinaryVariant, string> = {
 	gallery: "c_fill,g_auto:subject,w_1200,h_900,q_auto,f_auto",
 };
 
+function encodeCloudinaryPathSegment(value: string): string {
+	return encodeURIComponent(value);
+}
+
+function encodeCloudinaryPublicId(publicId: string): string {
+	return publicId
+		.split("/")
+		.map((segment) => encodeCloudinaryPathSegment(segment))
+		.join("/");
+}
+
 function getCloudinaryCloudName(): string | undefined {
 	return (
 		import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.toString().trim() || undefined
@@ -35,7 +46,10 @@ function buildDeliveryUrl(
 		return undefined;
 	}
 
-	return `https://res.cloudinary.com/${cloudName}/image/upload/${transformation}/${publicId}`;
+	const encodedTransformation = encodeCloudinaryPathSegment(transformation);
+	const encodedPublicId = encodeCloudinaryPublicId(publicId);
+
+	return `https://res.cloudinary.com/${cloudName}/image/upload/${encodedTransformation}/${encodedPublicId}`;
 }
 
 function withWidth(transformation: string, width: number): string {

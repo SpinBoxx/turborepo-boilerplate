@@ -33,9 +33,8 @@ export function useCreateRoom() {
 			});
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: [...roomKeys().all, ...hotelKeys().all],
-			});
+			queryClient.invalidateQueries({ queryKey: roomKeys().all });
+			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
 			toast.success("Chambre créée avec succès");
 		},
 	});
