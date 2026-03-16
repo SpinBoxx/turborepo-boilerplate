@@ -11,7 +11,13 @@ export default defineConfig(({ command }) => {
 		tailwindcss(),
 		intlayer(),
 		intlayerCompiler(),
-		legacy({ targets: ["iOS >= 13"] }),
+		legacy({
+			targets: ["iOS >= 13", "Safari >= 13"],
+			additionalModernPolyfills: [
+				"resize-observer-polyfill",
+				"wicg-inert",
+			],
+		}),
 		tanstackRouter({
 			target: "react",
 		}),
@@ -25,6 +31,11 @@ export default defineConfig(({ command }) => {
 			},
 		},
 		base: "/",
+		build: {
+			rollupOptions: {
+				output: {},
+			},
+		},
 		server: {
 			host: "0.0.0.0",
 			allowedHosts: true,
@@ -36,3 +47,4 @@ export default defineConfig(({ command }) => {
 		plugins,
 	};
 });
+
