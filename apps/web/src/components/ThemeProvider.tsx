@@ -18,6 +18,20 @@ const initialState: ThemeProviderState = {
 	setTheme: () => null,
 };
 
+function readStoredTheme(storageKey: string, fallbackTheme: Theme) {
+	try {
+		return (localStorage.getItem(storageKey) as Theme | null) || fallbackTheme;
+	} catch {
+		return fallbackTheme;
+	}
+}
+
+function writeStoredTheme(storageKey: string, theme: Theme) {
+	try {
+		localStorage.setItem(storageKey, theme);
+	} catch {}
+}
+
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
@@ -27,7 +41,7 @@ export function ThemeProvider({
 	...props
 }: ThemeProviderProps) {
 	const [theme, setTheme] = useState<Theme>(
-		() => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
+		() => readStoredTheme(storageKey, defaultTheme),
 	);
 
 	useEffect(() => {
@@ -41,7 +55,7 @@ export function ThemeProvider({
 	const value = {
 		theme,
 		setTheme: (theme: Theme) => {
-			localStorage.setItem(storageKey, theme);
+			writeStoredTheme(storageKey, theme);
 			setTheme(theme);
 		},
 	};
