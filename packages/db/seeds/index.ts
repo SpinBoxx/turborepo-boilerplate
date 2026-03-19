@@ -1,14 +1,13 @@
 import prisma from "../src/index";
 import { seedAmenities } from "./amenities.seed";
-import { seedEnv } from "./config";
-import { seedAdminUser } from "./users.seed";
+import seedAdminUsers from "./users.seed";
 
 async function main() {
 	const amenityCount = await seedAmenities();
-	const adminUserId = await seedAdminUser();
+	const adminUserIds = await seedAdminUsers();
 
 	console.log(`Seeded ${amenityCount} amenities.`);
-	console.log(`Seeded admin user ${seedEnv.SEED_ADMIN_EMAIL} (${adminUserId}).`);
+	console.log(`Seeded admin users (${adminUserIds.join(", ")}).`);
 }
 
 main()

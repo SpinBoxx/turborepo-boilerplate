@@ -4,11 +4,36 @@ import { hashPassword } from "better-auth/crypto";
 
 import { Role } from "../prisma/generated/enums";
 import prisma from "../src/index";
-import { adminUserSeed } from "./admin-user.data";
+
+const USERS_SEED = [
+	{
+		email: "quentin.mimault@orange.fr",
+		firstName: "Quentin",
+		lastName: "Mimault",
+		password: "Quentin86",
+	},
+	{
+		email: "antoinemathe86@gmail.com",
+		firstName: "Antoine",
+		lastName: "Mathé",
+		password: "AntoineAuMexique00",
+	},
+];
 
 const credentialProviderId = "credential";
 
-export async function seedAdminUser() {
+export default async function seedAdminUsers() {
+	const adminUserIds: string[] = [];
+	for (const adminUserSeed of USERS_SEED) {
+		const userId = await seedUser(adminUserSeed);
+		if (userId) {
+			adminUserIds.push(userId);
+		}
+	}
+	return adminUserIds;
+}
+
+async function seedUser(adminUserSeed: (typeof USERS_SEED)[number]) {
 	const passwordHash = await hashPassword(adminUserSeed.password);
 
 	const existingUser = await prisma.user.findUnique({
@@ -21,59 +46,26 @@ export async function seedAdminUser() {
 		},
 	});
 
-	if (existingUser) {
-		await prisma.user.update({
-			where: { id: existingUser.id },
+	if (!existingUser) {
+		const id = randomUUID();
+		const newUser = await prisma.user.create({
 			data: {
+				id,
+				email: adminUserSeed.email,
 				emailVerified: true,
 				firstName: adminUserSeed.firstName,
 				lastName: adminUserSeed.lastName,
 				roles: [Role.ADMIN, Role.USER],
+				accounts: {
+					create: {
+						accountId: id,
+						id: randomUUID(),
+						providerId: credentialProviderId,
+						password: passwordHash,
+					},
+				},
 			},
 		});
-
-		const credentialAccount = existingUser.accounts[0];
-
-		if (credentialAccount) {
-			await prisma.account.update({
-				where: { id: credentialAccount.id },
-				data: { password: passwordHash },
-			});
-		} else {
-			await prisma.account.create({
-				data: {
-					accountId: existingUser.id,
-					id: randomUUID(),
-					password: passwordHash,
-					providerId: credentialProviderId,
-					userId: existingUser.id,
-				},
-			});
-		}
-
-		return existingUser.id;
+		return newUser.id;
 	}
-
-	const userId = randomUUID();
-
-	await prisma.user.create({
-		data: {
-			id: userId,
-			email: adminUserSeed.email,
-			emailVerified: true,
-			firstName: adminUserSeed.firstName,
-			lastName: adminUserSeed.lastName,
-			roles: [Role.ADMIN, Role.USER],
-			accounts: {
-				create: {
-					accountId: userId,
-					id: randomUUID(),
-					password: passwordHash,
-					providerId: credentialProviderId,
-				},
-			},
-		},
-	});
-
-	return userId;
 }
