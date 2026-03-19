@@ -11,6 +11,9 @@ const config: IntlayerConfig = {
 		defaultLocale: Locales.ENGLISH,
 		requiredLocales: [Locales.FRENCH, Locales.ENGLISH],
 	},
+	dictionary: {
+		importMode: "static",
+	},
 	routing: {
 		/**
 		 * Locale routing strategy.
@@ -32,15 +35,6 @@ const config: IntlayerConfig = {
 		 * URL of your application for origin validation.
 		 */
 		applicationURL: "http://localhost:3000",
-	},
-	build: {
-		/**
-		 * Controls how dictionaries are imported.
-		 * - "static": Statically imported at build time.
-		 * - "dynamic": Dynamically imported using Suspense.
-		 * - "fetch": Fetched dynamically via the live sync API.
-		 */
-		importMode: "static",
 	},
 	compiler: {
 		enabled: true,
