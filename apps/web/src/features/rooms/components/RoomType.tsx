@@ -1,6 +1,5 @@
 import type { RoomUserComputed } from "@zanadeal/api/features/room";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Stars } from "lucide-react";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 import { useRoomContext } from "./RoomProvider";

@@ -9,8 +9,6 @@ import { intlayer, intlayerCompiler } from "vite-intlayer";
 export default defineConfig(({ command }) => {
 	const plugins = [
 		tailwindcss(),
-		intlayer(),
-		intlayerCompiler(),
 		legacy({
 			targets: ["iOS >= 13", "Safari >= 13"],
 			additionalModernPolyfills: ["resize-observer-polyfill", "wicg-inert"],
@@ -20,6 +18,8 @@ export default defineConfig(({ command }) => {
 			autoCodeSplitting: true,
 		}),
 		viteReact(),
+		intlayer(),
+		intlayerCompiler(),
 	];
 
 	return {

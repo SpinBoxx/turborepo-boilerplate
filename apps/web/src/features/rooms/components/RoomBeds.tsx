@@ -1,27 +1,42 @@
-import { BedDouble } from "lucide-react";
-import type { ComponentProps, ReactNode } from "react";
-import RoomInfoItem from "./RoomInfoItem";
+import { cn } from "@zanadeal/ui";
+import { BedDoubleIcon } from "lucide-react";
+import type { ComponentProps } from "react";
+import { useIntlayer } from "react-intlayer";
+import { Badge } from "@/components/ui/badge";
 import { useRoomContext } from "./RoomProvider";
 
-interface Props
-	extends Omit<
-		ComponentProps<typeof RoomInfoItem>,
-		"icon" | "label" | "value"
-	> {
-	label?: ReactNode;
-	value?: ReactNode;
+interface Props extends ComponentProps<"div"> {
+	variant?: "text" | "badge";
+	size?: "normal" | "lg";
 }
 
-export default function RoomBeds({ label, value, ...props }: Props) {
+export default function RoomBeds({
+	className,
+	variant = "text",
+	size,
+	...props
+}: Props) {
 	const { room } = useRoomContext();
-	const resolvedValue = value ?? room.beds;
+	const t = useIntlayer("room-beds");
+
+	if (variant === "badge") {
+		return (
+			<Badge variant={"outline"} size={"lg"}>
+				<BedDoubleIcon className="mr-1.5 size-5" />
+				{room.beds} {t.beds(room.beds)}
+			</Badge>
+		);
+	}
 
 	return (
-		<RoomInfoItem
-			icon={BedDouble}
-			label={label ?? (room.beds > 1 ? "Beds" : "Bed")}
-			value={resolvedValue}
+		<div
+			className={cn("flex shrink-0 items-center gap-1", className)}
 			{...props}
-		/>
+		>
+			<BedDoubleIcon className="mr-1.5 size-5" />
+			<div className="flex flex-row items-center gap-1 font-medium">
+				{room.beds} {t.beds(room.beds)}
+			</div>
+		</div>
 	);
 }

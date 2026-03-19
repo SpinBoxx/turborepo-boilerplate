@@ -1,6 +1,7 @@
 import { cn } from "@zanadeal/ui";
-import { Move } from "lucide-react";
+import { Flag } from "lucide-react";
 import type { ComponentProps } from "react";
+import { useIntlayer } from "react-intlayer";
 import { Badge } from "@/components/ui/badge";
 import { useRoomContext } from "./RoomProvider";
 
@@ -9,19 +10,20 @@ interface Props extends ComponentProps<"div"> {
 	size?: "normal" | "lg";
 }
 
-export default function RoomArea({
+export default function RoomQuantity({
 	className,
 	variant = "text",
 	size,
 	...props
 }: Props) {
 	const { room } = useRoomContext();
+	const t = useIntlayer("room-quantity");
 
 	if (variant === "badge") {
 		return (
-			<Badge variant={"outline"} size={"lg"}>
-				<Move className="mr-1.5 size-5" />
-				{room.areaM2} m²
+			<Badge variant={"info"} size={"lg"} className="">
+				<Flag className="mr-1.5 size-5" />
+				{room.quantity} {t.quantity(room.quantity)}
 			</Badge>
 		);
 	}
@@ -31,9 +33,9 @@ export default function RoomArea({
 			className={cn("flex shrink-0 items-center gap-1", className)}
 			{...props}
 		>
-			<Move className="mr-1.5 size-5" />
+			<Flag className="mr-1.5 size-5" />
 			<div className="flex flex-row items-center gap-1 font-medium">
-				{room.areaM2} m²
+				{room.quantity} {t.quantity(room.quantity)}
 			</div>
 		</div>
 	);
