@@ -37,11 +37,11 @@ export default function RoomDetailDialog({ children }: Props) {
 				<div className="flex min-h-0 flex-1 flex-col gap-3.5 space-y-1 p-4 pb-6">
 					<DialogClose
 						className={
-							"absolute top-5.5 right-5.5 z-50 text-white opacity-70 transition-opacity hover:opacity-100"
+							"absolute top-5.5 right-5.5 z-50 text-white opacity-70 transition-opacity hover:opacity-100 dark:opacity-100"
 						}
 						render={<Button variant={"outline"} />}
 					>
-						<X className="size-5 stroke-3 text-black" />
+						<X className="size-5 stroke-3 text-black dark:text-white" />
 					</DialogClose>
 
 					<RoomCarousel />
