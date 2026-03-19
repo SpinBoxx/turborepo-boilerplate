@@ -12,7 +12,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useHotelContext } from "./HotelProvider";
 
 export default function HotelBreadcrumb() {
-	const t = useIntlayer("hotelBreadcrumb");
+	const t = useIntlayer("hotel-breadcrumb");
 	const {
 		hotel: { name },
 	} = useHotelContext();
@@ -23,7 +23,7 @@ export default function HotelBreadcrumb() {
 
 	const pagesMap = [
 		isMobile ? name.slice(0, 16).concat("...") : name,
-		"Select rooms",
+		t.selectRooms.value,
 	];
 
 	const formatedPages = pages

@@ -1,7 +1,7 @@
 import { type Dictionary, t } from "intlayer";
 
 const hotelBreadcrumbContent = {
-	key: "hotelBreadcrumb",
+	key: "hotel-breadcrumb",
 	content: {
 		home: t({
 			fr: "Accueil",
