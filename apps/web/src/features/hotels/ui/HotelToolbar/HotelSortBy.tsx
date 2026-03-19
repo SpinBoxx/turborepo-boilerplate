@@ -27,7 +27,7 @@ export default function HotelSortBy() {
 	if (isMobile) {
 		return (
 			<ToggleGroup className="flex flex-wrap gap-3">
-				{HOTEL_SORT_OPTIONS.map(({ test, value: optionValue }) => (
+				{HOTEL_SORT_OPTIONS.map(({ label, value: optionValue }) => (
 					<Toggle
 						variant="outline"
 						className={cn(
@@ -39,7 +39,7 @@ export default function HotelSortBy() {
 						value={optionValue}
 						onClick={() => setSort(optionValue as HotelSortValue)}
 					>
-						{test}
+						{label}
 					</Toggle>
 				))}
 			</ToggleGroup>
@@ -49,10 +49,7 @@ export default function HotelSortBy() {
 	return (
 		<Select
 			aria-label="Trier les hotels"
-			items={HOTEL_SORT_OPTIONS.map(({ test, value }) => ({
-				label: test,
-				value,
-			}))}
+			items={HOTEL_SORT_OPTIONS}
 			onValueChange={(nextValue) => {
 				if (!nextValue) {
 					return;
@@ -65,9 +62,9 @@ export default function HotelSortBy() {
 				<SelectValue placeholder="Trier par" />
 			</SelectTrigger>
 			<SelectPopup>
-				{HOTEL_SORT_OPTIONS.map(({ test, value: optionValue }) => (
+				{HOTEL_SORT_OPTIONS.map(({ label, value: optionValue }) => (
 					<SelectItem key={optionValue} value={optionValue}>
-						{test}
+						{label}
 					</SelectItem>
 				))}
 			</SelectPopup>

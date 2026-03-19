@@ -13,7 +13,6 @@ export default defineConfig(({ command }) => {
 		tailwindcss(),
 		legacy({
 			targets: ["iOS >= 13", "Safari >= 13"],
-			additionalModernPolyfills: ["resize-observer-polyfill", "wicg-inert"],
 		}),
 		tanstackRouter({
 			target: "react",

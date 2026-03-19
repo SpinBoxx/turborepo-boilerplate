@@ -35,11 +35,11 @@ export const DEFAULT_HOTELS_PAGE_SEARCH: HotelsPageSearch = {
 	maxPrice: HOTEL_PRICE_RANGE_LIMITS.max,
 };
 
-export const HOTEL_SORT_OPTIONS: { test: string; value: HotelSortValue }[] = [
-	{ test: "Prix croissantt", value: "startingPrice:asc" },
-	{ test: "Prix décroissant", value: "startingPrice:desc" },
-	{ test: "Nom A -> Z", value: "name:asc" },
-	{ test: "Nom Z -> A", value: "name:desc" },
+export const HOTEL_SORT_OPTIONS: { label: string; value: HotelSortValue }[] = [
+	{ label: "Prix croissant", value: "startingPrice:asc" },
+	{ label: "Prix décroissant", value: "startingPrice:desc" },
+	{ label: "Nom A -> Z", value: "name:asc" },
+	{ label: "Nom Z -> A", value: "name:desc" },
 ];
 
 const hotelSortValues = new Set(
