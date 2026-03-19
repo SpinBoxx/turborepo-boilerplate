@@ -41,7 +41,7 @@ export default function RoomDetailDialog({ children }: Props) {
 						}
 						render={<Button variant={"outline"} />}
 					>
-						<X className="size-5 stroke-3 text-black dark:text-white" />
+						<X className="size-5 stroke-3 text-black dark:text-white dark:opacity-100" />
 					</DialogClose>
 
 					<RoomCarousel />
