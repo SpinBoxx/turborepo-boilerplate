@@ -26,9 +26,9 @@ export default function HotelCard() {
 	return (
 		<Card
 			onClick={handleClick}
-			className="group cursor-pointer overflow-hidden p-0"
+			className="group h-full cursor-pointer overflow-hidden p-0"
 		>
-			<CardPanel className="p-0">
+			<CardPanel className="flex h-full flex-col p-0">
 				<div className="relative z-10 aspect-video overflow-hidden">
 					<HotelImage
 						variant="listing-card"
@@ -44,7 +44,7 @@ export default function HotelCard() {
 				</div>
 
 				{/* Content */}
-				<div className="flex flex-col gap-2 p-4">
+				<div className="flex flex-1 flex-col gap-2 p-4">
 					<div className="flex">
 						<div className="flex flex-col gap-0.5">
 							<HotelName className="line-clamp-1 font-semibold text-lg" />
@@ -53,7 +53,7 @@ export default function HotelCard() {
 						<HotelPrice className="h-fit shrink-0 whitespace-nowrap rounded-full bg-muted px-3 py-1 font-medium text-sm" />
 					</div>
 					<HotelDescription className="line-clamp-3 font-light text-muted-foreground text-sm" />
-					<Separator />
+					<Separator className={"mt-auto"} />
 					<div className="flex items-center justify-between">
 						<div>
 							<span className="flex translate-y-0.5 text-muted-foreground text-xs uppercase">

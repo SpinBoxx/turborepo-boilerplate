@@ -1,18 +1,11 @@
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { Role } from "../../../../db/prisma/generated/enums";
 import { adminProcedure, publicProcedure } from "../../index";
-import { getRolesByPriority } from "../user/user-roles";
+import { createPaginatedResultSchema } from "../../listing/paginated-result";
 import { computeHotel } from "./computes/hotel-compute";
 import { computeUpsertHotelInput } from "./computes/upsert-compute";
-
-import {
-	createHotel,
-	deleteHotel,
-	getHotel,
-	listHotels,
-	updateHotel,
-} from "./hotel.store";
+import { createHotel, deleteHotel, getHotel, updateHotel } from "./hotel.store";
+import { listHotels } from "./hotel-list.service";
 import {
 	DeleteHotelInputSchema,
 	GetHotelInputSchema,
@@ -29,23 +22,9 @@ export const listHotelsRoute = publicProcedure
 		tags: ["Hotel"],
 	})
 	.input(ListHotelsInputSchema)
-	.output(HotelComputedSchema.array())
+	.output(createPaginatedResultSchema(HotelComputedSchema))
 	.handler(async ({ input, context }) => {
-		const hotels = await listHotels(input);
-
-		const rolesSortedByPriority = getRolesByPriority(context.user?.roles);
-		const highestRole = rolesSortedByPriority[0];
-		const isAdmin = highestRole === Role.ADMIN;
-
-		const filteredHotels = isAdmin
-			? hotels
-			: hotels.filter((h) => !h.isArchived);
-
-		return await Promise.all(
-			filteredHotels.map(
-				async (hotel) => await computeHotel(hotel, context.user),
-			),
-		);
+		return await listHotels(input, context.user);
 	});
 
 export const getHotelRoute = publicProcedure

@@ -10,6 +10,8 @@ const SORT_OPTIONS: SortOption[] = [
 	{ label: "Date (ancien)", value: "updatedAt:asc" },
 	{ label: "Nom (A → Z)", value: "name:asc" },
 	{ label: "Nom (Z → A)", value: "name:desc" },
+	{ label: "Prix de départ (croissant)", value: "startingPrice:asc" },
+	{ label: "Prix de départ (décroissant)", value: "startingPrice:desc" },
 ];
 
 export default function HotelSortSelect() {

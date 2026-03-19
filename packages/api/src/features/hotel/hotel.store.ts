@@ -2,7 +2,6 @@ import prisma from "@zanadeal/db";
 import type { Prisma } from "../../../../db/prisma/generated/client";
 import type {
 	DeleteHotelInput,
-	ListHotelsInput,
 	UpsertHotelComputedInput,
 } from "./schemas/hotel.schema";
 
@@ -34,21 +33,28 @@ export async function getHotel(id: string): Promise<HotelDB | null> {
 	});
 }
 
-export async function listHotels(input: ListHotelsInput): Promise<HotelDB[]> {
+export async function listHotelsFromDb(params: {
+	where?: Prisma.HotelWhereInput;
+	orderBy?:
+		| Prisma.HotelOrderByWithRelationInput
+		| Prisma.HotelOrderByWithRelationInput[];
+	take?: number;
+	skip?: number;
+}): Promise<HotelDB[]> {
 	return await prisma.hotel.findMany({
-		orderBy: { [input.sort.field]: input.sort.direction },
-		take: input.take,
-		skip: input.skip,
-		where: {
-			name: input.filters.name?.contains
-				? { contains: input.filters.name.contains, mode: "insensitive" }
-				: undefined,
-			updatedAt: {
-				gte: input.filters.updatedAt?.gte,
-				lte: input.filters.updatedAt?.lte,
-			},
-		},
+		orderBy: params.orderBy,
+		take: params.take,
+		skip: params.skip,
+		where: params.where,
 		include: hotelInclude,
+	});
+}
+
+export async function countHotelsFromDb(params: {
+	where?: Prisma.HotelWhereInput;
+}): Promise<number> {
+	return await prisma.hotel.count({
+		where: params.where,
 	});
 }
 

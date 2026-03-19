@@ -34,7 +34,10 @@ const config: IntlayerConfig = {
 		/**
 		 * URL of your application for origin validation.
 		 */
-		applicationURL: "http://localhost:3000",
+		applicationURL: "http://localhost:3001",
+	},
+	content: {
+		watch: true,
 	},
 	compiler: {
 		enabled: true,
@@ -63,7 +66,6 @@ const config: IntlayerConfig = {
 		 * ```
 		 */
 		output: ({ fileName }) => `./${fileName}.content.ts`,
-		dictionaryKeyPrefix: "comp-",
 		/**
 		 * Indicates if the components should be saved after being transformed.
 		 * That way, the compiler can be run only once to transform the app, and then it can be removed.

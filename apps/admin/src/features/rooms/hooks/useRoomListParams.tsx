@@ -64,7 +64,7 @@ export function RoomListProvider({ children }: { children: React.ReactNode }) {
 	const { data, isPending, isError, error } = useHotels(params);
 
 	const hotels = useMemo(
-		() => (data ?? []) as HotelAdminComputed[],
+		() => (data?.items ?? []) as HotelAdminComputed[],
 		[data],
 	);
 

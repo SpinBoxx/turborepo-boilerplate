@@ -1,6 +1,5 @@
 import z from "zod";
-import type { Hotel as PrismaHotel } from "../../../../../db/prisma/generated/client";
-import { createListSchemaFor } from "../../../utils";
+import { createHybridListSchemaFor } from "../../../listing/hybrid-list";
 import { AmenityComputedSchema } from "../../amenity";
 import { RoomComputedSchema } from "../../room";
 import {
@@ -88,25 +87,45 @@ export const GetHotelInputSchema = z.object({
 	id: z.string(),
 });
 
-export const ListHotelsInputSchema = createListSchemaFor<PrismaHotel>()({
+export const hotelListConfig = {
 	sort: {
 		default: {
 			direction: "desc",
 			field: "updatedAt",
 		},
-		fields: ["name", "updatedAt"],
+		fields: {
+			name: { stage: "db" },
+			updatedAt: { stage: "db" },
+			startingPrice: { stage: "computed" },
+			rating: { stage: "computed" },
+		},
 	},
 	filters: {
 		name: {
+			stage: "db",
 			schema: z.string(),
-			operators: ["contains"],
+			operators: ["contains", "equal"],
 		},
 		updatedAt: {
-			schema: z.date(),
+			stage: "db",
+			schema: z.coerce.date(),
 			operators: ["gte", "lte"],
 		},
+		startingPrice: {
+			stage: "computed",
+			schema: z.number(),
+			operators: ["gte", "lte", "equal"],
+		},
+		rating: {
+			stage: "computed",
+			schema: z.number(),
+			operators: ["gte", "lte", "equal"],
+		},
 	},
-});
+} as const;
+
+export const ListHotelsInputSchema =
+	createHybridListSchemaFor()(hotelListConfig);
 
 export const DeleteHotelInputSchema = z.object({
 	id: z.string().min(1),

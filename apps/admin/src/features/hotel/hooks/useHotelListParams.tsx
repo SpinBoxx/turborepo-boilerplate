@@ -1,4 +1,7 @@
-import type { HotelAdminComputed } from "@zanadeal/api/features/hotel";
+import type {
+	HotelAdminComputed,
+	ListHotelsInput,
+} from "@zanadeal/api/features/hotel";
 import {
 	createContext,
 	useCallback,
@@ -10,7 +13,7 @@ import { useHotels } from "../hotel.queries";
 
 // ─── Types ──────────────────────────────────────────────────────────
 
-export type HotelSortField = "name" | "updatedAt";
+export type HotelSortField = ListHotelsInput["sort"]["field"];
 export type SortDirection = "asc" | "desc";
 export type ViewMode = "grid" | "list";
 
@@ -69,7 +72,7 @@ export function HotelListProvider({ children }: { children: React.ReactNode }) {
 	const { data, isPending, isError, error } = useHotels(params);
 
 	const hotels = useMemo(
-		() => (data ?? []) as HotelAdminComputed[],
+		() => (data?.items ?? []) as HotelAdminComputed[],
 		[data],
 	);
 
@@ -112,7 +115,17 @@ export function HotelListProvider({ children }: { children: React.ReactNode }) {
 			setPage,
 			setViewMode,
 		}),
-		[params, hotels, isPending, isError, error, viewMode, setSearch, setSort, setPage],
+		[
+			params,
+			hotels,
+			isPending,
+			isError,
+			error,
+			viewMode,
+			setSearch,
+			setSort,
+			setPage,
+		],
 	);
 
 	return (
