@@ -1,3 +1,4 @@
+import { useIntlayer } from "react-intlayer";
 import {
 	Select,
 	SelectItem,
@@ -10,12 +11,19 @@ import { ToggleGroup } from "@/components/ui/toggle-group";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
-	HOTEL_SORT_OPTIONS,
+	getHotelSortOptions,
 	type HotelSortValue,
 } from "./hotel-toolbar.options";
 import { useHotelToolbarStore } from "./hotel-toolbar.store";
 
 export default function HotelSortBy() {
+	const t = useIntlayer("hotel-filters-drawer");
+	const sortOptions = getHotelSortOptions({
+		priceAscending: t.priceAscending.value,
+		priceDescending: t.priceDescending.value,
+		nameAscending: t.nameAscending.value,
+		nameDescending: t.nameDescending.value,
+	});
 	const isMobile = useIsMobile();
 	const value = useHotelToolbarStore((state) =>
 		isMobile ? state.draftSort : state.sort,
@@ -27,7 +35,7 @@ export default function HotelSortBy() {
 	if (isMobile) {
 		return (
 			<ToggleGroup className="flex flex-wrap gap-3">
-				{HOTEL_SORT_OPTIONS.map(({ label, value: optionValue }) => (
+				{sortOptions.map(({ label, value: optionValue }) => (
 					<Toggle
 						variant="outline"
 						className={cn(
@@ -49,7 +57,7 @@ export default function HotelSortBy() {
 	return (
 		<Select
 			aria-label="Trier les hotels"
-			items={HOTEL_SORT_OPTIONS}
+			items={sortOptions}
 			onValueChange={(nextValue) => {
 				if (!nextValue) {
 					return;
@@ -59,10 +67,10 @@ export default function HotelSortBy() {
 			value={value}
 		>
 			<SelectTrigger>
-				<SelectValue placeholder="Trier par" />
+				<SelectValue placeholder={t.sortBy.value} />
 			</SelectTrigger>
 			<SelectPopup>
-				{HOTEL_SORT_OPTIONS.map(({ label, value: optionValue }) => (
+				{sortOptions.map(({ label, value: optionValue }) => (
 					<SelectItem key={optionValue} value={optionValue}>
 						{label}
 					</SelectItem>

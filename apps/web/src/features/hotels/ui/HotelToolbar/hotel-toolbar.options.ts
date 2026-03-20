@@ -35,16 +35,37 @@ export const DEFAULT_HOTELS_PAGE_SEARCH: HotelsPageSearch = {
 	maxPrice: HOTEL_PRICE_RANGE_LIMITS.max,
 };
 
-export const HOTEL_SORT_OPTIONS: { label: string; value: HotelSortValue }[] = [
-	{ label: "Prix croissant", value: "startingPrice:asc" },
-	{ label: "Prix décroissant", value: "startingPrice:desc" },
-	{ label: "Nom A -> Z", value: "name:asc" },
-	{ label: "Nom Z -> A", value: "name:desc" },
+export interface HotelSortOption {
+	label: string;
+	value: HotelSortValue;
+}
+
+export interface HotelSortOptionLabels {
+	priceAscending: string;
+	priceDescending: string;
+	nameAscending: string;
+	nameDescending: string;
+}
+
+export const HOTEL_SORT_VALUES: HotelSortValue[] = [
+	"startingPrice:asc",
+	"startingPrice:desc",
+	"name:asc",
+	"name:desc",
 ];
 
-const hotelSortValues = new Set(
-	HOTEL_SORT_OPTIONS.map((option) => option.value),
-);
+export function getHotelSortOptions(
+	labels: HotelSortOptionLabels,
+): HotelSortOption[] {
+	return [
+		{ label: labels.priceAscending, value: "startingPrice:asc" },
+		{ label: labels.priceDescending, value: "startingPrice:desc" },
+		{ label: labels.nameAscending, value: "name:asc" },
+		{ label: labels.nameDescending, value: "name:desc" },
+	];
+}
+
+const hotelSortValues = new Set(HOTEL_SORT_VALUES);
 
 export function isHotelSortValue(value: string): value is HotelSortValue {
 	return hotelSortValues.has(value as HotelSortValue);
