@@ -36,9 +36,6 @@ const config: IntlayerConfig = {
 		 */
 		applicationURL: "http://localhost:3001",
 	},
-	content: {
-		watch: true,
-	},
 	compiler: {
 		enabled: true,
 
