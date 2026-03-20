@@ -49,6 +49,7 @@ const hotelFiltersDrawerContent = {
 			fr: "Affiner votre recherche",
 			en: "Refine your search",
 			"mg-MG": "Hamarino ny fikarohana",
+			mg: "Hamarino ny fikarohana",
 		}),
 		searchIdealHotel: t({
 			fr: "Trouver l'hotel idéal",
