@@ -8,7 +8,9 @@ const config: IntlayerConfig = {
 	},
 	compiler: {
 		enabled: false,
+		output: ({ fileName }) => `./${fileName}.content.ts`,
 	},
+
 	content: {
 		watch: true,
 	},

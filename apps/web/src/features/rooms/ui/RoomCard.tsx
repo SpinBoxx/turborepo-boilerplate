@@ -69,19 +69,15 @@ const RoomCard = ({ className, onViewDetails }: Props) => {
 
 					<Separator className="bg-border/80" />
 
-					<div className="flex flex-row items-center justify-between gap-4">
+					<div className="@container flex flex-row items-end justify-between gap-4">
 						<RoomAveragePricePerNight label="Average price" />
 						<Suspense
 							fallback={<div className="h-10 w-32 rounded-md bg-muted" />}
 						>
 							<RoomDetail>
-								<Button
-									type="button"
-									size="lg"
-									onClick={handlePrimaryAction}
-									className="rounded-2xl text-base"
-								>
-									View details
+								<Button type="button" onClick={handlePrimaryAction}>
+									<span>View</span>{" "}
+									<span className="@xs:block hidden">details</span>
 									<ArrowRight className="size-5" />
 								</Button>
 							</RoomDetail>

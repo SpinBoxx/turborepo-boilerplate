@@ -45,25 +45,24 @@ export default function HotelCard() {
 
 				{/* Content */}
 				<div className="flex flex-1 flex-col gap-2 p-4">
-					<div className="flex">
-						<div className="flex flex-col gap-0.5">
-							<HotelName className="line-clamp-1 font-semibold text-lg" />
-							<HotelAddress className="line-clamp-1 text-muted-foreground text-sm" />
-						</div>
+					<div className="flex gap-1">
+						<HotelName className="line-clamp-2 font-semibold text-lg" />
 						<HotelPrice className="h-fit shrink-0 whitespace-nowrap rounded-full bg-muted px-3 py-1 font-medium text-sm" />
 					</div>
+					<HotelAddress className="line-clamp-1 text-muted-foreground text-sm" />
 					<HotelDescription className="line-clamp-3 font-light text-muted-foreground text-sm" />
 					<Separator className={"mt-auto"} />
-					<div className="flex items-center justify-between">
+					<div className="@container flex items-end justify-between">
 						<div>
 							<span className="flex translate-y-0.5 text-muted-foreground text-xs uppercase">
 								Starting from
 							</span>
-							<HotelPricePerNight />
+							<HotelPricePerNight className="flex-wrap" />
 						</div>
-						<Button type="button">
-							View details
-							<ArrowRight className="size-4" />
+						<Button type="button" variant={"default"}>
+							<span>View </span>{" "}
+							<span className="@xs:block hidden">details</span>
+							<ArrowRight />
 						</Button>
 					</div>
 				</div>

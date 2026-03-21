@@ -3,8 +3,10 @@ export const createUuid = () => {
 	return uuidv4();
 };
 
-export const formatPrice = (price: number) => {
-	const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export const formatPrice = (price: number, separator = " ") => {
+	const formattedPrice = price
+		.toString()
+		.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 	return `${formattedPrice} Ar`;
 };
 

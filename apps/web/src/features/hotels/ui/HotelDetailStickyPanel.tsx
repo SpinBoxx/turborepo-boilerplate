@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookingSearchBarCalendarPopover } from "@/features/booking/BookinSearchBar/BookingSearchBarCalendarPopover";
 import BookingGuestCountInput from "@/features/booking/ui/BookingGuestCountInput";
+import HotelPricePerNight from "../components/HotelPricePerNight";
 import { useHotelContext } from "../components/HotelProvider";
 
 interface Props extends ComponentProps<"div"> {}
@@ -23,11 +24,11 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 		>
 			<Card className="shadow-lg md:border">
 				<CardContent className="flex flex-col gap-4 p-4 md:p-6">
-					<div className="flex items-end gap-1">
-						<span className="font-bold text-2xl text-primary md:text-3xl">
-							€{hotel.startingPrice}
+					<div>
+						<span className="font-light text-muted-foreground text-sm uppercase">
+							Starting from
 						</span>
-						<span className="mb-1 text-muted-foreground text-sm">/ night</span>
+						<HotelPricePerNight priceClassName="text-[27px]" />
 					</div>
 
 					<div className="hidden md:flex md:flex-col md:gap-4">

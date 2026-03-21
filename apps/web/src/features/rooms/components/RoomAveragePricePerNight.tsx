@@ -1,4 +1,3 @@
-import { formatPrice } from "@zanadeal/utils";
 import type { ComponentProps } from "react";
 import HotelPricePerNight from "@/features/hotels/components/HotelPricePerNight";
 import { cn } from "@/lib/utils";
@@ -22,16 +21,6 @@ export default function RoomAveragePricePerNight({
 	...props
 }: Props) {
 	const { room } = useRoomContext();
-	const averagePrice =
-		price ??
-		(room.prices.length > 0
-			? Math.round(
-					room.prices.reduce((total, item) => total + item.price, 0) /
-						room.prices.length,
-				)
-			: room.promoPrice > 0
-				? room.promoPrice
-				: room.price);
 
 	return (
 		<div className={cn("space-y-1.5", className)} {...props}>

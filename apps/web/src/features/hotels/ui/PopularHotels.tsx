@@ -1,11 +1,16 @@
 import { Link } from "@tanstack/react-router";
+import { cn } from "@zanadeal/ui";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHotels } from "../hotel.queries";
 import HotelsCardList from "./HotelsCardList";
 import { DEFAULT_HOTELS_PAGE_SEARCH } from "./HotelToolbar/hotel-toolbar.options";
 
-export default function PopularHotels() {
+interface Props {
+	className?: string;
+}
+
+export default function PopularHotels({ className }: Props) {
 	const hotels = useHotels({
 		take: 50,
 		skip: 0,
@@ -16,7 +21,7 @@ export default function PopularHotels() {
 	});
 
 	return (
-		<div>
+		<div className={cn("", className)}>
 			<div className="flex items-end justify-between">
 				<div>
 					<h3 className="font-semibold text-xl md:text-2xl">Popular hotels</h3>

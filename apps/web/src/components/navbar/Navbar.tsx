@@ -11,7 +11,7 @@ export default function Navbar() {
 		<div className="flex w-full items-center justify-between py-3.5">
 			<button
 				type="button"
-				className="flex cursor-pointer items-start gap-0"
+				className="flex cursor-pointer items-center gap-0"
 				onClick={() =>
 					navigate({
 						to: "/",
@@ -19,7 +19,7 @@ export default function Navbar() {
 				}
 			>
 				<img src="/logo.png" alt="Logo" className="size-6" />
-				<span className="-translate-y-[1px] font-bold text-2xl text-[#844b9b]">
+				<span className="translate-y-[3.5px] font-bold text-2xl text-[#844b9b]">
 					anadeal
 				</span>
 			</button>

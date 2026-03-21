@@ -32,8 +32,8 @@ function RouteComponent() {
 				{t.bookYourPerfectStay.value}
 			</h1>
 
-			<div className="space-y-4 sm:-translate-y-20 sm:space-y-18">
-				<BookingSearchBar className="mx-auto" />
+			<div className="space-y-4 sm:space-y-6 sm:*:-translate-y-20">
+				<BookingSearchBar />
 				<PopularHotels />
 			</div>
 		</div>
