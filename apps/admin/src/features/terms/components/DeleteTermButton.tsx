@@ -1,4 +1,4 @@
-import type { DeleteTermsInput } from "@zanadeal/api/contracts";
+import type { DeleteTermsInput } from "@zanadeal/api/features/terms";
 import { cn } from "@zanadeal/ui";
 import { Trash } from "lucide-react";
 import type { ComponentProps } from "react";

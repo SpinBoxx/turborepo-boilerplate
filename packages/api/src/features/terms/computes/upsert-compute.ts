@@ -1,7 +1,7 @@
 import type {
 	UpsertTermsComputedInput,
 	UpsertTermsInput,
-} from "../terms-schemas";
+} from "../schemas/terms-schemas";
 
 const computeTermTranslations = (
 	translations: UpsertTermsInput["translations"],

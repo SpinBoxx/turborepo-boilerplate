@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { TermsComputed } from "@zanadeal/api/features/terms/terms-schemas";
+import type { TermsComputed } from "@zanadeal/api/features/terms";
 import {
 	Button,
 	Card,
@@ -18,7 +18,7 @@ interface Props extends ComponentProps<"div"> {
 
 const TermCard = ({ term, className, ...props }: Props) => {
 	return (
-		<Card className={cn("group relative", className)}>
+		<Card {...props} className={cn("group relative", className)}>
 			<CardHeader>
 				<CardTitle>
 					{term.type}, {term.version}
@@ -27,7 +27,7 @@ const TermCard = ({ term, className, ...props }: Props) => {
 			<CardContent>
 				<div
 					className="line-clamp-13"
-					// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted admin-authored HTML content preview
 					dangerouslySetInnerHTML={{
 						__html: term.translations.fr?.content ?? "",
 					}}

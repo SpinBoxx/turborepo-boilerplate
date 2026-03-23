@@ -1,5 +1,5 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import type { AuthUser } from "@/auth/providers/AuthProvider";
+import type { UserComputed } from "@zanadeal/api/features/user";
 
 const RootLayout = () => (
 	<>
@@ -9,10 +9,9 @@ const RootLayout = () => (
 );
 
 interface MyRouterContext {
-	user: AuthUser | null;
+	user: UserComputed | null;
 	auth: {
-		getUser: () => AuthUser | null;
-		loadSession: () => Promise<AuthUser | null>;
+		loadSession: () => Promise<UserComputed | null | undefined>;
 	};
 }
 

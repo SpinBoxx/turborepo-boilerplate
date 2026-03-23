@@ -17,7 +17,6 @@ const router = createRouter({
 	context: {
 		user: null,
 		auth: {
-			getUser: () => null,
 			loadSession: async () => null,
 		},
 	},
@@ -38,7 +37,7 @@ if (!rootElement) {
 }
 
 const RouterProviderWithContext = () => {
-	const { user, getUser, loadSession } = useAuth();
+	const { user, loadSession } = useAuth();
 
 	return (
 		<RouterProvider
@@ -46,7 +45,6 @@ const RouterProviderWithContext = () => {
 			context={{
 				user,
 				auth: {
-					getUser,
 					loadSession,
 				},
 			}}

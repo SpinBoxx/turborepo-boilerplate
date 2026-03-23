@@ -4,7 +4,7 @@ import type {
 	GetTermsInput,
 	ListTermsInput,
 	UpdateTermsInput,
-} from "@zanadeal/api/contracts";
+} from "@zanadeal/api/features/terms";
 import { orpc } from "@/lib/orpc";
 
 export async function getTermById(input: GetTermsInput) {

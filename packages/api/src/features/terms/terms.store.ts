@@ -1,11 +1,9 @@
 import prisma from "@zanadeal/db";
-import type { Terms } from "../../../../db/prisma/generated/client";
+import type { Prisma, Terms } from "../../../../db/prisma/generated/client";
 import type {
 	DeleteTermsInput,
-	GetTermsInput,
-	ListTermsInput,
 	UpsertTermsComputedInput,
-} from "./terms-schemas";
+} from "./schemas/terms-schemas";
 
 export async function createTerm(
 	input: UpsertTermsComputedInput,
@@ -15,11 +13,19 @@ export async function createTerm(
 	});
 }
 
-export async function getTerm(input: GetTermsInput): Promise<Terms | null> {
-	return await prisma.terms.findFirst({
-		where: {
-			id: input.id,
-		},
+export async function updateTerm(
+	id: string,
+	input: Partial<UpsertTermsComputedInput>,
+): Promise<Terms> {
+	return await prisma.terms.update({
+		where: { id },
+		data: input,
+	});
+}
+
+export async function getTermById(id: string): Promise<Terms | null> {
+	return await prisma.terms.findUnique({
+		where: { id },
 	});
 }
 
@@ -31,18 +37,18 @@ export async function deleteTerm(input: DeleteTermsInput): Promise<Terms> {
 	});
 }
 
-export async function listTerms(input: ListTermsInput): Promise<Terms[]> {
+export async function listTermsFromDb(params: {
+	where?: Prisma.TermsWhereInput;
+	orderBy?:
+		| Prisma.TermsOrderByWithRelationInput
+		| Prisma.TermsOrderByWithRelationInput[];
+	take?: number;
+	skip?: number;
+}): Promise<Terms[]> {
 	return await prisma.terms.findMany({
-		take: input.take,
-		...(input.cursor
-			? {
-					cursor: { id: input.cursor },
-					skip: 1,
-				}
-			: {}),
-		orderBy: input.orderBy,
-		where: {
-			type: input.type,
-		},
+		orderBy: params.orderBy,
+		take: params.take,
+		skip: params.skip,
+		where: params.where,
 	});
 }

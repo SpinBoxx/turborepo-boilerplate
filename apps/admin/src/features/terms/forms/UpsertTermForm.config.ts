@@ -1,7 +1,7 @@
 import type {
 	TermsComputed,
 	UpsertTermsInput,
-} from "@zanadeal/api/features/terms/terms-schemas";
+} from "@zanadeal/api/features/terms";
 
 export const getTermInitialValues = (
 	term: TermsComputed | null,

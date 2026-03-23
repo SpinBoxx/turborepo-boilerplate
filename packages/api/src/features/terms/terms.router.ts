@@ -1,16 +1,17 @@
-import { ORPCError } from "@orpc/client";
+import { ORPCError } from "@orpc/server";
+import { z } from "zod";
 import { adminProcedure, publicProcedure } from "../..";
 import { computeTerm } from "./computes/term-compute";
 import { computeUpsertTermsInput } from "./computes/upsert-compute";
-import { createTerm, deleteTerm, getTerm, listTerms } from "./terms.store";
 import {
 	DeleteTermsInputSchema,
 	GetTermsInputSchema,
 	ListTermsInputSchema,
 	TermsComputedSchema,
-	TermsSchema,
 	UpsertTermsInputSchema,
-} from "./terms-schemas";
+} from "./schemas/terms-schemas";
+import { createTerm, deleteTerm, getTermById, updateTerm } from "./terms.store";
+import { listTerms } from "./terms-list.service";
 
 export const listTermsRoute = publicProcedure
 	.route({
@@ -22,8 +23,7 @@ export const listTermsRoute = publicProcedure
 	.input(ListTermsInputSchema)
 	.output(TermsComputedSchema.array())
 	.handler(async ({ input }) => {
-		const terms = await listTerms(input);
-		return terms.map(computeTerm);
+		return await listTerms(input);
 	});
 
 export const createTermRoute = adminProcedure
@@ -34,24 +34,33 @@ export const createTermRoute = adminProcedure
 		tags: ["Terms"],
 	})
 	.input(UpsertTermsInputSchema)
-	.output(TermsSchema)
+	.output(TermsComputedSchema)
 	.handler(async ({ input }) => {
 		const computedInput = await computeUpsertTermsInput(input);
-		const terms = await listTerms({
-			type: computedInput.type,
-			orderBy: {
-				version: "desc",
-			},
-		});
+		const terms = await listTerms(
+			ListTermsInputSchema.parse({
+				filters: {
+					type: {
+						equal: computedInput.type,
+					},
+				},
+				sort: {
+					field: "version",
+					direction: "desc",
+				},
+				page: 1,
+				limit: 1,
+			}),
+		);
 
-		const firstTerm = terms.at(0);
+		const latestTerm = terms.at(0);
 
-		if (!firstTerm) {
+		if (!latestTerm) {
 			const created = await createTerm(computedInput);
 			return computeTerm(created);
 		}
 
-		if (firstTerm.version >= computedInput.version) {
+		if (latestTerm.version >= computedInput.version) {
 			throw new ORPCError("BAD_REQUEST", {
 				message: "Une version égale ou supérieure existe déjà.",
 			});
@@ -64,14 +73,14 @@ export const createTermRoute = adminProcedure
 export const getTermRoute = publicProcedure
 	.route({
 		method: "GET",
-		path: "/terms",
-		summary: "Get a terms entry",
+		path: "/terms/{id}",
+		summary: "Get a terms entry by ID",
 		tags: ["Terms"],
 	})
 	.input(GetTermsInputSchema)
-	.output(TermsSchema)
+	.output(TermsComputedSchema)
 	.handler(async ({ input }) => {
-		const term = await getTerm(input);
+		const term = await getTermById(input.id);
 		if (!term) {
 			throw new ORPCError("NOT_FOUND");
 		}
@@ -81,13 +90,14 @@ export const getTermRoute = publicProcedure
 export const deleteTermRoute = adminProcedure
 	.route({
 		method: "DELETE",
-		path: "/terms",
+		path: "/terms/{id}",
 		summary: "Delete a terms entry",
 		tags: ["Terms"],
 	})
 	.input(DeleteTermsInputSchema)
+	.output(TermsComputedSchema)
 	.handler(async ({ input }) => {
-		const term = await getTerm({ id: input.id });
+		const term = await getTermById(input.id);
 		if (!term) {
 			throw new ORPCError("NOT_FOUND");
 		}
@@ -95,9 +105,30 @@ export const deleteTermRoute = adminProcedure
 		return computeTerm(deleted);
 	});
 
+export const updateTermRoute = adminProcedure
+	.route({
+		method: "PATCH",
+		path: "/terms/{id}",
+		summary: "Update a terms entry",
+		tags: ["Terms"],
+	})
+	.input(z.intersection(GetTermsInputSchema, UpsertTermsInputSchema.partial()))
+	.output(TermsComputedSchema)
+	.handler(async ({ input }) => {
+		const existing = await getTermById(input.id);
+		if (!existing) {
+			throw new ORPCError("NOT_FOUND");
+		}
+
+		const computedInput = await computeUpsertTermsInput(input);
+		const updated = await updateTerm(input.id, computedInput);
+		return computeTerm(updated);
+	});
+
 export const termsRouter = {
 	create: createTermRoute,
 	get: getTermRoute,
 	list: listTermsRoute,
+	update: updateTermRoute,
 	delete: deleteTermRoute,
 };

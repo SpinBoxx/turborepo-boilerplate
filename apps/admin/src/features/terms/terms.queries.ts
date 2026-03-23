@@ -4,7 +4,7 @@ import type {
 	DeleteTermsInput,
 	ListTermsInput,
 	UpdateTermsInput,
-} from "@zanadeal/api/contracts";
+} from "@zanadeal/api/features/terms";
 import { toast } from "sonner";
 import { getErrorMessage } from "../amenity/amenity.queries";
 import {

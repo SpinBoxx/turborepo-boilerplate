@@ -23,10 +23,10 @@ const footerContent = {
 			en: "Legal",
 			mg: "Ara-dalàna",
 		}),
-		privacyPolicy: t({
-			fr: "Politique de confidentialité",
-			en: "Privacy Policy",
-			mg: "Politikan'ny tsiambaratelo",
+		termsAndConditionsOfSale: t({
+			fr: "Conditions générales de vente",
+			en: "Terms and Conditions of Sale",
+			mg: "Fepetra sy fepetra amin'ny varotra",
 		}),
 		termsOfService: t({
 			fr: "Conditions d'utilisation",

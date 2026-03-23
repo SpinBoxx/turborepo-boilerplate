@@ -1,11 +1,11 @@
-import type { TermsComputed } from "@zanadeal/api/features/terms/terms-schemas";
+import type { TermsComputed } from "@zanadeal/api/features/terms";
 import { cn } from "@zanadeal/ui";
 import { PlusCircle } from "lucide-react";
 import type { ComponentProps } from "react";
 import { TranslationTabsForm } from "@/components/TranslationTabsForm";
 import { useAppForm } from "@/hooks/useAppForm";
 import { TermsType } from "../../../../../../packages/db/prisma/generated/enums";
-import { useCreateTerm } from "../terms.queries";
+import { useCreateTerm, useUpdateTerm } from "../terms.queries";
 import { getTermInitialValues } from "./UpsertTermForm.config";
 
 interface Props extends ComponentProps<"form"> {
@@ -14,11 +14,16 @@ interface Props extends ComponentProps<"form"> {
 
 const UpsertTermForm = ({ term, className }: Props) => {
 	const createTerm = useCreateTerm();
-	console.log(term);
+	const updateTerm = useUpdateTerm();
 
 	const form = useAppForm({
 		defaultValues: getTermInitialValues(term || null),
 		onSubmit: async ({ value }) => {
+			if (term) {
+				await updateTerm.mutateAsync({ id: term.id, ...value });
+				return;
+			}
+
 			await createTerm.mutateAsync({ ...value });
 		},
 	});

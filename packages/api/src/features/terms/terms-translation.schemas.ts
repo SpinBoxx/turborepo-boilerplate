@@ -5,7 +5,7 @@ export const TermTranslationItemSchema = z.object({
 	content: z.string(),
 });
 
-export const TermTranslationSchema = z.partialRecord(
+export const TermTranslationSchema = z.record(
 	z.enum(LOCALES),
 	TermTranslationItemSchema,
 );

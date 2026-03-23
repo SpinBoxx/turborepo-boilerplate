@@ -14,10 +14,9 @@ const CreateTermPage = () => {
 						<EditorContext.Consumer>
 							{(ctx) => (
 								<div
-									// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+									// biome-ignore lint/security/noDangerouslySetInnerHtml: editor provider returns trusted inline CSS markup
 									dangerouslySetInnerHTML={{
-										// biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: <explanation>
-										__html: ctx?.inlineCss()!,
+										__html: ctx?.inlineCss() ?? "",
 									}}
 								/>
 							)}

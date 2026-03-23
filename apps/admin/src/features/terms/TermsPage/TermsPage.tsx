@@ -6,8 +6,9 @@ import { useListTerms } from "../terms.queries";
 
 const TermsPage = () => {
 	const terms = useListTerms({
-		orderBy: {
-			version: "desc",
+		sort: {
+			field: "version",
+			direction: "desc",
 		},
 	});
 

@@ -10,9 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteRouteImport } from './routes/login/route'
+import { Route as LegalRouteRouteImport } from './routes/_legal/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as LegalTermsOfServiceRouteImport } from './routes/_legal/terms-of-service'
+import { Route as LegalTermsAndConditionsOfSaleRouteImport } from './routes/_legal/terms-and-conditions-of-sale'
+import { Route as CompanyContactRouteImport } from './routes/_company/contact'
+import { Route as CompanyAboutRouteImport } from './routes/_company/about'
 import { Route as AppHotelsIndexRouteImport } from './routes/_app/hotels/index'
 import { Route as AppHotelIdIndexRouteImport } from './routes/_app/$hotelId/index'
 import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId/rooms/index'
@@ -20,6 +25,10 @@ import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId
 const LoginRouteRoute = LoginRouteRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalRouteRoute = LegalRouteRouteImport.update({
+  id: '/_legal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRouteRoute = AppRouteRouteImport.update({
@@ -35,6 +44,27 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRouteRoute,
+} as any)
+const LegalTermsOfServiceRoute = LegalTermsOfServiceRouteImport.update({
+  id: '/terms-of-service',
+  path: '/terms-of-service',
+  getParentRoute: () => LegalRouteRoute,
+} as any)
+const LegalTermsAndConditionsOfSaleRoute =
+  LegalTermsAndConditionsOfSaleRouteImport.update({
+    id: '/terms-and-conditions-of-sale',
+    path: '/terms-and-conditions-of-sale',
+    getParentRoute: () => LegalRouteRoute,
+  } as any)
+const CompanyContactRoute = CompanyContactRouteImport.update({
+  id: '/_company/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyAboutRoute = CompanyAboutRouteImport.update({
+  id: '/_company/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppHotelsIndexRoute = AppHotelsIndexRouteImport.update({
   id: '/hotels/',
@@ -55,6 +85,10 @@ const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRouteRouteWithChildren
+  '/about': typeof CompanyAboutRoute
+  '/contact': typeof CompanyContactRoute
+  '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
+  '/terms-of-service': typeof LegalTermsOfServiceRoute
   '/login/': typeof LoginIndexRoute
   '/$hotelId/': typeof AppHotelIdIndexRoute
   '/hotels/': typeof AppHotelsIndexRoute
@@ -62,6 +96,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
+  '/about': typeof CompanyAboutRoute
+  '/contact': typeof CompanyContactRoute
+  '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
+  '/terms-of-service': typeof LegalTermsOfServiceRoute
   '/login': typeof LoginIndexRoute
   '/$hotelId': typeof AppHotelIdIndexRoute
   '/hotels': typeof AppHotelsIndexRoute
@@ -70,7 +108,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
+  '/_legal': typeof LegalRouteRouteWithChildren
   '/login': typeof LoginRouteRouteWithChildren
+  '/_company/about': typeof CompanyAboutRoute
+  '/_company/contact': typeof CompanyContactRoute
+  '/_legal/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
+  '/_legal/terms-of-service': typeof LegalTermsOfServiceRoute
   '/_app/': typeof AppIndexRoute
   '/login/': typeof LoginIndexRoute
   '/_app/$hotelId/': typeof AppHotelIdIndexRoute
@@ -82,16 +125,34 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/about'
+    | '/contact'
+    | '/terms-and-conditions-of-sale'
+    | '/terms-of-service'
     | '/login/'
     | '/$hotelId/'
     | '/hotels/'
     | '/$hotelId/rooms/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/$hotelId' | '/hotels' | '/$hotelId/rooms'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/terms-and-conditions-of-sale'
+    | '/terms-of-service'
+    | '/login'
+    | '/$hotelId'
+    | '/hotels'
+    | '/$hotelId/rooms'
   id:
     | '__root__'
     | '/_app'
+    | '/_legal'
     | '/login'
+    | '/_company/about'
+    | '/_company/contact'
+    | '/_legal/terms-and-conditions-of-sale'
+    | '/_legal/terms-of-service'
     | '/_app/'
     | '/login/'
     | '/_app/$hotelId/'
@@ -101,7 +162,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  LegalRouteRoute: typeof LegalRouteRouteWithChildren
   LoginRouteRoute: typeof LoginRouteRouteWithChildren
+  CompanyAboutRoute: typeof CompanyAboutRoute
+  CompanyContactRoute: typeof CompanyContactRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -111,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_legal': {
+      id: '/_legal'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LegalRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -133,6 +204,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/_legal/terms-of-service': {
+      id: '/_legal/terms-of-service'
+      path: '/terms-of-service'
+      fullPath: '/terms-of-service'
+      preLoaderRoute: typeof LegalTermsOfServiceRouteImport
+      parentRoute: typeof LegalRouteRoute
+    }
+    '/_legal/terms-and-conditions-of-sale': {
+      id: '/_legal/terms-and-conditions-of-sale'
+      path: '/terms-and-conditions-of-sale'
+      fullPath: '/terms-and-conditions-of-sale'
+      preLoaderRoute: typeof LegalTermsAndConditionsOfSaleRouteImport
+      parentRoute: typeof LegalRouteRoute
+    }
+    '/_company/contact': {
+      id: '/_company/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof CompanyContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_company/about': {
+      id: '/_company/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof CompanyAboutRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/hotels/': {
       id: '/_app/hotels/'
@@ -176,6 +275,20 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface LegalRouteRouteChildren {
+  LegalTermsAndConditionsOfSaleRoute: typeof LegalTermsAndConditionsOfSaleRoute
+  LegalTermsOfServiceRoute: typeof LegalTermsOfServiceRoute
+}
+
+const LegalRouteRouteChildren: LegalRouteRouteChildren = {
+  LegalTermsAndConditionsOfSaleRoute: LegalTermsAndConditionsOfSaleRoute,
+  LegalTermsOfServiceRoute: LegalTermsOfServiceRoute,
+}
+
+const LegalRouteRouteWithChildren = LegalRouteRoute._addFileChildren(
+  LegalRouteRouteChildren,
+)
+
 interface LoginRouteRouteChildren {
   LoginIndexRoute: typeof LoginIndexRoute
 }
@@ -190,7 +303,10 @@ const LoginRouteRouteWithChildren = LoginRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
+  LegalRouteRoute: LegalRouteRouteWithChildren,
   LoginRouteRoute: LoginRouteRouteWithChildren,
+  CompanyAboutRoute: CompanyAboutRoute,
+  CompanyContactRoute: CompanyContactRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

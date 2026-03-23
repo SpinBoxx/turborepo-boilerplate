@@ -1,5 +1,5 @@
 import type { Terms as DbTerms } from "../../../../../db/prisma/generated/client";
-import type { Terms } from "../terms-schemas";
+import type { Terms } from "../schemas/terms-schemas";
 
 export const computeTerm = (term: DbTerms): Terms => {
 	return {
