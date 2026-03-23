@@ -1,10 +1,8 @@
-import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { date } from "intlayer";
 import {
 	CalendarIcon,
 	ChevronDown,
-	ChevronLast,
 	ChevronLeft,
 	ChevronRight,
 	Search,
@@ -45,7 +43,7 @@ export default function BookingSearchBarMobile({ className }: Props) {
 			return `${date(checkInDate, { dateStyle: "medium", locale })} - ${date(checkOutDate, { dateStyle: "medium", locale })}`;
 
 		return "";
-	}, [checkInDate, checkOutDate, locale]);
+	}, [checkInDate, checkOutDate, locale, t.whenAreYouGoing.value]);
 
 	return (
 		<Popover open={isOpen} onOpenChange={setIsOpen}>

@@ -1,13 +1,22 @@
 import {
 	dateToString,
 	getNights,
-	stringToDate,
 	todayDateOnly,
 	tomorrowDateOnly,
 } from "@zanadeal/utils";
 import z from "zod";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import {
+	createBookingDatesFromCheckIn,
+	getDefaultBookingDates,
+	getEarliestBookableCheckInDate,
+	isCheckInBeforeMinimumAllowed,
+	isCheckoutAfterCheckIn,
+	isDateOnlyString,
+	normalizeBookingDates,
+	shouldRefreshBookingDates,
+} from "../services/booking.service";
 
 interface BookingState {
 	// Guest count management
@@ -36,7 +45,8 @@ interface BookingState {
 		success: boolean;
 		error?: string;
 	};
-	resetBooking: () => void;
+	refreshBooking: () => void;
+	resetBooking: (when?: "today" | "tomorrow") => void;
 	hasGuest: () => boolean;
 	hasAllInfo: () => boolean;
 	hasMaxGuests: () => boolean;
@@ -50,8 +60,7 @@ export const useBookingStore = create<BookingState>()(
 			// Initial state
 			guestCount: 1,
 			maxGuests: DEFAULT_MAX_GUESTS,
-			checkInDate: todayDateOnly(),
-			checkOutDate: tomorrowDateOnly(),
+			...getDefaultBookingDates(),
 			roomId: null,
 
 			// Guest count actions
@@ -92,13 +101,32 @@ export const useBookingStore = create<BookingState>()(
 			},
 
 			// Utility actions
-			resetBooking: () =>
+			resetBooking: (when: "today" | "tomorrow" = "today") =>
 				set({
 					guestCount: 1,
-					checkInDate: todayDateOnly(),
-					checkOutDate: tomorrowDateOnly(),
+					...createBookingDatesFromCheckIn(
+						when === "tomorrow" ? tomorrowDateOnly() : todayDateOnly(),
+					),
 					roomId: null,
 				}),
+			refreshBooking: () => {
+				const state = get();
+				const currentDates = {
+					checkInDate: state.checkInDate,
+					checkOutDate: state.checkOutDate,
+				};
+
+				if (!shouldRefreshBookingDates(currentDates)) {
+					return;
+				}
+
+				const nextDates = normalizeBookingDates(currentDates);
+
+				set({
+					...nextDates,
+					roomId: null,
+				});
+			},
 
 			hasGuest: () => {
 				const state = get();
@@ -111,19 +139,18 @@ export const useBookingStore = create<BookingState>()(
 			},
 			validateBooking: () => {
 				const state = get();
+				const minimumCheckInDate = getEarliestBookableCheckInDate();
 
 				const bookingSchema = z.object({
 					checkInDate: z.string().refine((date) => {
-						const today = stringToDate(todayDateOnly());
-						const checkIn = stringToDate(date);
-						return checkIn >= today;
-					}, "Check-in date cannot be in the past"),
+						return (
+							isDateOnlyString(date) &&
+							!isCheckInBeforeMinimumAllowed(date, minimumCheckInDate)
+						);
+					}, "Check-in date is no longer available"),
 
 					checkOutDate: z.string().refine((date) => {
-						const state = get();
-						const checkIn = new Date(state.checkInDate);
-						const checkOut = new Date(date);
-						return checkOut > checkIn;
+						return isCheckoutAfterCheckIn(state.checkInDate, date);
 					}, "Check-out date must be after check-in date"),
 
 					guestCount: z.number().min(1, "At least one guest is required"),

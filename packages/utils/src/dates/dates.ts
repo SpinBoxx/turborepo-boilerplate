@@ -8,6 +8,10 @@ export function tomorrowDateOnly() {
 	return format(addDays(new Date(), 1), "yyyy-MM-dd");
 }
 
+export function addDaysDateOnly(days: number) {
+	return format(addDays(new Date(), days), "yyyy-MM-dd");
+}
+
 export function getNights(checkin: string, checkout: string) {
 	const start = parseISO(checkin); // "2025-03-20"
 	const end = parseISO(checkout); // "2025-03-22"

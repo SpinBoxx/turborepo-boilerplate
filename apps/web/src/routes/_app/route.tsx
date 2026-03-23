@@ -1,12 +1,20 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { useEffect } from "react";
 import Footer from "@/components/footer/footer";
 import Navbar from "@/components/navbar/Navbar";
+import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	const refreshBooking = useBookingStore((state) => state.refreshBooking);
+
+	useEffect(() => {
+		refreshBooking();
+	}, [refreshBooking]);
+
 	return (
 		<div className="mx-auto max-w-7xl">
 			<Navbar />
