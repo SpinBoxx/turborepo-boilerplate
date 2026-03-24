@@ -167,21 +167,24 @@ export function createHybridListSchemaFor() {
 					.default({
 						field: config.sort.default.field,
 						direction: config.sort.default.direction,
-					}),
-				page: z.coerce.number().int().min(1).default(defaultPage),
+					})
+					.optional(),
+				page: z.coerce.number().int().min(1).default(defaultPage).optional(),
 				limit: z.coerce
 					.number()
 					.int()
 					.min(1)
 					.max(maxLimit)
-					.default(defaultLimit),
-				filters: buildFiltersSchema(config.filters),
+					.default(defaultLimit)
+					.optional(),
+				filters: buildFiltersSchema(config.filters).optional(),
 			})
 			.transform((input) => ({
 				...input,
 				take: input.limit,
-				skip: (input.page - 1) * input.limit,
-			}));
+				skip: input.page && input.limit ? (input.page - 1) * input.limit : 0,
+			}))
+			.optional();
 	};
 }
 

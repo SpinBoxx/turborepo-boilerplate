@@ -1,0 +1,15 @@
+/* Remove default padding */
+.gm-style .gm-style-iw-c {
+	/* biome-ignore lint/complexity/noImportantStyles: <explanation> */
+	padding: 0 !important;
+}
+
+/* Disable overflow*/
+.gm-style-iw-d {
+	/* biome-ignore lint/complexity/noImportantStyles: <explanation> */
+	overflow: hidden !important;
+}
+
+.gm-style .gm-style-iw-tc::after {
+	background-color: var(--color-background);
+}

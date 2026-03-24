@@ -1,7 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
 import { useIntlayer } from "react-intlayer";
 import BookingSearchBar from "@/features/booking/BookinSearchBar/BookingSearchBar";
 import PopularHotels from "@/features/hotels/ui/PopularHotels";
+
+const FindHotelsOnMap = lazy(
+	() => import("@/features/hotels/ui/HotelsMap/FindHotelsOnMap"),
+);
+
+function FindHotelsOnMapFallback() {
+	return (
+		<div className="space-y-4">
+			<div className="space-y-2">
+				<div className="h-7 w-64 animate-pulse rounded-md bg-muted" />
+				<div className="h-4 w-96 max-w-full animate-pulse rounded-md bg-muted" />
+			</div>
+			<div className="h-112 w-full animate-pulse rounded-xl bg-muted" />
+		</div>
+	);
+}
 
 export const Route = createFileRoute("/_app/")({
 	component: RouteComponent,
@@ -32,9 +49,12 @@ function RouteComponent() {
 				{t.bookYourPerfectStay.value}
 			</h1>
 
-			<div className="space-y-4 sm:space-y-6 sm:*:-translate-y-20">
+			<div className="space-y-7 sm:space-y-9 sm:*:-translate-y-20">
 				<BookingSearchBar />
-				<PopularHotels />
+				<PopularHotels className="sm:mt-14" />
+				<Suspense fallback={<FindHotelsOnMapFallback />}>
+					<FindHotelsOnMap />
+				</Suspense>
 			</div>
 		</div>
 	);
