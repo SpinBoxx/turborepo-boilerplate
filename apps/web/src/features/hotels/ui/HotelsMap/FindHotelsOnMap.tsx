@@ -31,7 +31,7 @@ export default function FindHotelsOnMap({ className }: Props) {
 				</div>
 			</div>
 			<PlacesMap<HotelMapPoi>
-				className="h-130 overflow-hidden rounded-lg"
+				className="h-150 overflow-hidden rounded-lg"
 				locations={hotelPois}
 				config={{ allowCluster: true }}
 				renderPoiContent={(poi, { close }) => (

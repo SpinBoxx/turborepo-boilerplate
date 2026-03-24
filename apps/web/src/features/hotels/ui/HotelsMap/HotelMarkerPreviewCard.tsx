@@ -29,7 +29,7 @@ export default function HotelMarkerPreviewCard({
 }: Props) {
 	return (
 		<HotelProvider hotel={hotel}>
-			<Card className={cn("w-64 gap-1", className)}>
+			<Card className={cn("w-64 gap-1 rounded-xl", className)}>
 				<CardHeader className="p-3 pb-0!">
 					<CardTitle>
 						<HotelName />

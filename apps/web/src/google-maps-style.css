@@ -3,6 +3,8 @@
 	/* biome-ignore lint/complexity/noImportantStyles: <explanation> */
 	padding: 0 !important;
 	max-width: max-content !important;
+	overflow: hidden !important;
+	border-radius: 1.25rem !important;
 }
 
 /* Disable overflow*/
