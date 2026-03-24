@@ -56,6 +56,8 @@ export default function PlacesMap<TPoi extends MapsPoi = MapsPoi>({
 				mapId={"a19425a6dc46018226582841"}
 				defaultZoom={zoom}
 				defaultCenter={resolvedCenter}
+				mapTypeControl={false}
+				streetViewControl={false}
 				colorScheme={theme === "dark" ? ColorScheme.DARK : ColorScheme.LIGHT}
 			>
 				<PlacesMapContent<TPoi>
