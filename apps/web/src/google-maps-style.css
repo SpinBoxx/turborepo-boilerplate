@@ -2,6 +2,7 @@
 .gm-style .gm-style-iw-c {
 	/* biome-ignore lint/complexity/noImportantStyles: <explanation> */
 	padding: 0 !important;
+	max-width: max-content !important;
 }
 
 /* Disable overflow*/
