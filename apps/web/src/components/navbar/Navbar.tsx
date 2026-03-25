@@ -8,7 +8,7 @@ export default function Navbar() {
 	const navigate = useNavigate();
 
 	return (
-		<div className="flex w-full items-center justify-between py-3.5">
+		<div className="flex w-full items-center justify-between py-4.5">
 			<button
 				type="button"
 				className="flex cursor-pointer items-center gap-0"

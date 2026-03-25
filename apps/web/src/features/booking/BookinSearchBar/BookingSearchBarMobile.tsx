@@ -21,6 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useBookingStore } from "../hooks/useBookingHook";
 import BookingGuestCountInput from "../ui/BookingGuestCountInput";
+import BookingNoBookingAfterHoursInfo from "./BookingNoBookingAfterHoursInfo";
 import BookingSearchBarCalendar from "./BookingSearchBarCalendar";
 
 interface Props {
@@ -124,8 +125,9 @@ const PopoverDatesContent = ({
 					{t.selectYourTravelDates.value}
 				</p>
 			</div>
-			<div className="p-4">
+			<div className="space-y-3 p-4">
 				<BookingSearchBarCalendar />
+				<BookingNoBookingAfterHoursInfo />
 			</div>
 			<div className="flex justify-end border-t bg-muted/20 p-4">
 				<Button className="w-full sm:w-auto" onClick={onNext}>
