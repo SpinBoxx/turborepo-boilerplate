@@ -1,4 +1,5 @@
 import type { IncomingHttpHeaders } from "node:http";
+import { verifyUserSignUp } from "@zanadeal/api/features/user";
 import { auth } from "@zanadeal/auth";
 import type { FastifyInstance } from "fastify";
 
@@ -34,6 +35,18 @@ export function registerAuthRoutes(
 					if (typeof rawBody === "string") body = rawBody;
 					else if (Buffer.isBuffer(rawBody)) body = rawBody;
 					else if (rawBody != null) body = JSON.stringify(rawBody);
+				}
+
+				const isBodyValid = body
+					? await verifyUserSignUp(JSON.parse(body.toString()))
+					: { success: false };
+
+				if (!isBodyValid.success) {
+					reply.status(400).send({
+						error: "Invalid request body for authentication",
+						code: "INVALID_AUTH_BODY",
+					});
+					return;
 				}
 
 				const req = new Request(url.toString(), {
