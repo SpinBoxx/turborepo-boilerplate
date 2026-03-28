@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { cn } from "@zanadeal/ui";
 import { ChevronRight } from "lucide-react";
 import type { ComponentProps } from "react";
+import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookingSearchBarCalendarPopover } from "@/features/booking/BookinSearchBar/BookingSearchBarCalendarPopover";
@@ -13,6 +14,8 @@ interface Props extends ComponentProps<"div"> {}
 
 const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 	const { hotel } = useHotelContext();
+
+	const t = useIntlayer("hotels");
 
 	return (
 		<div
@@ -26,14 +29,14 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 				<CardContent className="flex flex-col gap-4 p-4 md:p-6">
 					<div>
 						<span className="font-light text-muted-foreground text-sm uppercase">
-							Starting from
+							{t.startingFrom.value}
 						</span>
 						<HotelPricePerNight priceClassName="text-[27px]" />
 					</div>
 
 					<div className="hidden md:flex md:flex-col md:gap-4">
 						<div className="space-y-1.5">
-							<p className="font-medium text-sm">Date de séjour</p>
+							<p className="font-medium text-sm">{t.dateOfStay.value}</p>
 							<BookingSearchBarCalendarPopover
 								buttonsProps={{
 									size: "lg",
@@ -42,7 +45,7 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 						</div>
 
 						<div className="space-y-1.5">
-							<p className="font-medium text-sm">Guests</p>
+							<p className="font-medium text-sm">{t.guests.value}</p>
 							<BookingGuestCountInput size="lg" />
 						</div>
 					</div>
@@ -51,7 +54,7 @@ const HotelDetailStickyPanel = ({ className, ...props }: Props) => {
 							size="lg"
 							className="group mt-2 w-full font-bold md:text-base"
 						>
-							Select Rooms
+							{t.selectRooms.value}
 							<ChevronRight className="transition-all group-hover:translate-x-2" />
 						</Button>
 					</Link>

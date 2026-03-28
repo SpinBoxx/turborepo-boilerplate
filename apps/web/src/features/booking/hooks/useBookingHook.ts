@@ -4,9 +4,11 @@ import {
 	todayDateOnly,
 	tomorrowDateOnly,
 } from "@zanadeal/utils";
+import { getIntlayer } from "intlayer";
 import z from "zod";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { getLocale } from "@/features/locale/services/locale";
 import {
 	createBookingDatesFromCheckIn,
 	getDefaultBookingDates,
@@ -147,11 +149,17 @@ export const useBookingStore = create<BookingState>()(
 							isDateOnlyString(date) &&
 							!isCheckInBeforeMinimumAllowed(date, minimumCheckInDate)
 						);
-					}, "Check-in date is no longer available"),
+					}, getIntlayer(
+						"booking-translations",
+						getLocale(),
+					).errors.invalidDates),
 
 					checkOutDate: z.string().refine((date) => {
 						return isCheckoutAfterCheckIn(state.checkInDate, date);
-					}, "Check-out date must be after check-in date"),
+					}, getIntlayer(
+						"booking-translations",
+						getLocale(),
+					).errors.invalidDates),
 
 					guestCount: z.number().min(1, "At least one guest is required"),
 				});

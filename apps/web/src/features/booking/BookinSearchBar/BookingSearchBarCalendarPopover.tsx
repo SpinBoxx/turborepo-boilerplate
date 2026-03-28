@@ -48,9 +48,9 @@ export function BookingSearchBarCalendarPopover({ buttonsProps }: Props) {
 				<CalendarDays />
 				{formatDate}
 			</PopoverTrigger>
-			<PopoverContent className="space-y-3">
+			<PopoverContent className="">
 				<BookingSearchBarCalendar />
-				<BookingNoBookingAfterHoursInfo className="mx-auto w-127" />
+				<BookingNoBookingAfterHoursInfo className="mx-auto mt-4 w-127" />
 			</PopoverContent>
 		</Popover>
 	);

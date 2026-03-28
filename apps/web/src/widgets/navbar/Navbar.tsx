@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
+import ToggleThemeButton from "../../components/theme/ToggleThemeButton";
 import LocalePopover from "../../features/locale/ui/LocalePopover";
-import ToggleThemeButton from "../theme/ToggleThemeButton";
 import NavbarAuthActions from "./NavbarAuthActions";
 import NavbarMenu from "./NavbarMenu";
 

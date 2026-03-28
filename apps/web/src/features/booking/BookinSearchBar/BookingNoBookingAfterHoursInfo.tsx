@@ -25,7 +25,7 @@ export default function BookingNoBookingAfterHoursInfo({
 			aria-live="polite"
 		>
 			<AlertCircleIcon
-				className="mt-0.5 size-4 flex-none text-muted-foreground"
+				className="mt-0.5 size-5 flex-none text-muted-foreground"
 				aria-hidden="true"
 			/>
 			<div className="space-y-1">

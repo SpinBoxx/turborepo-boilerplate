@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import { Card, CardPanel } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -15,6 +16,7 @@ export default function HotelCard() {
 	const {
 		hotel: { id },
 	} = useHotelContext();
+	const t = useIntlayer("hotels");
 	const navigate = useNavigate();
 	const handleClick = () => {
 		navigate({
@@ -55,13 +57,13 @@ export default function HotelCard() {
 					<div className="@container flex items-end justify-between">
 						<div>
 							<span className="flex translate-y-0.5 text-muted-foreground text-xs uppercase">
-								Starting from
+								{t.startingFrom.value}
 							</span>
 							<HotelPricePerNight className="flex-wrap" />
 						</div>
 						<Button type="button" variant={"default"}>
-							<span>View </span>{" "}
-							<span className="@xs:block hidden">details</span>
+							<span>{t.view.value} </span>{" "}
+							<span className="@xs:block hidden">{t.details.value}</span>
 							<ArrowRight />
 						</Button>
 					</div>

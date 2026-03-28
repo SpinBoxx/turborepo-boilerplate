@@ -1,5 +1,11 @@
 import { uppercaseFirstLetter } from "@zanadeal/utils";
-import { getLocaleName, Locales, type LocalesValues } from "intlayer";
+import {
+	getCookie,
+	getLocaleName,
+	Locales,
+	type LocalesValues,
+} from "intlayer";
+import { LOCALES_CONSTANTS } from "../constants/locale.constants";
 
 export const getLanguages = (locale: LocalesValues) => [
 	{
@@ -25,4 +31,16 @@ export const isLocaleValid = (locale: string | null | undefined): boolean => {
 	if (!locale) return false;
 
 	return Object.values(Locales).includes(locale as unknown as typeof Locales);
+};
+
+export const getLocale = () => {
+	const localeFromCookie = getCookie(LOCALES_CONSTANTS.localeCookieKey);
+
+	let locale: LocalesValues = Locales.ENGLISH; // Default locale
+
+	if (isLocaleValid(localeFromCookie)) {
+		locale = localeFromCookie as LocalesValues;
+	}
+
+	return locale;
 };

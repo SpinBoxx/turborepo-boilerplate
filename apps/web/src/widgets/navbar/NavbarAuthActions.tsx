@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { LogOut, User, UserCog2 } from "lucide-react";
+import { useIntlayer } from "react-intlayer";
 import { useAuth } from "@/auth/providers/AuthProvider";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import {
 	Menu,
 	MenuGroup,
@@ -9,15 +10,16 @@ import {
 	MenuItem,
 	MenuPopup,
 	MenuTrigger,
-} from "../ui/menu";
+} from "../../components/ui/menu";
 
 export default function NavbarAuthActions() {
 	const { user, signOut } = useAuth();
+	const t = useIntlayer("navbar");
 	if (!user) {
 		return (
 			<div className="flex gap-2">
 				<Link to="/login">
-					<Button>Login</Button>
+					<Button>{t.login.value}</Button>
 				</Link>
 			</div>
 		);
@@ -31,10 +33,10 @@ export default function NavbarAuthActions() {
 				</MenuTrigger>
 				<MenuPopup align="end">
 					<MenuGroup>
-						<MenuGroupLabel>Profile</MenuGroupLabel>
+						<MenuGroupLabel>{t.profile.value}</MenuGroupLabel>
 						<MenuItem>
 							<UserCog2 className="size-5" />
-							<span>View Profile</span>
+							<span>{t.profile.value}</span>
 						</MenuItem>
 					</MenuGroup>
 					<MenuItem
@@ -43,7 +45,7 @@ export default function NavbarAuthActions() {
 						onClick={() => signOut()}
 					>
 						<LogOut className="size-5 text-destructive" />
-						<span className="text-destructive">Log Out</span>
+						<span className="text-destructive">{t.signOut.value}</span>
 					</MenuItem>
 				</MenuPopup>
 			</Menu>

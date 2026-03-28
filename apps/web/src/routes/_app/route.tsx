@@ -1,8 +1,8 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
 import Footer from "@/components/footer/footer";
-import Navbar from "@/components/navbar/Navbar";
 import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
+import Navbar from "@/widgets/navbar/Navbar";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,
