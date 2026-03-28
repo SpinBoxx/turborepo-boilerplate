@@ -11,6 +11,7 @@ import { createQueryClient } from "./lib/queryClient";
 import type { FileRouteTypes } from "./routeTree.gen";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
+import RootDialogs from "./widgets/root/RootDialogs";
 
 // Create a new router instance
 const router = createRouter({
@@ -61,6 +62,7 @@ root.render(
 				<ThemeProvider>
 					<AuthProvider>
 						<RouterProviderWithContext />
+						<RootDialogs />
 					</AuthProvider>
 					<Toaster />
 				</ThemeProvider>

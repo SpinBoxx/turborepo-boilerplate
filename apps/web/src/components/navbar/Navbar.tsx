@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import LangPopover from "../LangPopover";
+import LocalePopover from "../../features/locale/ui/LocalePopover";
 import ToggleThemeButton from "../theme/ToggleThemeButton";
 import NavbarAuthActions from "./NavbarAuthActions";
 import NavbarMenu from "./NavbarMenu";
@@ -26,7 +26,7 @@ export default function Navbar() {
 
 			<div className="flex items-center gap-2">
 				<NavbarMenu className="hidden md:mr-10 md:block" />
-				<LangPopover />
+				<LocalePopover />
 				<ToggleThemeButton />
 				<NavbarAuthActions />
 			</div>
