@@ -5,7 +5,7 @@ import { z } from "zod";
 import VerifyEmailDialog from "@/auth/components/VerifyEmailDialog";
 
 const verifyEmailSearchSchema = z.object({
-	email: z.string().email(),
+	email: z.email(),
 });
 
 export const Route = createFileRoute("/_auth/verify-email/")({

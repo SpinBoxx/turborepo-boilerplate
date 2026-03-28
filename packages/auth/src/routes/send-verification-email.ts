@@ -20,6 +20,9 @@ export const sendVerificationEmailRouteHandler: AuthRouteHandler = async (
 		return;
 	}
 
+	const headers = request.headers;
+	console.log(headers["content-language"]);
+
 	await forwardToBetterAuth(request, reply, parsedBody.data);
 };
 

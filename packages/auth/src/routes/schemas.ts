@@ -34,3 +34,7 @@ export const verifyEmailQuerySchema = z
 		callbackURL: z.string().optional(),
 	})
 	.strict();
+
+export type sendVerificationEmailType = z.infer<
+	typeof sendVerificationEmailSchema
+>;

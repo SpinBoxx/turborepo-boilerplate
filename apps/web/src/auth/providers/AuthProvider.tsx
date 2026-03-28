@@ -1,4 +1,5 @@
 import type { LoginInput, UpsertUserInput } from "@zanadeal/api/features/user";
+import type { sendVerificationEmailType } from "@zanadeal/auth/routes/schemas";
 import {
 	createContext,
 	useCallback,
@@ -47,6 +48,7 @@ type AuthContextValue = {
 	user: User | null;
 	loadSession: () => Promise<User | null | undefined>;
 	refresh: () => Promise<void>;
+	sendVerificationEmail: (body: sendVerificationEmailType) => Promise<void>;
 	signInWithEmail: (
 		input: LoginInput,
 		options?: LoginOptions,
@@ -137,6 +139,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					: new Error("An unexpected error occurred."),
 			);
 			return;
+		}
+	};
+
+	const sendVerificationEmail = async (body: sendVerificationEmailType) => {
+		const { email } = body;
+		try {
+			const res = await $fetch(
+				`${import.meta.env.VITE_API_URL}/api/auth/send-verification-email`,
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"content-type": "application/json",
+					},
+					body: JSON.stringify({
+						email,
+						callbackURL: `${window.location.origin}/email-verified`,
+					}),
+				},
+			);
+
+			if (!res || res.error) {
+				toast.error("Failed to send verification email", {
+					description: res?.error?.message || "Please try again later.",
+				});
+			} else {
+				toast.success("Verification email sent", {
+					description: "Please check your inbox and follow the instructions.",
+				});
+			}
+		} catch (_e) {
+			toast.error("Failed to send verification email", {
+				description: "An unexpected error occurred. Please try again later.",
+			});
 		}
 	};
 
@@ -234,11 +270,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			refresh,
 			signInWithEmail,
 			signUpWithEmail,
+			sendVerificationEmail,
 			signOut,
 		}),
 		[
 			signOut,
 			signUpWithEmail,
+			sendVerificationEmail,
 			status,
 			refresh,
 			user,

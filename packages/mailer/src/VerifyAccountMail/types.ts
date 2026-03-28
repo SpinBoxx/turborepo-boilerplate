@@ -1,7 +1,9 @@
 import * as z from "zod";
+import { LOCALES } from "../resend";
 
 export const VerifyAccountMailInputSchema = z.object({
 	to: z.email(),
+	locale: z.enum(LOCALES),
 	variables: z.object({
 		userName: z.string().min(1),
 		confirmationUrl: z.string(),

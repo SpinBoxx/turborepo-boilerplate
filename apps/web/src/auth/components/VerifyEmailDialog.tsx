@@ -2,7 +2,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon, MailIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIntlayer } from "react-intlayer";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -12,7 +11,7 @@ import {
 	DialogPopup,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { $fetch } from "@/lib/fetch";
+import { useAuth } from "../providers/AuthProvider";
 
 const RESEND_COOLDOWN = 60;
 
@@ -29,6 +28,7 @@ export default function VerifyEmailDialog({ email }: { email: string }) {
 	const [cooldown, setCooldown] = useState(0);
 	const [isResending, setIsResending] = useState(false);
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+	const { sendVerificationEmail } = useAuth();
 
 	const startCooldown = useCallback(() => {
 		setCooldown(RESEND_COOLDOWN);
@@ -52,30 +52,9 @@ export default function VerifyEmailDialog({ email }: { email: string }) {
 	const handleResend = async () => {
 		if (cooldown > 0 || isResending) return;
 		setIsResending(true);
-		try {
-			const res = await $fetch(
-				`${import.meta.env.VITE_API_URL}/api/auth/send-verification-email`,
-				{
-					method: "POST",
-					credentials: "include",
-					headers: { "content-type": "application/json" },
-					body: JSON.stringify({
-						email,
-						callbackURL: `${window.location.origin}/email-verified`,
-					}),
-				},
-			);
-			if (res.error) {
-				toast.error(content.emailResendFailed.value);
-			} else {
-				toast.success(content.emailResent.value);
-				startCooldown();
-			}
-		} catch {
-			toast.error(content.emailResendFailed.value);
-		} finally {
-			setIsResending(false);
-		}
+		await sendVerificationEmail({ email });
+		setIsResending(false);
+		startCooldown();
 	};
 
 	return (

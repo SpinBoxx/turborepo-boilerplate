@@ -1,5 +1,6 @@
 import prisma from "@zanadeal/db";
 import { mailService } from "@zanadeal/mailer";
+import { verifyLocale } from "@zanadeal/mailer/resend";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import type { User } from "../../db/prisma/generated/client";
@@ -15,14 +16,18 @@ export const auth = betterAuth({
 	},
 
 	emailVerification: {
-		sendVerificationEmail: async ({ url, user }, _request) => {
+		sendVerificationEmail: async ({ url, user }, request) => {
 			const parsedUrl = new URL(url);
 			parsedUrl.searchParams.set(
 				"callbackURL",
 				`${process.env.CLIENT_URL}/email-verified`,
 			);
+			const localeFromHeaders = request?.headers.get("content-language");
+
+			const locale = verifyLocale(localeFromHeaders);
 
 			const mail = await mailService.sendVerifyAccountMail({
+				locale,
 				to: user.email,
 				variables: {
 					// @ts-expect-error
@@ -36,7 +41,7 @@ export const auth = betterAuth({
 		},
 		expiresIn: 60 * 60, // 1 hour
 
-		sendOnSignUp: true,
+		sendOnSignUp: false,
 	},
 	user: {
 		additionalFields: {

@@ -35,4 +35,17 @@ export const $fetch = createFetch({
 		type: "Bearer",
 		token: getSessionToken(),
 	},
+	onRequest: ({ headers, ...context }) => {
+		if (!headers.has("content-language")) {
+			headers.set(
+				"content-language",
+				getCookieValue("INTLAYER_LOCALE") || "en",
+			);
+		}
+
+		return {
+			...context,
+			headers,
+		};
+	},
 });
