@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useDocumentTitle } from "usehooks-ts";
 import AuthDialog from "@/auth/components/AuthDialog";
 
-export const Route = createFileRoute("/login/")({
+export const Route = createFileRoute("/_auth/login/")({
 	component: RouteComponent,
 });
 

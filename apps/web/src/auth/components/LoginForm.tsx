@@ -1,3 +1,4 @@
+import { revalidateLogic } from "@tanstack/react-form";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
@@ -26,6 +27,7 @@ export default function LoginForm({
 			email: "",
 			password: "",
 		},
+		validationLogic: revalidateLogic(),
 		onSubmit: async ({ value }) => {
 			await signInWithEmail(value, {
 				onSuccess: () => {
@@ -55,7 +57,7 @@ export default function LoginForm({
 				<form.AppField
 					name="email"
 					validators={{
-						onBlur: ({ value }) => {
+						onDynamic: ({ value }) => {
 							if (!value || value.trim().length === 0) {
 								return content.emailIsRequired.value;
 							}
@@ -74,7 +76,7 @@ export default function LoginForm({
 				<form.AppField
 					name="password"
 					validators={{
-						onBlur: ({ value }) => {
+						onDynamic: ({ value }) => {
 							if (!value || value.trim().length === 0) {
 								return content.passwordIsRequired.value;
 							}
@@ -106,7 +108,12 @@ export default function LoginForm({
 			</form>
 			<div className="mt-4 text-center">
 				<Button
-					onClick={onCreateAccountClick}
+					type="button"
+					onClick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						onCreateAccountClick();
+					}}
 					variant={"link"}
 					className="text-muted-foreground text-sm"
 				>

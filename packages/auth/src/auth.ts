@@ -11,21 +11,31 @@ export const auth = betterAuth({
 	trustedOrigins: process.env.CORS_ORIGIN?.split(",") || [],
 	emailAndPassword: {
 		enabled: true,
+		requireEmailVerification: true,
 	},
 
 	emailVerification: {
 		sendVerificationEmail: async ({ url, user }, _request) => {
+			const parsedUrl = new URL(url);
+			parsedUrl.searchParams.set(
+				"callbackURL",
+				`${process.env.CLIENT_URL}/email-verified`,
+			);
+
 			const mail = await mailService.sendVerifyAccountMail({
 				to: user.email,
 				variables: {
 					// @ts-expect-error
 					userName: (user as User).firstName,
-					confirmationUrl: url,
+					confirmationUrl: parsedUrl.toString(),
 				},
 				subject: "Veuillez vérifier votre compte",
 			});
+
 			console.log(mail);
 		},
+		expiresIn: 60 * 60, // 1 hour
+
 		sendOnSignUp: true,
 	},
 	user: {
@@ -43,16 +53,19 @@ export const auth = betterAuth({
 			kyc_session_id: {
 				required: false,
 				returned: true,
+				input: false,
 				type: "string",
 			},
 			kyc_verified: {
 				required: false,
 				returned: true,
+				input: false,
 				type: "boolean",
 			},
 			roles: {
 				required: false,
 				returned: true,
+				input: false,
 				type: "string[]",
 			},
 		},

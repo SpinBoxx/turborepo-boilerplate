@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Home } from "lucide-react";
+import LangPopover from "../LangPopover";
 import Logo from "../Logo";
+import ToggleThemeButton from "../theme/ToggleThemeButton";
 import { Button } from "../ui/button";
 
 export default function LoginNavbar() {
@@ -9,12 +11,16 @@ export default function LoginNavbar() {
 			<Link to="/">
 				<Logo />
 			</Link>
-			<Link to="/">
-				<Button variant={"outline"}>
-					<Home />
-					Home
-				</Button>
-			</Link>
+			<div className="space-x-2">
+				<LangPopover />
+				<ToggleThemeButton />
+				<Link to="/">
+					<Button variant={"outline"}>
+						<Home />
+						Home
+					</Button>
+				</Link>
+			</div>
 		</div>
 	);
 }

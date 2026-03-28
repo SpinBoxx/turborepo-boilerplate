@@ -32,7 +32,10 @@ export default function RegisterForm({
 			const user = await signUpWithEmail(value, {});
 
 			if (user) {
-				navigate({ to: redirectTo || "/" });
+				navigate({
+					to: "/verify-email",
+					search: { email: value.email },
+				});
 			}
 		},
 	});

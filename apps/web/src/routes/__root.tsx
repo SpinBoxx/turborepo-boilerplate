@@ -11,7 +11,7 @@ export const containerClassName = "mx-auto px-5.5 sm:px-8 max-w-7xl";
 const RootLayout = () => (
 	<>
 		<HeadContent />
-		<div className="relative isolate min-h-dvh">
+		<div className="relative isolate min-h-dvh overflow-x-hidden">
 			<Container>
 				<Outlet />
 			</Container>

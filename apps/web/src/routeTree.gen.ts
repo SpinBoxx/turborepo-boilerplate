@@ -9,36 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteRouteImport } from './routes/login/route'
 import { Route as LegalRouteRouteImport } from './routes/_legal/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
-import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as LegalTermsOfServiceRouteImport } from './routes/_legal/terms-of-service'
 import { Route as LegalTermsAndConditionsOfSaleRouteImport } from './routes/_legal/terms-and-conditions-of-sale'
 import { Route as CompanyContactRouteImport } from './routes/_company/contact'
 import { Route as CompanyAboutRouteImport } from './routes/_company/about'
+import { Route as AuthLoginRouteRouteImport } from './routes/_auth/login/route'
+import { Route as AuthVerifyEmailIndexRouteImport } from './routes/_auth/verify-email/index'
+import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as AuthEmailVerifiedIndexRouteImport } from './routes/_auth/email-verified/index'
 import { Route as AppHotelsIndexRouteImport } from './routes/_app/hotels/index'
 import { Route as AppHotelIdIndexRouteImport } from './routes/_app/$hotelId/index'
 import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId/rooms/index'
 
-const LoginRouteRoute = LoginRouteRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LegalRouteRoute = LegalRouteRouteImport.update({
   id: '/_legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
-} as any)
-const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => LoginRouteRoute,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
@@ -66,6 +63,26 @@ const CompanyAboutRoute = CompanyAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthLoginRouteRoute = AuthLoginRouteRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthVerifyEmailIndexRoute = AuthVerifyEmailIndexRouteImport.update({
+  id: '/verify-email/',
+  path: '/verify-email/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthLoginRouteRoute,
+} as any)
+const AuthEmailVerifiedIndexRoute = AuthEmailVerifiedIndexRouteImport.update({
+  id: '/email-verified/',
+  path: '/email-verified/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AppHotelsIndexRoute = AppHotelsIndexRouteImport.update({
   id: '/hotels/',
   path: '/hotels/',
@@ -84,14 +101,16 @@ const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
-  '/login': typeof LoginRouteRouteWithChildren
+  '/login': typeof AuthLoginRouteRouteWithChildren
   '/about': typeof CompanyAboutRoute
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/terms-of-service': typeof LegalTermsOfServiceRoute
-  '/login/': typeof LoginIndexRoute
   '/$hotelId/': typeof AppHotelIdIndexRoute
   '/hotels/': typeof AppHotelsIndexRoute
+  '/email-verified/': typeof AuthEmailVerifiedIndexRoute
+  '/login/': typeof AuthLoginIndexRoute
+  '/verify-email/': typeof AuthVerifyEmailIndexRoute
   '/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -100,24 +119,29 @@ export interface FileRoutesByTo {
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/terms-of-service': typeof LegalTermsOfServiceRoute
-  '/login': typeof LoginIndexRoute
   '/$hotelId': typeof AppHotelIdIndexRoute
   '/hotels': typeof AppHotelsIndexRoute
+  '/email-verified': typeof AuthEmailVerifiedIndexRoute
+  '/login': typeof AuthLoginIndexRoute
+  '/verify-email': typeof AuthVerifyEmailIndexRoute
   '/$hotelId/rooms': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
+  '/_auth': typeof AuthRouteRouteWithChildren
   '/_legal': typeof LegalRouteRouteWithChildren
-  '/login': typeof LoginRouteRouteWithChildren
+  '/_auth/login': typeof AuthLoginRouteRouteWithChildren
   '/_company/about': typeof CompanyAboutRoute
   '/_company/contact': typeof CompanyContactRoute
   '/_legal/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/_legal/terms-of-service': typeof LegalTermsOfServiceRoute
   '/_app/': typeof AppIndexRoute
-  '/login/': typeof LoginIndexRoute
   '/_app/$hotelId/': typeof AppHotelIdIndexRoute
   '/_app/hotels/': typeof AppHotelsIndexRoute
+  '/_auth/email-verified/': typeof AuthEmailVerifiedIndexRoute
+  '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_auth/verify-email/': typeof AuthVerifyEmailIndexRoute
   '/_app/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRouteTypes {
@@ -129,9 +153,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/terms-and-conditions-of-sale'
     | '/terms-of-service'
-    | '/login/'
     | '/$hotelId/'
     | '/hotels/'
+    | '/email-verified/'
+    | '/login/'
+    | '/verify-email/'
     | '/$hotelId/rooms/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -140,48 +166,53 @@ export interface FileRouteTypes {
     | '/contact'
     | '/terms-and-conditions-of-sale'
     | '/terms-of-service'
-    | '/login'
     | '/$hotelId'
     | '/hotels'
+    | '/email-verified'
+    | '/login'
+    | '/verify-email'
     | '/$hotelId/rooms'
   id:
     | '__root__'
     | '/_app'
+    | '/_auth'
     | '/_legal'
-    | '/login'
+    | '/_auth/login'
     | '/_company/about'
     | '/_company/contact'
     | '/_legal/terms-and-conditions-of-sale'
     | '/_legal/terms-of-service'
     | '/_app/'
-    | '/login/'
     | '/_app/$hotelId/'
     | '/_app/hotels/'
+    | '/_auth/email-verified/'
+    | '/_auth/login/'
+    | '/_auth/verify-email/'
     | '/_app/$hotelId/rooms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   LegalRouteRoute: typeof LegalRouteRouteWithChildren
-  LoginRouteRoute: typeof LoginRouteRouteWithChildren
   CompanyAboutRoute: typeof CompanyAboutRoute
   CompanyContactRoute: typeof CompanyContactRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_legal': {
       id: '/_legal'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof LegalRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -190,13 +221,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/login/': {
-      id: '/login/'
-      path: '/'
-      fullPath: '/login/'
-      preLoaderRoute: typeof LoginIndexRouteImport
-      parentRoute: typeof LoginRouteRoute
     }
     '/_app/': {
       id: '/_app/'
@@ -232,6 +256,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/about'
       preLoaderRoute: typeof CompanyAboutRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/verify-email/': {
+      id: '/_auth/verify-email/'
+      path: '/verify-email'
+      fullPath: '/verify-email/'
+      preLoaderRoute: typeof AuthVerifyEmailIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/login/': {
+      id: '/_auth/login/'
+      path: '/'
+      fullPath: '/login/'
+      preLoaderRoute: typeof AuthLoginIndexRouteImport
+      parentRoute: typeof AuthLoginRouteRoute
+    }
+    '/_auth/email-verified/': {
+      id: '/_auth/email-verified/'
+      path: '/email-verified'
+      fullPath: '/email-verified/'
+      preLoaderRoute: typeof AuthEmailVerifiedIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_app/hotels/': {
       id: '/_app/hotels/'
@@ -275,6 +327,34 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface AuthLoginRouteRouteChildren {
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+}
+
+const AuthLoginRouteRouteChildren: AuthLoginRouteRouteChildren = {
+  AuthLoginIndexRoute: AuthLoginIndexRoute,
+}
+
+const AuthLoginRouteRouteWithChildren = AuthLoginRouteRoute._addFileChildren(
+  AuthLoginRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthLoginRouteRoute: typeof AuthLoginRouteRouteWithChildren
+  AuthEmailVerifiedIndexRoute: typeof AuthEmailVerifiedIndexRoute
+  AuthVerifyEmailIndexRoute: typeof AuthVerifyEmailIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginRouteRoute: AuthLoginRouteRouteWithChildren,
+  AuthEmailVerifiedIndexRoute: AuthEmailVerifiedIndexRoute,
+  AuthVerifyEmailIndexRoute: AuthVerifyEmailIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 interface LegalRouteRouteChildren {
   LegalTermsAndConditionsOfSaleRoute: typeof LegalTermsAndConditionsOfSaleRoute
   LegalTermsOfServiceRoute: typeof LegalTermsOfServiceRoute
@@ -289,22 +369,10 @@ const LegalRouteRouteWithChildren = LegalRouteRoute._addFileChildren(
   LegalRouteRouteChildren,
 )
 
-interface LoginRouteRouteChildren {
-  LoginIndexRoute: typeof LoginIndexRoute
-}
-
-const LoginRouteRouteChildren: LoginRouteRouteChildren = {
-  LoginIndexRoute: LoginIndexRoute,
-}
-
-const LoginRouteRouteWithChildren = LoginRouteRoute._addFileChildren(
-  LoginRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   LegalRouteRoute: LegalRouteRouteWithChildren,
-  LoginRouteRoute: LoginRouteRouteWithChildren,
   CompanyAboutRoute: CompanyAboutRoute,
   CompanyContactRoute: CompanyContactRoute,
 }

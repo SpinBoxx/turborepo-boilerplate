@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import { useRouter, useRouterState } from "@tanstack/react-router";
 
 export default function AuthDialog() {
 	const content = useIntlayer("auth-dialog");
