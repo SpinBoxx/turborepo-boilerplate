@@ -1,4 +1,5 @@
 import { computeAmenity } from "../amenity/computes/amenity-compute";
+import { fromStoredMoneyAmount } from "../../money";
 import type { UserComputed } from "../user";
 import type { RoomDB } from "./room.store";
 import type { RoomComputed } from "./schemas/room.schemas";
@@ -16,11 +17,23 @@ export const computeCurrentPrice = (room: RoomDB) => {
 	return validPrices.at(0);
 };
 
+export const normalizeRoomPrice = (
+	price: RoomDB["prices"][number],
+): RoomComputed["prices"][number] => {
+	return {
+		...price,
+		price: fromStoredMoneyAmount(price.price),
+		promoPrice: fromStoredMoneyAmount(price.promoPrice),
+	};
+};
+
 export const computeRoomPriceFields = (room: RoomDB) => {
 	const currentPrice = computeCurrentPrice(room);
 	return {
-		price: currentPrice ? (currentPrice.price ?? 0) : 0,
-		promoPrice: currentPrice ? (currentPrice.promoPrice ?? 0) : 0,
+		price: currentPrice ? fromStoredMoneyAmount(currentPrice.price ?? 0) : 0,
+		promoPrice: currentPrice
+			? fromStoredMoneyAmount(currentPrice.promoPrice ?? 0)
+			: 0,
 	};
 };
 
@@ -46,6 +59,7 @@ export const computeRoomFull = async (
 > => {
 	return {
 		...room,
+		prices: room.prices.map(normalizeRoomPrice),
 		...computeRoomPriceFields(room),
 		amenities: await computeRoomAmenities(room, user),
 	};

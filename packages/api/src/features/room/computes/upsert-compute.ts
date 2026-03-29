@@ -1,5 +1,6 @@
 import { ORPCError } from "@orpc/client";
 
+import { toStoredMoneyAmount } from "../../../money";
 import { uploadBase64Image } from "../../../cloudinary/cloudinary.upload.service";
 import type {
 	UpsertRoomComputedInput,
@@ -53,6 +54,14 @@ const computedStringToNumbers = (input: Partial<UpsertRoomInput>) => {
 	};
 };
 
+const computeRoomPrices = (prices: UpsertRoomInput["prices"] | undefined) => {
+	return prices?.map((price) => ({
+		...price,
+		price: toStoredMoneyAmount(price.price),
+		promoPrice: toStoredMoneyAmount(price.promoPrice),
+	}));
+};
+
 // Create: tous les champs requis → retour complet
 export async function computeUpsertRoomInput(
 	input: UpsertRoomInput,
@@ -73,6 +82,10 @@ export async function computeUpsertRoomInput(
 	const result: Record<string, unknown> = {
 		...computedStringToNumbers(roomData),
 	};
+
+	if (roomData.prices !== undefined) {
+		result.prices = computeRoomPrices(roomData.prices);
+	}
 
 	// Ne compute les images que si elles sont fournies dans l'input
 	if (images !== undefined) {

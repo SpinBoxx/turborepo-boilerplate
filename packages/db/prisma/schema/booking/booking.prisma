@@ -1,0 +1,57 @@
+model Booking {
+  id                             String            @id @default(cuid())
+  quote                          BookingQuote?     @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  quoteId                        String?           @unique
+  paymentAttempt                 PaymentAttempt?   @relation(fields: [paymentAttemptId], references: [id], onDelete: SetNull)
+  paymentAttemptId               String?           @unique
+  user                           User?             @relation("BookingCustomer", fields: [userId], references: [id], onDelete: SetNull)
+  userId                         String?
+  validatedByUser                User?             @relation("BookingValidatedBy", fields: [validatedByUserId], references: [id], onDelete: SetNull)
+  validatedByUserId              String?
+  hotel                          Hotel             @relation(fields: [hotelId], references: [id], onDelete: Restrict)
+  hotelId                        String
+  room                           Room              @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  roomId                         String
+  checkInDate                    DateTime
+  checkOutDate                   DateTime
+  nights                         Int
+  quantity                       Int
+  guestCount                     Int
+  status                         BookingStatus     @default(PENDING_VALIDATION)
+  currency                       String            @default("MGA")
+  subtotalAmount                 Int
+  discountAmount                 Int               @default(0)
+  taxAmount                      Int               @default(0)
+  platformFeePercentageBasisPoints Int
+  platformFeeAmount              Int               @default(0)
+  hotelPayoutAmount              Int
+  totalAmount                    Int
+  paidAmount                     Int
+  refundedAmount                 Int               @default(0)
+  paidAt                         DateTime
+  confirmedAt                    DateTime?
+  rejectedAt                     DateTime?
+  cancelledAt                    DateTime?
+  validationNote                 String?
+  rejectionReason                String?
+  cancellationReason             String?
+  specialRequests                String?
+  customerFirstName              String
+  customerLastName               String
+  customerEmail                  String
+  customerPhoneNumber            String
+  discounts                      BookingDiscount[]
+  events                         BookingEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([validatedByUserId])
+  @@index([hotelId])
+  @@index([roomId])
+  @@index([status])
+  @@index([status, paidAt])
+  @@index([roomId, checkInDate, checkOutDate])
+  @@index([hotelId, checkInDate, checkOutDate])
+}

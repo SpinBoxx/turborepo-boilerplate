@@ -1,3 +1,4 @@
+import { fromStoredMoneyAmount } from "../../../money";
 import { computeAmenity } from "../../amenity/computes/amenity-compute";
 import { computeRoom } from "../../room/computes/room-compute";
 import type { UserComputed } from "../../user";
@@ -25,7 +26,7 @@ export const computeHotelStartingPrice = (hotel: HotelDB): number => {
 	if (allPrices.length === 0) {
 		return 0;
 	}
-	return Math.min(...allPrices);
+	return fromStoredMoneyAmount(Math.min(...allPrices));
 };
 
 export const computeHotelAmenities = async (

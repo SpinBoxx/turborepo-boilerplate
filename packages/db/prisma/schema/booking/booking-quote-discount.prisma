@@ -1,0 +1,20 @@
+model BookingQuoteDiscount {
+  id                     String       @id @default(cuid())
+  quote                  BookingQuote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  quoteId                String
+  type                   DiscountType
+  name                   String
+  code                   String?
+  sortOrder              Int          @default(0)
+  percentageBasisPoints  Int?
+  amount                 Int?
+  appliedAmount          Int
+  metadata               Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([quoteId])
+  @@index([quoteId, sortOrder])
+  @@index([type])
+}

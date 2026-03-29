@@ -1,0 +1,28 @@
+model PaymentAttempt {
+  id                String               @id @default(cuid())
+  quote             BookingQuote         @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  quoteId           String
+  provider          PaymentProvider
+  status            PaymentAttemptStatus @default(PENDING)
+  amount            Int
+  currency          String               @default("MGA")
+  providerReference String?
+  providerStatus    String?
+  transactionId     String?
+  failureCode       String?
+  failureMessage    String?
+  redirectUrl       String?
+  callbackPayload   Json?
+  initiatedAt       DateTime             @default(now())
+  completedAt       DateTime?
+  events            BookingEvent[]
+  booking           Booking?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([quoteId])
+  @@index([status])
+  @@index([provider, providerReference])
+  @@index([provider, transactionId])
+}

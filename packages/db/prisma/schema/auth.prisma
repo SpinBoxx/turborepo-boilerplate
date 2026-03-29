@@ -14,9 +14,11 @@ model User {
   accounts      Account[]
   favorites     Favorite[]
   roles         Role[]   @default([USER])
-  bookings      Booking[]
+  bookingQuotes BookingQuote[]
+  bookings      Booking[] @relation("BookingCustomer")
+  validatedBookings Booking[] @relation("BookingValidatedBy")
+  bookingEvents BookingEvent[] @relation("BookingEventActor")
   reviews       Review[]
-
 
   @@unique([email])
   @@map("user")
