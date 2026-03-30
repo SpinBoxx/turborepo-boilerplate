@@ -1,7 +1,8 @@
-import type { RoomComputed } from "@zanadeal/api/features/room/room.schemas";
-import { Card, cn } from "@zanadeal/ui";
-import { Calendar, Pen } from "lucide-react";
+import type { RoomAdminComputed } from "@zanadeal/api/features/room";
+import { Button, Card, cn } from "@zanadeal/ui";
+import { Calendar, Pen, Trash2 } from "lucide-react";
 import type { ComponentProps } from "react";
+import DeleteRoomAlertDialog from "../../ui/alert-dialogs/DeleteRoomAlertDialog";
 import RoomAmenities from "./RoomAmenities";
 import RoomDescription from "./RoomDescription";
 import RoomImage from "./RoomImage";
@@ -12,7 +13,7 @@ import RoomType from "./RoomType";
 import RoomUpdateButton from "./RoomUpdateButton";
 
 interface Props extends ComponentProps<"div"> {
-	room: RoomComputed;
+	room: RoomAdminComputed;
 }
 
 export default function RoomCard({ room, className, ...props }: Props) {
@@ -33,13 +34,18 @@ export default function RoomCard({ room, className, ...props }: Props) {
 					<RoomPrice />
 					<RoomAmenities />
 				</div>
-				<div className="mt-auto space-x-2">
+				<div className="mt-auto flex w-full space-x-2">
 					<RoomUpdateButton buttonProps={{ variant: "secondary" }}>
 						<Pen />
 					</RoomUpdateButton>
 					<RoomPricesCalendarButton buttonProps={{ variant: "secondary" }}>
 						<Calendar />
 					</RoomPricesCalendarButton>
+					<DeleteRoomAlertDialog className="ml-auto" id={room.id}>
+						<Button variant={"destructive"} size={"icon"} className="ml-auto">
+							<Trash2 />
+						</Button>
+					</DeleteRoomAlertDialog>
 				</div>
 			</Card>
 		</RoomProvider>

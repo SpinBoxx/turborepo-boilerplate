@@ -63,6 +63,7 @@ export function useDeleteRoom() {
 		mutationFn: (input: DeleteRoomInput) => deleteRoom(input),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: roomKeys().all });
+			queryClient.invalidateQueries({ queryKey: hotelKeys().all });
 			toast.success("Chambre supprimée avec succès");
 		},
 		onError: (error) => {

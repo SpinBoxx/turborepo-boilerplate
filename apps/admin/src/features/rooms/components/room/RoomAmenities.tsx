@@ -14,7 +14,7 @@ export default function RoomAmenities({ className, ...props }: Props) {
 		<div className={cn("flex flex-wrap gap-1.5", className)} {...props}>
 			{amenities.map((amenity) => (
 				<Badge key={amenity.id} variant="secondary" className="text-xs">
-					{amenity.name}
+					{amenity.translations.fr?.name ?? "Amenity name not available"}
 				</Badge>
 			))}
 		</div>
