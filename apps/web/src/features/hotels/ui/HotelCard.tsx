@@ -8,7 +8,6 @@ import HotelAddress from "../components/HotelAddress";
 import HotelDescription from "../components/HotelDescription";
 import HotelImage from "../components/HotelImage";
 import HotelName from "../components/HotelName";
-import HotelPrice from "../components/HotelPrice";
 import HotelPricePerNight from "../components/HotelPricePerNight";
 import { useHotelContext } from "../components/HotelProvider";
 
@@ -47,9 +46,8 @@ export default function HotelCard() {
 
 				{/* Content */}
 				<div className="flex flex-1 flex-col gap-2 p-4">
-					<div className="flex gap-1">
+					<div className="flex justify-between gap-1">
 						<HotelName className="line-clamp-2 font-semibold text-lg" />
-						<HotelPrice className="h-fit shrink-0 whitespace-nowrap rounded-full bg-muted px-3 py-1 font-medium text-sm" />
 					</div>
 					<HotelAddress className="line-clamp-1 text-muted-foreground text-sm" />
 					<HotelDescription className="line-clamp-3 font-light text-muted-foreground text-sm" />

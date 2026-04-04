@@ -2,6 +2,7 @@ import { useStore } from "@tanstack/react-form";
 import { cn } from "@zanadeal/ui";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { type ComponentProps, useState } from "react";
+import { useIntlayer } from "react-intlayer";
 import { useFieldContext } from "@/hooks/useFormContext";
 import { Button } from "../ui/button";
 import {
@@ -22,6 +23,7 @@ interface Props {
 
 export function PasswordField({ inputProps, label, prefix, className }: Props) {
 	const field = useFieldContext<string>();
+	const t = useIntlayer("common");
 	const errors = useStore(
 		field.store,
 		(state) => state.meta.errors,
@@ -59,7 +61,7 @@ export function PasswordField({ inputProps, label, prefix, className }: Props) {
 						<TooltipTrigger
 							render={
 								<Button
-									aria-label={showPassword ? "Hide password" : "Show password"}
+									aria-label={showPassword ? t.hidePassword.value : t.showPassword.value}
 									onClick={() => setShowPassword(!showPassword)}
 									size="icon-xs"
 									variant="ghost"
@@ -69,7 +71,7 @@ export function PasswordField({ inputProps, label, prefix, className }: Props) {
 							{showPassword ? <EyeOffIcon /> : <EyeIcon />}
 						</TooltipTrigger>
 						<TooltipPopup>
-							{showPassword ? "Hide password" : "Show password"}
+							{showPassword ? t.hidePassword.value : t.showPassword.value}
 						</TooltipPopup>
 					</Tooltip>
 				</InputGroupAddon>

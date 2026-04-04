@@ -1,17 +1,18 @@
 import { ArrowRight } from "lucide-react";
 import { lazy, Suspense, useState } from "react";
+import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import { Card, CardPanel } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import RoomArea from "../components/RoomArea";
-import RoomAveragePricePerNight from "../components/RoomAveragePricePerNight";
 import RoomBaths from "../components/RoomBaths";
 import RoomBeds from "../components/RoomBeds";
 import RoomDescription from "../components/RoomDescription";
 import RoomImage from "../components/RoomImage";
 import RoomTitle from "../components/RoomTitle";
+import RoomTotalPrice from "../components/RoomTotalPrice";
 import RoomType from "../components/RoomType";
 
 const RoomDetail = lazy(() => import("./RoomDetail"));
@@ -24,6 +25,7 @@ interface Props {
 const RoomCard = ({ className, onViewDetails }: Props) => {
 	const [_mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 	const isMobile = useIsMobile();
+	const t = useIntlayer("room-detail");
 
 	const handlePrimaryAction = () => {
 		if (isMobile) {
@@ -70,14 +72,14 @@ const RoomCard = ({ className, onViewDetails }: Props) => {
 					<Separator className="bg-border/80" />
 
 					<div className="@container flex flex-row items-end justify-between gap-4">
-						<RoomAveragePricePerNight label="Average price" />
+						<RoomTotalPrice />
 						<Suspense
 							fallback={<div className="h-10 w-32 rounded-md bg-muted" />}
 						>
 							<RoomDetail>
 								<Button type="button" onClick={handlePrimaryAction}>
-									<span>View</span>{" "}
-									<span className="@xs:block hidden">details</span>
+									<span>{t.view.value}</span>{" "}
+									<span className="@xs:block hidden">{t.details.value}</span>
 									<ArrowRight className="size-5" />
 								</Button>
 							</RoomDetail>

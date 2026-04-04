@@ -85,6 +85,8 @@ export const UpsertHotelComputedInputSchema = z.object({
 
 export const GetHotelInputSchema = z.object({
 	id: z.string(),
+	checkInDate: z.string().optional(),
+	checkOutDate: z.string().optional(),
 });
 
 export const hotelListConfig = {
@@ -124,8 +126,14 @@ export const hotelListConfig = {
 	},
 } as const;
 
-export const ListHotelsInputSchema =
-	createHybridListSchemaFor()(hotelListConfig);
+export const ListHotelsInputSchema = createHybridListSchemaFor()(
+	hotelListConfig,
+).and(
+	z.object({
+		checkInDate: z.string().optional(),
+		checkOutDate: z.string().optional(),
+	}),
+);
 
 export const DeleteHotelInputSchema = z.object({
 	id: z.string().min(1),

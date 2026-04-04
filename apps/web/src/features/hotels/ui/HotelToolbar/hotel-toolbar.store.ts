@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import {
 	DEFAULT_HOTELS_PAGE_SEARCH,
 	type HotelPriceRange,
@@ -135,7 +136,14 @@ export const useHotelToolbarStore = create<HotelToolbarStore>()((set, get) => ({
 			drawerOpen: false,
 		});
 
-		get().onSearchChange?.(DEFAULT_HOTELS_PAGE_SEARCH);
+		useBookingStore.getState().resetBooking();
+
+		const { checkInDate, checkOutDate } = useBookingStore.getState();
+		get().onSearchChange?.({
+			...DEFAULT_HOTELS_PAGE_SEARCH,
+			checkIn: checkInDate,
+			checkOut: checkOutDate ?? "",
+		});
 	},
 
 	hasActiveFilter: () => {

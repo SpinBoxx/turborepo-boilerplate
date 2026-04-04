@@ -1,4 +1,5 @@
 import { useIntlayer } from "react-intlayer";
+import HotelDateFilter from "./HotelDateFilter";
 import HotelPriceSlideRange from "./HotelPriceSlideRange";
 import HotelSortBy from "./HotelSortBy";
 
@@ -13,6 +14,8 @@ export default function HotelFiltersPanel({
 
 	return (
 		<div className="space-y-5">
+			<HotelDateFilter />
+
 			{showSort ? (
 				<section className="flex flex-col space-y-2">
 					<p className="font-medium text-muted-foreground text-xs uppercase tracking-[0.2em]">

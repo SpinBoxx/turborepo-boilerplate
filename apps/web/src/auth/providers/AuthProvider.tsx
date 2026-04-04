@@ -8,6 +8,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
+import { useIntlayer } from "react-intlayer";
 import { toast } from "sonner";
 import { $fetch } from "@/lib/fetch";
 import { orpc } from "@/lib/orpc";
@@ -65,6 +66,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = useState<User | null>(null);
 	const [status, setStatus] = useState<AuthStatus>("loading");
+	const authT = useIntlayer("auth-provider");
 
 	const loadSession = useCallback(async (): Promise<
 		User | null | undefined
@@ -110,15 +112,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			);
 
 			if (response.error) {
-				toast.error("Login failed", {
-					description: response.error.message || "Invalid email or password.",
+				toast.error(authT.loginFailed.value, {
+					description: response.error.message || authT.invalidEmailOrPassword.value,
 				});
 				return;
 			}
 
 			if (!isAuthResponseOK(response.data)) {
-				toast.error("Login failed", {
-					description: "Invalid response format.",
+				toast.error(authT.loginFailed.value, {
+					description: authT.invalidResponseFormat.value,
 				});
 				return;
 			}
@@ -129,8 +131,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 			return response.data.user;
 		} catch (error) {
-			toast.error("Login failed", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.loginFailed.value, {
+				description: authT.unexpectedError.value,
 			});
 
 			options?.onError?.(
@@ -161,17 +163,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			);
 
 			if (!res || res.error) {
-				toast.error("Failed to send verification email", {
-					description: res?.error?.message || "Please try again later.",
+				toast.error(authT.failedToSendVerificationEmail.value, {
+					description: res?.error?.message || authT.pleaseTryAgainLater.value,
 				});
 			} else {
-				toast.success("Verification email sent", {
-					description: "Please check your inbox and follow the instructions.",
+				toast.success(authT.verificationEmailSent.value, {
+					description: authT.checkInboxInstructions.value,
 				});
 			}
 		} catch (_e) {
-			toast.error("Failed to send verification email", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.failedToSendVerificationEmail.value, {
+				description: authT.unexpectedError.value,
 			});
 		}
 	};
@@ -194,17 +196,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			);
 
 			if (response.error) {
-				toast.error("Account creation failed", {
+				toast.error(authT.accountCreationFailed.value, {
 					description:
 						response.error.message ||
-						"Cannot create your account. Try again later.",
+						authT.cannotCreateAccount.value,
 				});
 				return;
 			}
 
 			if (!isAuthResponseOK(response.data)) {
-				toast.error("Account creation failed", {
-					description: "Invalid response format.",
+				toast.error(authT.accountCreationFailed.value, {
+					description: authT.invalidResponseFormat.value,
 				});
 				return;
 			}
@@ -217,8 +219,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 			return response.data.user;
 		} catch (error) {
-			toast.error("Account creation failed", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.accountCreationFailed.value, {
+				description: authT.unexpectedError.value,
 			});
 
 			options?.onError?.(
@@ -243,15 +245,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setStatus("unauthenticated");
 
 			if (res.error) {
-				toast.error("Sign out failed", {
+				toast.error(authT.signOutFailed.value, {
 					description:
-						res.error.message || "Unable to sign out. Try again later.",
+						res.error.message || authT.unableToSignOut.value,
 				});
 				return;
 			}
 		} catch (error) {
-			toast.error("Sign out failed", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.signOutFailed.value, {
+				description: authT.unexpectedError.value,
 			});
 			options?.onError?.(
 				error instanceof Error

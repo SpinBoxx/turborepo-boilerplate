@@ -3,6 +3,11 @@ import { type Dictionary, t } from "intlayer";
 const bookingTranslationsContent = {
 	key: "booking-translations",
 	content: {
+		selectTravelDates: t({
+			en: "Select your travel dates",
+			fr: "Sélectionnez vos dates de voyage",
+			mg: "Safidio ny daty fitsangatsanganana",
+		}),
 		checkIn: t({
 			en: "Check-in",
 			fr: "Arrivée",

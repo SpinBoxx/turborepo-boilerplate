@@ -8,6 +8,11 @@ const registerFormContent = {
 			en: "Email is required",
 			mg: "Ilaina ny adiresy mailaka",
 		}),
+		email: t({
+			fr: "Email",
+			en: "Email",
+			mg: "Mailaka",
+		}),
 		passwordIsRequired: t({
 			fr: "Le mot de passe est requis",
 			en: "Password is required",
@@ -37,6 +42,16 @@ const registerFormContent = {
 			fr: "Vous avez déjà un compte ? Connectez-vous",
 			en: "Already have an account? Sign in",
 			mg: "Efa manana kaonty ve ianao? Midira",
+		}),
+		password: t({
+			fr: "Mot de passe",
+			en: "Password",
+			mg: "Tenimiafina",
+		}),
+		register: t({
+			fr: "S'inscrire",
+			en: "Register",
+			mg: "Hisoratra anarana",
 		}),
 	},
 } satisfies Dictionary;

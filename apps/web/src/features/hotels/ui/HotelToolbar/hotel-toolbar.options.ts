@@ -14,6 +14,8 @@ export interface HotelsPageSearch {
 	name: string;
 	minPrice: number;
 	maxPrice: number;
+	checkIn: string;
+	checkOut: string;
 }
 
 export interface HotelPriceRange {
@@ -33,6 +35,8 @@ export const DEFAULT_HOTELS_PAGE_SEARCH: HotelsPageSearch = {
 	name: "",
 	minPrice: HOTEL_PRICE_RANGE_LIMITS.min,
 	maxPrice: HOTEL_PRICE_RANGE_LIMITS.max,
+	checkIn: "",
+	checkOut: "",
 };
 
 export interface HotelSortOption {
@@ -134,6 +138,14 @@ export function parseHotelsPageSearch(
 				: DEFAULT_HOTELS_PAGE_SEARCH.name,
 		minPrice: Math.min(minPrice, maxPrice),
 		maxPrice: Math.max(minPrice, maxPrice),
+		checkIn:
+			typeof search.checkIn === "string"
+				? search.checkIn
+				: DEFAULT_HOTELS_PAGE_SEARCH.checkIn,
+		checkOut:
+			typeof search.checkOut === "string"
+				? search.checkOut
+				: DEFAULT_HOTELS_PAGE_SEARCH.checkOut,
 	};
 }
 
@@ -167,5 +179,7 @@ export function buildListHotelsInput(
 		limit: search.limit,
 		take: search.limit,
 		skip: (search.page - 1) * search.limit,
+		checkInDate: search.checkIn || undefined,
+		checkOutDate: search.checkOut || undefined,
 	};
 }

@@ -33,7 +33,7 @@ export default function RoomPreviewImage({
 			{...props}
 			src={src}
 			srcSet={srcSet}
-			alt={`${room.type} room`}
+			alt={room.title || room.type}
 		/>
 	);
 }

@@ -1,4 +1,5 @@
 import type { HotelUserComputed } from "@zanadeal/api/features/hotel";
+import { useIntlayer } from "react-intlayer";
 import BookingSearchBarDesktop from "@/features/booking/BookinSearchBar/BookingSearchBarDesktop";
 import BookingSearchBarMobile from "@/features/booking/BookinSearchBar/BookingSearchBarMobile";
 import RoomCardList from "@/features/rooms/ui/RoomCardList";
@@ -11,6 +12,8 @@ interface Props {
 }
 
 const HotelRoomsPage = ({ hotel }: Props) => {
+	const t = useIntlayer("hotel-rooms-page");
+
 	return (
 		<HotelProvider hotel={hotel}>
 			<div className="space-y-4">
@@ -19,14 +22,12 @@ const HotelRoomsPage = ({ hotel }: Props) => {
 				<BookingSearchBarDesktop
 					guestsInputClassName="flex-1 max-w-[12rem]"
 					className="hidden md:block md:w-full"
-					actionButton={{ label: "Filter rooms", className: "lg:px-8" }}
+					actionButton={{ label: t.filterRooms.value, className: "lg:px-8" }}
 				/>
 				<div className="mt-7 space-y-1.5">
 					<HotelName className="font-semibold text-xl" />
 					<p className="max-w-2xl text-muted-foreground text-sm leading-relaxed">
-						Choisissez la chambre qui vous convient le mieux parmi notre
-						sélection de chambres confortables et élégantes, conçues pour
-						répondre à tous vos besoins pendant votre séjour chez nous.
+						{t.chooseRoom.value}
 					</p>
 				</div>
 				<RoomCardList />

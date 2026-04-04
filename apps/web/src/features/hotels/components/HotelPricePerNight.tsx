@@ -1,6 +1,7 @@
 import { cn } from "@zanadeal/ui";
 import { formatPrice } from "@zanadeal/utils";
 import type { ComponentProps } from "react";
+import { useIntlayer } from "react-intlayer";
 import { useHotelContext } from "./HotelProvider";
 
 interface Props extends ComponentProps<"span"> {
@@ -15,6 +16,8 @@ export default function HotelPricePerNight({
 	...props
 }: Props) {
 	const { hotel } = useHotelContext();
+	const t = useIntlayer("hotel-price-per-night");
+
 	return (
 		<div className={cn("flex items-center gap-1", className)}>
 			<span
@@ -29,7 +32,7 @@ export default function HotelPricePerNight({
 					nightClassName,
 				)}
 			>
-				/night
+				{t.perNight.value}
 			</span>
 		</div>
 	);

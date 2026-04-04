@@ -24,7 +24,13 @@ const BookingSearchBarCalendar = () => {
 			}}
 			selected={{
 				from: stringToDate(checkInDate),
-				to: stringToDate(checkOutDate),
+				to: checkOutDate ? stringToDate(checkOutDate) : undefined,
+			}}
+			onDayClick={(date) => {
+				if (checkInDate && checkOutDate) {
+					setCheckInDate(date);
+					setCheckOutDate(null);
+				}
 			}}
 			onSelect={(dateRange: DateRange) => {
 				if (!dateRange.from || !dateRange.to) return;

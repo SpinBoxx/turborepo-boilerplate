@@ -1,5 +1,6 @@
-import { formatPrice } from "@zanadeal/utils";
+import { Link } from "@tanstack/react-router";
 import type * as React from "react";
+import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -17,6 +18,7 @@ import RoomBeds from "../components/RoomBeds";
 import RoomCarousel from "../components/RoomCarousel";
 import { useRoomContext } from "../components/RoomProvider";
 import RoomQuantity from "../components/RoomQuantity";
+import RoomTotalPrice from "../components/RoomTotalPrice";
 import RoomType from "../components/RoomType";
 import RoomDetailTabs from "./RoomDetailTabs/RoomDetailTabs";
 
@@ -29,7 +31,7 @@ interface Props {
 
 export default function RoomDetailDrawer({ children, snapPoints }: Props) {
 	const { room } = useRoomContext();
-	const displayPrice = room.promoPrice > 0 ? room.promoPrice : room.price;
+	const t = useIntlayer("room-detail");
 
 	return (
 		<Drawer
@@ -50,7 +52,7 @@ export default function RoomDetailDrawer({ children, snapPoints }: Props) {
 									{room.title}
 								</DrawerTitle>
 								<DrawerDescription className="text-sm leading-relaxed">
-									Explore this room in detail before confirming your selection.
+								{t.exploreRoom.value}
 								</DrawerDescription>
 							</div>
 							<RoomType display="badge" className="mt-1" />
@@ -67,23 +69,14 @@ export default function RoomDetailDrawer({ children, snapPoints }: Props) {
 					</div>
 				</DrawerPanel>
 				<DrawerFooter className={cn()}>
-					<div className="flex items-center gap-3">
-						<div className="min-w-0 flex-1">
-							<p className="text-muted-foreground text-xs uppercase tracking-[0.14em]">
-								Total Price
-							</p>
-							<div className="flex items-end gap-1.5">
-								<span className="font-semibold text-2xl leading-none tracking-[-0.05em]">
-									{formatPrice(displayPrice)}
-								</span>
-								<span className="pb-0.5 text-muted-foreground text-sm">
-									/night
-								</span>
-							</div>
-						</div>
-						<Button className="min-w-44 rounded-2xl" size="xl">
-							Confirm
-						</Button>
+					<div className="flex items-center justify-between gap-3">
+						<RoomTotalPrice />
+
+						<Link to="/review-cart-checkout">
+							<Button className="rounded-2xl" size="default">
+							{t.confirm.value}
+							</Button>
+						</Link>
 					</div>
 				</DrawerFooter>
 			</DrawerPopup>

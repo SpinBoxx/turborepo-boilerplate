@@ -12,7 +12,7 @@ model BookingQuote {
   roomId                         String
   checkInDate                    DateTime
   checkOutDate                   DateTime
-  nights                         Int
+  nights                        Int
   quantity                       Int
   guestCount                     Int
   currency                       String                 @default("MGA")

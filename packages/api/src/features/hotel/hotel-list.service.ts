@@ -1,5 +1,6 @@
 import type { Prisma } from "../../../../db/prisma/generated/client";
 import { Role } from "../../../../db/prisma/generated/enums";
+import { stringToDate } from "@zanadeal/utils";
 import {
 	applyComputedFilters,
 	applyComputedSort,
@@ -10,14 +11,19 @@ import {
 	toPaginatedResult,
 } from "../../listing/paginated-result";
 import type { UserComputed } from "../user";
-import { getRolesByPriority } from "../user/user-roles";
 import { computeHotel } from "./computes/hotel-compute";
 import { countHotelsFromDb, listHotelsFromDb } from "./hotel.store";
+import {
+	buildHotelVisibilityWhere,
+	filterVisibleHotelsForUser,
+	getHotelViewerRole,
+} from "./hotel-visibility";
 import {
 	type HotelComputed,
 	hotelListConfig,
 	type ListHotelsInput,
 } from "./schemas/hotel.schema";
+import type { HotelComputeOptions } from "./services/hotel.service";
 
 const HOTEL_FALLBACK_DB_ORDER: Prisma.HotelOrderByWithRelationInput[] = [
 	{ updatedAt: "desc" },
@@ -26,9 +32,12 @@ const HOTEL_FALLBACK_DB_ORDER: Prisma.HotelOrderByWithRelationInput[] = [
 
 function buildHotelWhere(
 	filters: ListHotelsInput["filters"],
-	isAdmin: boolean,
+	user: UserComputed | null | undefined,
 ): Prisma.HotelWhereInput {
+	const isAdmin = getHotelViewerRole(user) === Role.ADMIN;
+
 	return {
+		...buildHotelVisibilityWhere(user),
 		isArchived: isAdmin ? undefined : false,
 		name: filters.name?.contains
 			? { contains: filters.name.contains, mode: "insensitive" }
@@ -57,17 +66,30 @@ function buildHotelDbOrder(
 	] as Prisma.HotelOrderByWithRelationInput[];
 }
 
+function buildComputeOptions(
+	input: ListHotelsInput,
+): HotelComputeOptions | undefined {
+	if (!input.checkInDate || !input.checkOutDate) return undefined;
+	return {
+		checkInDate: stringToDate(input.checkInDate),
+		checkOutDate: stringToDate(input.checkOutDate),
+	};
+}
+
 export async function listHotels(
 	input: ListHotelsInput,
 	user: UserComputed | null | undefined,
 ): Promise<PaginatedResult<HotelComputed>> {
 	const plan = buildHybridListExecutionPlan(input, hotelListConfig);
-	const rolesSortedByPriority = getRolesByPriority(user?.roles);
-	const highestRole = rolesSortedByPriority[0];
-	const isAdmin = highestRole === Role.ADMIN;
-	const where = buildHotelWhere(input.filters, isAdmin);
+	const where = buildHotelWhere(input.filters, user);
+	const computeOptions = buildComputeOptions(input);
 
-	if (!plan.execution.needsPostCompute) {
+	// When dates are provided, room filtering happens post-compute so we must
+	// go through the post-compute branch to get accurate pagination.
+	const needsPostCompute =
+		plan.execution.needsPostCompute || !!computeOptions;
+
+	if (!needsPostCompute) {
 		const [rows, total] = await Promise.all([
 			listHotelsFromDb({
 				where,
@@ -97,10 +119,12 @@ export async function listHotels(
 	});
 
 	const computedHotels = await Promise.all(
-		rows.map(async (row) => await computeHotel(row, user)),
+		rows.map(async (row) => await computeHotel(row, user, computeOptions)),
 	);
+
+	const visibleHotels = filterVisibleHotelsForUser(computedHotels, user);
 	const filteredHotels = applyComputedFilters(
-		computedHotels,
+		visibleHotels,
 		plan.computed.filters,
 	);
 	const sortedHotels = applyComputedSort(filteredHotels, plan.computed.sort);

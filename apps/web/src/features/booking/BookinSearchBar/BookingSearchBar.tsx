@@ -21,7 +21,7 @@ export default function BookingSearchBar({
 			/>
 			<BookingSearchBarDesktop
 				className={cn(
-					"hidden sm:mx-auto sm:block sm:w-[calc(100vw-4rem)] lg:w-4/5",
+					"hidden sm:mx-auto sm:flex sm:w-[calc(100vw-8rem)] lg:w-4/5",
 					desktopClassName,
 				)}
 				guestsInputClassName=""

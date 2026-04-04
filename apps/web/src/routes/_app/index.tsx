@@ -41,7 +41,7 @@ function RouteComponent() {
 			<div className="relative left-1/2 hidden w-screen -translate-x-1/2 sm:block">
 				<img
 					src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&auto=format&fit=crop&w=2068&q=80"
-					alt="Background"
+					alt={t.backgroundImage.value}
 					className="aspect-video h-96 w-full object-cover"
 				/>
 			</div>

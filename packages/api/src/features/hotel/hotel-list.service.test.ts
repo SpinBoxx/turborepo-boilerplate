@@ -46,6 +46,7 @@ describe("hotel list service", () => {
 		});
 
 		const result = await listHotels(input, { roles: [Role.ADMIN] } as never);
+		const listArgs = vi.mocked(listHotelsFromDb).mock.calls[0]?.[0];
 
 		expect(listHotelsFromDb).toHaveBeenCalledWith(
 			expect.objectContaining({
@@ -60,6 +61,8 @@ describe("hotel list service", () => {
 				}),
 			}),
 		);
+		expect(listArgs?.where).not.toHaveProperty("rooms");
+		expect(listArgs?.where).not.toHaveProperty("NOT");
 		expect(countHotelsFromDb).toHaveBeenCalledOnce();
 		expect(result).toEqual({
 			items: [
@@ -75,6 +78,90 @@ describe("hotel list service", () => {
 			limit: 5,
 			pageCount: 3,
 		});
+	});
+
+	it("adds the zero-price visibility clause for user queries", async () => {
+		vi.mocked(listHotelsFromDb).mockResolvedValue([{ id: "1", name: "Alpha" }] as never);
+		vi.mocked(countHotelsFromDb).mockResolvedValue(1);
+		vi.mocked(computeHotel).mockResolvedValue({
+			id: "1",
+			name: "Alpha",
+			startingPrice: 100,
+			rating: 4,
+		} as never);
+
+		const input = ListHotelsInputSchema.parse({
+			sort: {
+				field: "name",
+				direction: "asc",
+			},
+			page: 1,
+			limit: 10,
+		});
+
+		await listHotels(input, { roles: [Role.USER] } as never);
+
+		expect(listHotelsFromDb).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({
+					isArchived: false,
+					rooms: {
+						some: {
+							prices: {
+								some: {
+									price: {
+										gt: 0,
+									},
+								},
+							},
+						},
+					},
+					NOT: {
+						rooms: {
+							some: {
+								prices: {
+									some: {
+										price: {
+											lte: 0,
+										},
+									},
+								},
+							},
+						},
+					},
+				}),
+			}),
+		);
+		expect(countHotelsFromDb).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({
+					rooms: {
+						some: {
+							prices: {
+								some: {
+									price: {
+										gt: 0,
+									},
+								},
+							},
+						},
+					},
+					NOT: {
+						rooms: {
+							some: {
+								prices: {
+									some: {
+										price: {
+											lte: 0,
+										},
+									},
+								},
+							},
+						},
+					},
+				}),
+			}),
+		);
 	});
 
 	it("applies computed filters and sort after compute", async () => {
@@ -134,6 +221,56 @@ describe("hotel list service", () => {
 			page: 1,
 			limit: 1,
 			pageCount: 2,
+		});
+	});
+
+	it("filters out zero-price hotels for user after compute", async () => {
+		vi.mocked(listHotelsFromDb).mockResolvedValue([
+			{ id: "1", name: "Hidden Hotel" },
+			{ id: "2", name: "Visible Hotel" },
+			{ id: "3", name: "Premium Hotel" },
+		] as never);
+		vi.mocked(computeHotel)
+			.mockResolvedValueOnce({
+				id: "1",
+				name: "Hidden Hotel",
+				startingPrice: 0,
+				rating: 4.4,
+			} as never)
+			.mockResolvedValueOnce({
+				id: "2",
+				name: "Visible Hotel",
+				startingPrice: 90,
+				rating: 4.1,
+			} as never)
+			.mockResolvedValueOnce({
+				id: "3",
+				name: "Premium Hotel",
+				startingPrice: 200,
+				rating: 4.8,
+			} as never);
+
+		const input = ListHotelsInputSchema.parse({
+			sort: {
+				field: "startingPrice",
+				direction: "asc",
+			},
+			page: 1,
+			limit: 10,
+		});
+
+		const result = await listHotels(input, undefined);
+
+		expect(countHotelsFromDb).not.toHaveBeenCalled();
+		expect(result).toEqual({
+			items: [
+				{ id: "2", name: "Visible Hotel", startingPrice: 90, rating: 4.1 },
+				{ id: "3", name: "Premium Hotel", startingPrice: 200, rating: 4.8 },
+			],
+			total: 2,
+			page: 1,
+			limit: 10,
+			pageCount: 1,
 		});
 	});
 });

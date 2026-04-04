@@ -1,6 +1,7 @@
-import { formatPrice } from "@zanadeal/utils";
+import { Link } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import type * as React from "react";
+import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -19,6 +20,7 @@ import RoomBeds from "../components/RoomBeds";
 import RoomCarousel from "../components/RoomCarousel";
 import { useRoomContext } from "../components/RoomProvider";
 import RoomQuantity from "../components/RoomQuantity";
+import RoomTotalPrice from "../components/RoomTotalPrice";
 import RoomType from "../components/RoomType";
 import RoomDetailTabs from "./RoomDetailTabs/RoomDetailTabs";
 
@@ -28,7 +30,7 @@ interface Props {
 
 export default function RoomDetailDialog({ children }: Props) {
 	const { room } = useRoomContext();
-	const displayPrice = room.promoPrice > 0 ? room.promoPrice : room.price;
+	const t = useIntlayer("room-detail");
 
 	return (
 		<Dialog modal>
@@ -54,8 +56,7 @@ export default function RoomDetailDialog({ children }: Props) {
 										{room.title}
 									</DialogTitle>
 									<DialogDescription className="text-sm leading-relaxed">
-										Explore this room in detail before confirming your
-										selection.
+										{t.exploreRoom.value}
 									</DialogDescription>
 								</div>
 								<RoomType display="badge" className="mt-1" />
@@ -73,23 +74,15 @@ export default function RoomDetailDialog({ children }: Props) {
 					</DialogPanel>
 				</div>
 
-				<DialogFooter className={cn("flex items-center justify-between")}>
-					<div className="min-w-0 flex-1">
-						<p className="text-muted-foreground text-xs uppercase tracking-[0.14em]">
-							Total Price
-						</p>
-						<div className="flex items-end gap-1.5">
-							<span className="font-semibold text-2xl leading-none tracking-[-0.05em]">
-								{formatPrice(displayPrice)}
-							</span>
-							<span className="pb-0.5 text-muted-foreground text-sm">
-								/night
-							</span>
-						</div>
+				<DialogFooter>
+					<div className={cn("flex w-full items-center justify-between gap-3")}>
+						<RoomTotalPrice className="justify-self-start" />
+						<Link to="/review-cart-checkout">
+							<Button className="min-w-44 rounded-2xl" size="xl">
+							{t.confirm.value}
+							</Button>
+						</Link>
 					</div>
-					<Button className="min-w-44 rounded-2xl" size="xl">
-						Confirm
-					</Button>
 				</DialogFooter>
 			</DialogPopup>
 		</Dialog>

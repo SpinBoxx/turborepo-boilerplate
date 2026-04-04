@@ -8,6 +8,11 @@ const homepageContent = {
 			en: "Book Your Perfect Stay",
 			mg: "Boky ny fialan-tsasatrao tonga lafatra",
 		}),
+		backgroundImage: t({
+			fr: "Image de fond",
+			en: "Background",
+			mg: "Sary ambadika",
+		}),
 	},
 } satisfies Dictionary;
 

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LegalRouteRouteImport } from './routes/_legal/route'
+import { Route as CheckoutRouteRouteImport } from './routes/_checkout/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
@@ -18,6 +19,7 @@ import { Route as LegalTermsAndConditionsOfSaleRouteImport } from './routes/_leg
 import { Route as CompanyContactRouteImport } from './routes/_company/contact'
 import { Route as CompanyAboutRouteImport } from './routes/_company/about'
 import { Route as AuthLoginRouteRouteImport } from './routes/_auth/login/route'
+import { Route as CheckoutReviewCartCheckoutIndexRouteImport } from './routes/_checkout/review-cart-checkout/index'
 import { Route as AuthVerifyEmailIndexRouteImport } from './routes/_auth/verify-email/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as AuthEmailVerifiedIndexRouteImport } from './routes/_auth/email-verified/index'
@@ -27,6 +29,10 @@ import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId
 
 const LegalRouteRoute = LegalRouteRouteImport.update({
   id: '/_legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRouteRoute = CheckoutRouteRouteImport.update({
+  id: '/_checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -68,6 +74,12 @@ const AuthLoginRouteRoute = AuthLoginRouteRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const CheckoutReviewCartCheckoutIndexRoute =
+  CheckoutReviewCartCheckoutIndexRouteImport.update({
+    id: '/review-cart-checkout/',
+    path: '/review-cart-checkout/',
+    getParentRoute: () => CheckoutRouteRoute,
+  } as any)
 const AuthVerifyEmailIndexRoute = AuthVerifyEmailIndexRouteImport.update({
   id: '/verify-email/',
   path: '/verify-email/',
@@ -111,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/email-verified/': typeof AuthEmailVerifiedIndexRoute
   '/login/': typeof AuthLoginIndexRoute
   '/verify-email/': typeof AuthVerifyEmailIndexRoute
+  '/review-cart-checkout/': typeof CheckoutReviewCartCheckoutIndexRoute
   '/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -124,12 +137,14 @@ export interface FileRoutesByTo {
   '/email-verified': typeof AuthEmailVerifiedIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/verify-email': typeof AuthVerifyEmailIndexRoute
+  '/review-cart-checkout': typeof CheckoutReviewCartCheckoutIndexRoute
   '/$hotelId/rooms': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
+  '/_checkout': typeof CheckoutRouteRouteWithChildren
   '/_legal': typeof LegalRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRouteRouteWithChildren
   '/_company/about': typeof CompanyAboutRoute
@@ -142,6 +157,7 @@ export interface FileRoutesById {
   '/_auth/email-verified/': typeof AuthEmailVerifiedIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/verify-email/': typeof AuthVerifyEmailIndexRoute
+  '/_checkout/review-cart-checkout/': typeof CheckoutReviewCartCheckoutIndexRoute
   '/_app/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRouteTypes {
@@ -158,6 +174,7 @@ export interface FileRouteTypes {
     | '/email-verified/'
     | '/login/'
     | '/verify-email/'
+    | '/review-cart-checkout/'
     | '/$hotelId/rooms/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -171,11 +188,13 @@ export interface FileRouteTypes {
     | '/email-verified'
     | '/login'
     | '/verify-email'
+    | '/review-cart-checkout'
     | '/$hotelId/rooms'
   id:
     | '__root__'
     | '/_app'
     | '/_auth'
+    | '/_checkout'
     | '/_legal'
     | '/_auth/login'
     | '/_company/about'
@@ -188,12 +207,14 @@ export interface FileRouteTypes {
     | '/_auth/email-verified/'
     | '/_auth/login/'
     | '/_auth/verify-email/'
+    | '/_checkout/review-cart-checkout/'
     | '/_app/$hotelId/rooms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  CheckoutRouteRoute: typeof CheckoutRouteRouteWithChildren
   LegalRouteRoute: typeof LegalRouteRouteWithChildren
   CompanyAboutRoute: typeof CompanyAboutRoute
   CompanyContactRoute: typeof CompanyContactRoute
@@ -206,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof LegalRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_checkout': {
+      id: '/_checkout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof CheckoutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -263,6 +291,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginRouteRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/_checkout/review-cart-checkout/': {
+      id: '/_checkout/review-cart-checkout/'
+      path: '/review-cart-checkout'
+      fullPath: '/review-cart-checkout/'
+      preLoaderRoute: typeof CheckoutReviewCartCheckoutIndexRouteImport
+      parentRoute: typeof CheckoutRouteRoute
     }
     '/_auth/verify-email/': {
       id: '/_auth/verify-email/'
@@ -355,6 +390,18 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface CheckoutRouteRouteChildren {
+  CheckoutReviewCartCheckoutIndexRoute: typeof CheckoutReviewCartCheckoutIndexRoute
+}
+
+const CheckoutRouteRouteChildren: CheckoutRouteRouteChildren = {
+  CheckoutReviewCartCheckoutIndexRoute: CheckoutReviewCartCheckoutIndexRoute,
+}
+
+const CheckoutRouteRouteWithChildren = CheckoutRouteRoute._addFileChildren(
+  CheckoutRouteRouteChildren,
+)
+
 interface LegalRouteRouteChildren {
   LegalTermsAndConditionsOfSaleRoute: typeof LegalTermsAndConditionsOfSaleRoute
   LegalTermsOfServiceRoute: typeof LegalTermsOfServiceRoute
@@ -372,6 +419,7 @@ const LegalRouteRouteWithChildren = LegalRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  CheckoutRouteRoute: CheckoutRouteRouteWithChildren,
   LegalRouteRoute: LegalRouteRouteWithChildren,
   CompanyAboutRoute: CompanyAboutRoute,
   CompanyContactRoute: CompanyContactRoute,

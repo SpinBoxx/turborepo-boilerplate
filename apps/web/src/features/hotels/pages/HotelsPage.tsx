@@ -1,6 +1,7 @@
 import type { ListHotelsInput } from "@zanadeal/api/features/hotel";
-import { AlertCircleIcon, HotelIcon } from "lucide-react";
+import { AlertCircleIcon } from "lucide-react";
 import { useEffect } from "react";
+import { useIntlayer } from "react-intlayer";
 import {
 	Pagination,
 	PaginationContent,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/pagination";
 import { useHotels } from "../hotel.queries";
 import HotelsCardList from "../ui/HotelsCardList";
+import HotelsEmpty from "../ui/HotelsEmpty";
 import HotelToolbar from "../ui/HotelToolbar/HotelToolbar";
 import {
 	buildListHotelsInput,
@@ -41,6 +43,7 @@ export default function HotelsPage({
 	onSearchChange,
 }: HotelsPageProps) {
 	const initializeToolbar = useHotelToolbarStore((state) => state.initialize);
+	const t = useIntlayer("hotels-page");
 	const hotelsInput: ListHotelsInput = buildListHotelsInput(search);
 	const hotelsQuery = useHotels(hotelsInput);
 	const hotels = hotelsQuery.data?.items ?? [];
@@ -64,18 +67,11 @@ export default function HotelsPage({
 					<span>
 						{hotelsQuery.error instanceof Error
 							? hotelsQuery.error.message
-							: "Impossible de charger les hotels."}
+						: t.loadError.value}
 					</span>
 				</div>
 			) : hotels.length === 0 ? (
-				<div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-border/60 border-dashed bg-card/70 px-6 py-16 text-center">
-					<HotelIcon className="size-8 text-muted-foreground" />
-					<h2 className="font-semibold text-xl">Aucun hotel trouve</h2>
-					<p className="max-w-xl text-muted-foreground">
-						Essayez un autre tri ou modifiez votre filtre pour elargir les
-						resultats.
-					</p>
-				</div>
+				<HotelsEmpty hasDates={!!(search.checkIn && search.checkOut)} />
 			) : (
 				<>
 					<HotelsCardList hotels={hotels} />

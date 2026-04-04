@@ -40,7 +40,7 @@ export default function HotelFiltersDrawer() {
 				{t.filters.value}
 				{hasActiveFilter ? (
 					<span className="rounded-full bg-primary/12 px-2 py-0.5 text-primary text-xs">
-						On
+						{t.filterActive.value}
 					</span>
 				) : null}
 			</DrawerTrigger>

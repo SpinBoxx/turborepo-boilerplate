@@ -207,14 +207,17 @@ vi.mock("@zanadeal/db", () => {
 	};
 });
 
-function createTestContext(): Context {
+function createTestContext(roles: Role[] = [Role.ADMIN]): Context {
+	const user = {
+		id: "test-user",
+		roles,
+	};
+
 	return {
 		session: {
-			user: {
-				id: "test-user",
-				roles: [Role.ADMIN],
-			},
+			user,
 		},
+		user,
 		logger: undefined,
 	} as unknown as Context;
 }
@@ -232,12 +235,12 @@ type HotelJson = {
 	updatedAt: string;
 };
 
-async function startOpenApiServer() {
+async function startOpenApiServer(roles: Role[] = [Role.ADMIN]) {
 	const handler = new OpenAPIHandler(appRouter);
 
 	const server = createServer(async (req, res) => {
 		const { matched } = await handler.handle(req, res, {
-			context: createTestContext(),
+			context: createTestContext(roles),
 		});
 
 		if (matched) {
@@ -388,5 +391,38 @@ describe("hotel OpenAPI routes", () => {
 		expect(payload.items.map((item) => item.name)).toEqual(
 			expect.arrayContaining(["Budget Hotel", "Premium Hotel"]),
 		);
+	});
+
+	it("GET /hotels/{id} hides zero-price hotels for user role", async () => {
+		const createRes = await fetch(`${baseUrl}/hotels`, {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify({
+				name: "Hidden For User Hotel",
+				description: "No priced rooms yet",
+				address: "3 Test Street",
+				mapLink: "https://maps.example/hidden",
+				latitude: "0",
+				longitude: "0",
+				amenityIds: [],
+				images: [],
+			}),
+		});
+
+		expect(createRes.status).toBe(200);
+		const created = (await createRes.json()) as HotelJson;
+		const userServer = await startOpenApiServer([Role.USER]);
+
+		try {
+			const getRes = await fetch(`${userServer.baseUrl}/hotels/${created.id}`, {
+				method: "GET",
+			});
+
+			expect(getRes.status).toBe(404);
+		} finally {
+			await userServer.close();
+		}
 	});
 });

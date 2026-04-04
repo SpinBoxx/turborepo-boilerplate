@@ -19,6 +19,8 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { DEFAULT_HOTELS_PAGE_SEARCH } from "@/features/hotels/ui/HotelToolbar/hotel-toolbar.options";
+import { Link } from "@tanstack/react-router";
 import { useBookingStore } from "../hooks/useBookingHook";
 import BookingGuestCountInput from "../ui/BookingGuestCountInput";
 import BookingNoBookingAfterHoursInfo from "./BookingNoBookingAfterHoursInfo";
@@ -39,12 +41,18 @@ export default function BookingSearchBarMobile({ className }: Props) {
 	const formatDate = useMemo(() => {
 		if (!checkInDate) return t.whenAreYouGoing.value;
 		if (checkInDate && !checkOutDate)
-			return date(checkInDate, { dateStyle: "medium", locale });
+			return `${date(checkInDate, { dateStyle: "medium", locale })} - ${t.choose.value}`;
 		if (checkInDate && checkOutDate)
 			return `${date(checkInDate, { dateStyle: "medium", locale })} - ${date(checkOutDate, { dateStyle: "medium", locale })}`;
 
 		return "";
-	}, [checkInDate, checkOutDate, locale, t.whenAreYouGoing.value]);
+	}, [
+		checkInDate,
+		checkOutDate,
+		locale,
+		t.whenAreYouGoing.value,
+		t.choose.value,
+	]);
 
 	return (
 		<Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -122,7 +130,7 @@ const PopoverDatesContent = ({
 					{t.whenAreYouGoing.value}
 				</PopoverTitle>
 				<p className="mt-1 text-muted-foreground text-sm">
-					{t.selectYourTravelDates.value}
+					{t.selectTravelDates.value}
 				</p>
 			</div>
 			<div className="space-y-3 p-4">
@@ -148,6 +156,7 @@ const PopoverGuestsContent = ({
 	onSave: () => void;
 	onBack: () => void;
 }) => {
+	const { checkInDate, checkOutDate } = useBookingStore();
 	const t = useIntlayer("booking-search-bar-mobile");
 	return (
 		<motion.div
@@ -173,10 +182,19 @@ const PopoverGuestsContent = ({
 					<ChevronLeft />
 					{t.back.value}
 				</Button>
-				<PopoverClose render={<Button onClick={onSave} />}>
-					<Search />
-					{t.search.value}
-				</PopoverClose>
+				<Link
+					to="/hotels"
+					search={{
+						...DEFAULT_HOTELS_PAGE_SEARCH,
+						checkIn: checkInDate,
+						checkOut: checkOutDate ?? "",
+					}}
+				>
+					<PopoverClose render={<Button onClick={onSave} />}>
+						<Search />
+						{t.search.value}
+					</PopoverClose>
+				</Link>
 			</div>
 		</motion.div>
 	);

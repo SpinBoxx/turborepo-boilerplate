@@ -1,9 +1,11 @@
 import { ORPCError } from "@orpc/server";
+import { stringToDate } from "@zanadeal/utils";
 import { z } from "zod";
 import { adminProcedure, publicProcedure } from "../../index";
 import { createPaginatedResultSchema } from "../../listing/paginated-result";
 import { computeHotel } from "./computes/hotel-compute";
 import { computeUpsertHotelInput } from "./computes/upsert-compute";
+import { isHotelVisibleToUser } from "./hotel-visibility";
 import { createHotel, deleteHotel, getHotel, updateHotel } from "./hotel.store";
 import { listHotels } from "./hotel-list.service";
 import {
@@ -13,6 +15,7 @@ import {
 	ListHotelsInputSchema,
 	UpsertHotelInputSchema,
 } from "./schemas/hotel.schema";
+import type { HotelComputeOptions } from "./services/hotel.service";
 
 export const listHotelsRoute = publicProcedure
 	.route({
@@ -41,7 +44,25 @@ export const getHotelRoute = publicProcedure
 		if (!hotel) {
 			throw new ORPCError("NOT_FOUND");
 		}
-		return await computeHotel(hotel, context.user);
+
+		const computeOptions: HotelComputeOptions | undefined =
+			input.checkInDate && input.checkOutDate
+				? {
+						checkInDate: stringToDate(input.checkInDate),
+						checkOutDate: stringToDate(input.checkOutDate),
+					}
+				: undefined;
+
+		const computedHotel = await computeHotel(
+			hotel,
+			context.user,
+			computeOptions,
+		);
+		if (!isHotelVisibleToUser(computedHotel, context.user)) {
+			throw new ORPCError("NOT_FOUND");
+		}
+
+		return computedHotel;
 	});
 
 export const createHotelRoute = adminProcedure

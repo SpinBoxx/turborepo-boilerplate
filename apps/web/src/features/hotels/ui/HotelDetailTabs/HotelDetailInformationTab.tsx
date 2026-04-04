@@ -1,4 +1,5 @@
 import { type LucideIcon, MailIcon, PhoneIcon } from "lucide-react";
+import { useIntlayer } from "react-intlayer";
 import CopyButton from "@/components/buttons/CopyButton";
 import { Card, CardContent } from "@/components/ui/card";
 import HotelDescription from "../../components/HotelDescription";
@@ -7,25 +8,27 @@ import HotelDetailSectionTitle from "./HotelDetailSectionTitle";
 
 const HotelDetailInformationTab = () => {
 	const { hotel } = useHotelContext();
+	const t = useIntlayer("hotel-detail");
+
 	return (
 		<div className="space-y-5">
 			<div className="space-y-2">
-				<HotelDetailSectionTitle>À propos de l'hôtel</HotelDetailSectionTitle>
+				<HotelDetailSectionTitle>{t.aboutHotel.value}</HotelDetailSectionTitle>
 				<HotelDescription className="text-muted-foreground" />
 			</div>
 			<div className="flex flex-col gap-3">
-				<HotelDetailSectionTitle>Contact</HotelDetailSectionTitle>
+				<HotelDetailSectionTitle>{t.contact.value}</HotelDetailSectionTitle>
 				{hotel.email && (
 					<ContactInfo
 						icon={MailIcon}
-						label="Email address"
+						label={t.emailAddress.value}
 						value={hotel.email}
 					/>
 				)}
 				{hotel.phoneNumber && (
 					<ContactInfo
 						icon={PhoneIcon}
-						label="Phone number"
+						label={t.phoneNumber.value}
 						value={hotel.phoneNumber}
 					/>
 				)}

@@ -69,7 +69,7 @@ export default function RegisterForm({
 				>
 					{(field) => (
 						<field.TextField
-							label="Email"
+							label={content.email.value}
 							inputProps={{ type: "email", placeholder: "john@example.com" }}
 						/>
 					)}
@@ -89,7 +89,7 @@ export default function RegisterForm({
 				>
 					{(field) => (
 						<field.PasswordField
-							label="Password"
+							label={content.password.value}
 							inputProps={{ placeholder: "••••••••" }}
 						/>
 					)}
@@ -109,7 +109,7 @@ export default function RegisterForm({
 					{(field) => (
 						<field.TextField
 							label={content.firstName.value}
-							inputProps={{ type: "text", placeholder: "John" }}
+							inputProps={{ type: "text" }}
 						/>
 					)}
 				</form.AppField>
@@ -127,13 +127,13 @@ export default function RegisterForm({
 					{(field) => (
 						<field.TextField
 							label={content.lastName.value}
-							inputProps={{ type: "text", placeholder: "Doe" }}
+							inputProps={{ type: "text" }}
 						/>
 					)}
 				</form.AppField>
 				<form.AppForm>
 					<form.SubmitButton variants={{ variant: "default" }}>
-						Register
+						{content.register.value}
 					</form.SubmitButton>
 				</form.AppForm>
 			</form>

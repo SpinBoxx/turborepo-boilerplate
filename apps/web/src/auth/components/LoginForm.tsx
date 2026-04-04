@@ -67,7 +67,7 @@ export default function LoginForm({
 				>
 					{(field) => (
 						<field.TextField
-							label="Email"
+							label={content.email.value}
 							inputProps={{ type: "email", placeholder: "john@example.com" }}
 						/>
 					)}

@@ -1,9 +1,15 @@
+import { hasFullDateCoverage } from "@zanadeal/utils";
 import { fromStoredMoneyAmount } from "../../../money";
 import { computeAmenity } from "../../amenity/computes/amenity-compute";
 import { computeRoom } from "../../room/computes/room-compute";
 import type { UserComputed } from "../../user";
 import type { HotelDB } from "../hotel.store";
 import type { HotelComputed } from "../schemas/hotel.schema";
+
+export interface HotelComputeOptions {
+	checkInDate?: Date;
+	checkOutDate?: Date;
+}
 
 export const computeHotelRating = (hotel: HotelDB): number => {
 	if (!hotel.reviews || hotel.reviews.length === 0) {
@@ -51,12 +57,26 @@ export const computeHotelRooms = async (
 export const computeHotelFull = async (
 	hotel: HotelDB,
 	user: UserComputed | null | undefined,
+	options?: HotelComputeOptions,
 ) => {
+	// When a date range is provided, keep only rooms fully covered by prices
+	const checkIn = options?.checkInDate;
+	const checkOut = options?.checkOutDate;
+	const effectiveHotel =
+		checkIn && checkOut
+			? {
+					...hotel,
+					rooms: hotel.rooms.filter((room) =>
+						hasFullDateCoverage(room.prices, checkIn, checkOut),
+					),
+				}
+			: hotel;
+
 	return {
-		...hotel,
-		rating: computeHotelRating(hotel),
-		startingPrice: computeHotelStartingPrice(hotel),
-		amenities: await computeHotelAmenities(hotel, user),
-		rooms: await computeHotelRooms(hotel, user),
+		...effectiveHotel,
+		rating: computeHotelRating(effectiveHotel),
+		startingPrice: computeHotelStartingPrice(effectiveHotel),
+		amenities: await computeHotelAmenities(effectiveHotel, user),
+		rooms: await computeHotelRooms(effectiveHotel, user),
 	};
 };

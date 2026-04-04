@@ -14,7 +14,7 @@ export const auth = betterAuth({
 		enabled: true,
 		requireEmailVerification: true,
 	},
-
+	baseURL: process.env.API_URL,
 	emailVerification: {
 		sendVerificationEmail: async ({ url, user }, request) => {
 			const parsedUrl = new URL(url);
