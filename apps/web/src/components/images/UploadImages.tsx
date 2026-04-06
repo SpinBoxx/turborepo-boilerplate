@@ -10,8 +10,8 @@ import {
 	FileUploadTrigger,
 } from "@zanadeal/ui";
 import { Upload, X } from "lucide-react";
+import type { SetStateAction } from "react";
 import * as React from "react";
-import { type SetStateAction } from "react";
 import { useIntlayer } from "react-intlayer";
 import { toast } from "sonner";
 
@@ -29,11 +29,14 @@ interface Props {
 
 export function UploadImages({ files, setFiles, options }: Props) {
 	const t = useIntlayer("common");
-	const onFileReject = React.useCallback((file: File, message: string) => {
-		toast(message, {
-			description: `"${file.name.length > 20 ? `${file.name.slice(0, 20)}...` : file.name}" ${t.fileRejected.value}`,
-		});
-	}, [t.fileRejected.value]);
+	const onFileReject = React.useCallback(
+		(file: File, message: string) => {
+			toast(message, {
+				description: `"${file.name.length > 20 ? `${file.name.slice(0, 20)}...` : file.name}" ${t.fileRejected.value}`,
+			});
+		},
+		[t.fileRejected.value],
+	);
 
 	const MAX_FILES = options?.maxFiles || 2;
 	const MAX_SIZE = options?.maxSize || 5 * 1024 * 1024;

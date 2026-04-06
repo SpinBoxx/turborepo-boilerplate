@@ -38,6 +38,10 @@ export type AuthResponseKO = {
 
 export type AuthResponse = AuthResponseOK | AuthResponseKO;
 
+type SignUpWithEmailInput = UpsertUserInput & {
+	callbackURL?: string;
+};
+
 const isAuthResponseOK = (
 	data: AuthResponse | null | undefined,
 ): data is AuthResponseOK => {
@@ -55,7 +59,7 @@ type AuthContextValue = {
 		options?: LoginOptions,
 	) => Promise<User | undefined>;
 	signUpWithEmail: (
-		input: UpsertUserInput,
+		input: SignUpWithEmailInput,
 		options?: LoginOptions,
 	) => Promise<User | undefined>;
 	signOut: (options?: SignOutOptions) => Promise<void>;
@@ -113,7 +117,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 			if (response.error) {
 				toast.error(authT.loginFailed.value, {
-					description: response.error.message || authT.invalidEmailOrPassword.value,
+					description:
+						response.error.message || authT.invalidEmailOrPassword.value,
 				});
 				return;
 			}
@@ -145,7 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	const sendVerificationEmail = async (body: sendVerificationEmailType) => {
-		const { email } = body;
+		const { callbackURL, email } = body;
 		try {
 			const res = await $fetch(
 				`${import.meta.env.VITE_API_URL}/api/auth/send-verification-email`,
@@ -157,7 +162,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					},
 					body: JSON.stringify({
 						email,
-						callbackURL: `${window.location.origin}/email-verified`,
+							callbackURL,
 					}),
 				},
 			);
@@ -179,7 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	const signUpWithEmail = async (
-		body: UpsertUserInput,
+		body: SignUpWithEmailInput,
 		options?: LoginOptions,
 	): Promise<User | undefined> => {
 		try {
@@ -198,8 +203,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			if (response.error) {
 				toast.error(authT.accountCreationFailed.value, {
 					description:
-						response.error.message ||
-						authT.cannotCreateAccount.value,
+						response.error.message || authT.cannotCreateAccount.value,
 				});
 				return;
 			}
@@ -246,8 +250,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 			if (res.error) {
 				toast.error(authT.signOutFailed.value, {
-					description:
-						res.error.message || authT.unableToSignOut.value,
+					description: res.error.message || authT.unableToSignOut.value,
 				});
 				return;
 			}

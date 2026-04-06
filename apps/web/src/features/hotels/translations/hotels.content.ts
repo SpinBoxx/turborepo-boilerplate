@@ -8,11 +8,6 @@ const hotelsContent = {
 			en: "Starting from",
 			mg: "Manomboka amin'ny",
 		}),
-		from: t({
-			fr: "De",
-			en: "From",
-			mg: "Avy amin'ny",
-		}),
 		dateOfStay: t({
 			fr: "Date de séjour",
 			en: "Date of stay",
@@ -24,9 +19,9 @@ const hotelsContent = {
 			mg: "Vahiny",
 		}),
 		selectRooms: t({
-			fr: "Sélectionner les chambres",
-			en: "Select Rooms",
-			mg: "Misafidiana efitra",
+			fr: "Voir les chambres",
+			en: "See rooms",
+			mg: "Jereo ny efitra",
 		}),
 		selectDates: t({
 			fr: "Sélectionner les dates",

@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import type * as React from "react";
 import { useIntlayer } from "react-intlayer";
@@ -13,6 +13,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import { cn } from "@/lib/utils";
 import RoomArea from "../components/RoomArea";
 import RoomBaths from "../components/RoomBaths";
@@ -31,7 +32,17 @@ interface Props {
 export default function RoomDetailDialog({ children }: Props) {
 	const { room } = useRoomContext();
 	const t = useIntlayer("room-detail");
-
+	const { setRoomId } = useBookingStore();
+	const navigate = useNavigate();
+	const onConfirm = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setRoomId(room.id);
+		navigate({
+			to: "/review-cart-checkout",
+			replace: true,
+		});
+	};
 	return (
 		<Dialog modal>
 			<DialogTrigger render={children} />
@@ -77,9 +88,9 @@ export default function RoomDetailDialog({ children }: Props) {
 				<DialogFooter>
 					<div className={cn("flex w-full items-center justify-between gap-3")}>
 						<RoomTotalPrice className="justify-self-start" />
-						<Link to="/review-cart-checkout">
+						<Link to="/review-cart-checkout" onClick={onConfirm}>
 							<Button className="min-w-44 rounded-2xl" size="xl">
-							{t.confirm.value}
+								{t.confirm.value}
 							</Button>
 						</Link>
 					</div>

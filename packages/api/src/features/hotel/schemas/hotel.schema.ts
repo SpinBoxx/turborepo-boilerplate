@@ -25,6 +25,7 @@ const HotelComputedSchemaBase = z.object({
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional().nullable(),
+	platformFeePercentageBasisPoints: z.number().int(),
 	phoneNumber: z.string().optional().nullable(),
 	bankAccount: BankAccountSchema.optional().nullable(),
 	amenities: z.array(AmenityComputedSchema),

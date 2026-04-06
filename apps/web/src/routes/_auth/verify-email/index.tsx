@@ -6,6 +6,7 @@ import VerifyEmailDialog from "@/auth/components/VerifyEmailDialog";
 
 const verifyEmailSearchSchema = z.object({
 	email: z.email(),
+	redirectTo: z.string().optional(),
 });
 
 export const Route = createFileRoute("/_auth/verify-email/")({
@@ -14,9 +15,9 @@ export const Route = createFileRoute("/_auth/verify-email/")({
 });
 
 function RouteComponent() {
-	const { email } = Route.useSearch();
+	const { email, redirectTo } = Route.useSearch();
 	const content = useIntlayer("verify-email-dialog");
 	useDocumentTitle(content.pageTitle.value);
 
-	return <VerifyEmailDialog email={email} />;
+	return <VerifyEmailDialog email={email} redirectTo={redirectTo} />;
 }

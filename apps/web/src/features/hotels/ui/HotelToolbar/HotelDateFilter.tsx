@@ -17,9 +17,7 @@ import { useHotelToolbarStore } from "./hotel-toolbar.store";
 export default function HotelDateFilter() {
 	const { checkInDate, checkOutDate, setCheckInDate, setCheckOutDate } =
 		useBookingStore();
-	const onSearchChange = useHotelToolbarStore(
-		(state) => state.onSearchChange,
-	);
+	const onSearchChange = useHotelToolbarStore((state) => state.onSearchChange);
 	const { locale } = useIntlayerContext();
 	const t = useIntlayer("hotel-filters-drawer");
 	const firstBookableDate = getNextBookableDate();
@@ -31,9 +29,7 @@ export default function HotelDateFilter() {
 			</p>
 			<div className="grid grid-cols-2 gap-3">
 				<div className="space-y-1.5">
-					<p className="text-muted-foreground text-xs">
-						{t.checkIn.value}
-					</p>
+					<p className="text-muted-foreground text-xs">{t.checkIn.value}</p>
 					<Popover>
 						<PopoverTrigger
 							render={
@@ -55,10 +51,7 @@ export default function HotelDateFilter() {
 									setCheckInDate(day);
 									const newCheckIn = dateToString(day);
 									let newCheckOut = checkOutDate ?? "";
-									if (
-										checkOutDate &&
-										day >= stringToDate(checkOutDate)
-									) {
+									if (checkOutDate && day >= stringToDate(checkOutDate)) {
 										const nextDay = addDays(day, 1);
 										setCheckOutDate(nextDay);
 										newCheckOut = dateToString(nextDay);
@@ -76,9 +69,7 @@ export default function HotelDateFilter() {
 					</Popover>
 				</div>
 				<div className="space-y-1.5">
-					<p className="text-muted-foreground text-xs">
-						{t.checkOut.value}
-					</p>
+					<p className="text-muted-foreground text-xs">{t.checkOut.value}</p>
 					<Popover>
 						<PopoverTrigger
 							render={
@@ -99,11 +90,7 @@ export default function HotelDateFilter() {
 						<PopoverContent className="w-auto p-0">
 							<Calendar
 								mode="single"
-								selected={
-									checkOutDate
-										? stringToDate(checkOutDate)
-										: undefined
-								}
+								selected={checkOutDate ? stringToDate(checkOutDate) : undefined}
 								onSelect={(day) => {
 									if (!day) return;
 									setCheckOutDate(day);
@@ -113,10 +100,7 @@ export default function HotelDateFilter() {
 									});
 								}}
 								disabled={{
-									before: addDays(
-										stringToDate(checkInDate),
-										1,
-									),
+									before: addDays(stringToDate(checkInDate), 1),
 								}}
 								required
 							/>

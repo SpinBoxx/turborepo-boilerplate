@@ -61,7 +61,9 @@ export function PasswordField({ inputProps, label, prefix, className }: Props) {
 						<TooltipTrigger
 							render={
 								<Button
-									aria-label={showPassword ? t.hidePassword.value : t.showPassword.value}
+									aria-label={
+										showPassword ? t.hidePassword.value : t.showPassword.value
+									}
 									onClick={() => setShowPassword(!showPassword)}
 									size="icon-xs"
 									variant="ghost"

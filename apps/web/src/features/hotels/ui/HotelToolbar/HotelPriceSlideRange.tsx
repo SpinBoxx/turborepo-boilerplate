@@ -40,11 +40,15 @@ export default function HotelPriceSlideRange() {
 			/>
 			<div className="grid grid-cols-2 gap-3 text-sm">
 				<div className="rounded-xl border bg-muted/40 px-3 py-2">
-					<p className="text-muted-foreground text-xs uppercase">{t.min.value}</p>
+					<p className="text-muted-foreground text-xs uppercase">
+						{t.min.value}
+					</p>
 					<p className="mt-1 font-medium">{formatPrice(priceRange.min)}</p>
 				</div>
 				<div className="rounded-xl border bg-muted/40 px-3 py-2">
-					<p className="text-muted-foreground text-xs uppercase">{t.max.value}</p>
+					<p className="text-muted-foreground text-xs uppercase">
+						{t.max.value}
+					</p>
 					<p className="mt-1 font-medium">{formatPrice(priceRange.max)}</p>
 				</div>
 			</div>

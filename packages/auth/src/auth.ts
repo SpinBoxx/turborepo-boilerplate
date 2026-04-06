@@ -18,9 +18,10 @@ export const auth = betterAuth({
 	emailVerification: {
 		sendVerificationEmail: async ({ url, user }, request) => {
 			const parsedUrl = new URL(url);
+			const requestedCallbackUrl = parsedUrl.searchParams.get("callbackURL");
 			parsedUrl.searchParams.set(
 				"callbackURL",
-				`${process.env.CLIENT_URL}/email-verified`,
+				requestedCallbackUrl || `${process.env.CLIENT_URL}/email-verified`,
 			);
 			const localeFromHeaders = request?.headers.get("content-language");
 

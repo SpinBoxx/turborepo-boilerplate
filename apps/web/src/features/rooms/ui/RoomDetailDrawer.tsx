@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import type * as React from "react";
 import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import { cn } from "@/lib/utils";
 import RoomArea from "../components/RoomArea";
 import RoomBaths from "../components/RoomBaths";
@@ -32,6 +33,18 @@ interface Props {
 export default function RoomDetailDrawer({ children, snapPoints }: Props) {
 	const { room } = useRoomContext();
 	const t = useIntlayer("room-detail");
+	const { setRoomId } = useBookingStore();
+
+	const navigate = useNavigate();
+	const onConfirm = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setRoomId(room.id);
+		navigate({
+			to: "/review-cart-checkout",
+			replace: true,
+		});
+	};
 
 	return (
 		<Drawer
@@ -52,7 +65,7 @@ export default function RoomDetailDrawer({ children, snapPoints }: Props) {
 									{room.title}
 								</DrawerTitle>
 								<DrawerDescription className="text-sm leading-relaxed">
-								{t.exploreRoom.value}
+									{t.exploreRoom.value}
 								</DrawerDescription>
 							</div>
 							<RoomType display="badge" className="mt-1" />
@@ -72,9 +85,9 @@ export default function RoomDetailDrawer({ children, snapPoints }: Props) {
 					<div className="flex items-center justify-between gap-3">
 						<RoomTotalPrice />
 
-						<Link to="/review-cart-checkout">
+						<Link to="/review-cart-checkout" onClick={onConfirm}>
 							<Button className="rounded-2xl" size="default">
-							{t.confirm.value}
+								{t.confirm.value}
 							</Button>
 						</Link>
 					</div>

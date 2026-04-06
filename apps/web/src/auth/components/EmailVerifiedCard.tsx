@@ -10,9 +10,15 @@ import {
 	DialogPopup,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { sanitizeRedirectTo } from "@/auth/services/auth-dialog.service";
 
-export default function EmailVerifiedCard() {
+export default function EmailVerifiedCard({
+	redirectTo,
+}: {
+	redirectTo?: string;
+}) {
 	const content = useIntlayer("email-verified-card");
+	const safeRedirectTo = sanitizeRedirectTo(redirectTo);
 
 	return (
 		<Dialog defaultOpen open={true} modal={false}>
@@ -39,7 +45,12 @@ export default function EmailVerifiedCard() {
 					</DialogHeader>
 
 					<DialogPanel className="grid gap-5">
-						<Link to="/login">
+						<Link
+							to="/login"
+							search={{
+								redirectTo: safeRedirectTo,
+							}}
+						>
 							<Button className="w-full">{content.loginCta.value}</Button>
 						</Link>
 					</DialogPanel>

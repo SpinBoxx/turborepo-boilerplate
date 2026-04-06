@@ -13,9 +13,7 @@ export default function HotelsEmpty({ hasDates }: HotelsEmptyProps) {
 			{hasDates ? (
 				<>
 					<CalendarX2Icon className="size-8 text-muted-foreground" />
-					<h2 className="font-semibold text-xl">
-						{t.noHotelForDates.value}
-					</h2>
+					<h2 className="font-semibold text-xl">{t.noHotelForDates.value}</h2>
 					<p className="max-w-xl text-muted-foreground">
 						{t.noHotelForDatesDescription.value}
 					</p>
@@ -23,9 +21,7 @@ export default function HotelsEmpty({ hasDates }: HotelsEmptyProps) {
 			) : (
 				<>
 					<HotelIcon className="size-8 text-muted-foreground" />
-					<h2 className="font-semibold text-xl">
-						{t.noHotelFound.value}
-					</h2>
+					<h2 className="font-semibold text-xl">{t.noHotelFound.value}</h2>
 					<p className="max-w-xl text-muted-foreground">
 						{t.noHotelFoundDescription.value}
 					</p>

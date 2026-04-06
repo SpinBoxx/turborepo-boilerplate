@@ -5,9 +5,9 @@ import { cn } from "@zanadeal/ui";
 import { useIntlayer } from "react-intlayer";
 import { Separator } from "@/components/ui/separator";
 import { constants } from "@/constants/contants";
-import Logo from "../Logo";
-import ToggleThemeButton from "../theme/ToggleThemeButton";
-import Container from "../widgets/container";
+import Logo from "../../components/Logo";
+import ToggleThemeButton from "../../components/theme/ToggleThemeButton";
+import Container from "../container";
 
 type FooterLink = { title: string; linkProps: LinkProps };
 
@@ -60,7 +60,7 @@ const Footer = ({ className }: { className?: string }) => {
 			)}
 		>
 			<Container>
-				<div className="pt-6 pb-12">
+				<div className="px-2 pt-6 pb-12">
 					<div className="mt-6 grid grid-cols-2 gap-12 sm:grid-cols-4 lg:grid-cols-6">
 						<div className="col-span-full lg:col-span-2">
 							<Link to="/" className="inline-flex items-center gap-2">

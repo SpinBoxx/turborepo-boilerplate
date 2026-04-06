@@ -1,4 +1,3 @@
-import { BedDouble } from "lucide-react";
 import type { ComponentProps } from "react";
 import { buildCloudinaryImage, type CloudinaryVariant } from "@/lib/cloudinary";
 import { useRoomContext } from "./RoomProvider";

@@ -42,3 +42,11 @@ export const getTotalPriceByRange = (
 	const breakdown = getNightlyBreakdown(prices, startDate, endDate);
 	return breakdown.reduce((sum, item) => sum + item.price, 0);
 };
+
+export const getPercentage = (percentage: number) => {
+	return percentage / 100;
+};
+
+export const getValueWithPercentage = (value: number, percentage: number) => {
+	return value + (value * getPercentage(percentage)) / 100;
+};

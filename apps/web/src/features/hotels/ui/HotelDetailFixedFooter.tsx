@@ -27,7 +27,9 @@ const HotelDetailFixedFooter = ({ className, ...props }: Props) => {
 		>
 			<div className="flex items-center justify-between">
 				<div className="flex flex-col gap-0">
-					<span className="text-muted-foreground text-sm">{t.from.value}</span>
+					<span className="text-muted-foreground text-sm">
+						{t.startingFrom.value}
+					</span>
 					<HotelPricePerNight />
 				</div>
 				{hasAllInfo() ? (
@@ -37,11 +39,11 @@ const HotelDetailFixedFooter = ({ className, ...props }: Props) => {
 							hotelId,
 						}}
 					>
-						<Button size="xl">{t.selectRooms.value}</Button>
+						<Button size="sm">{t.selectRooms.value}</Button>
 					</Link>
 				) : (
 					<BookingInfoDrawer>
-						<Button size="xl">{t.selectDates.value}</Button>
+						<Button size="sm">{t.selectDates.value}</Button>
 					</BookingInfoDrawer>
 				)}
 			</div>

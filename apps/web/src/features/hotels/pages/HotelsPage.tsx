@@ -67,7 +67,7 @@ export default function HotelsPage({
 					<span>
 						{hotelsQuery.error instanceof Error
 							? hotelsQuery.error.message
-						: t.loadError.value}
+							: t.loadError.value}
 					</span>
 				</div>
 			) : hotels.length === 0 ? (

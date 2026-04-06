@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { date } from "intlayer";
 import {
@@ -18,9 +19,8 @@ import {
 	PopoverTitle,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { DEFAULT_HOTELS_PAGE_SEARCH } from "@/features/hotels/ui/HotelToolbar/hotel-toolbar.options";
-import { Link } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
 import { useBookingStore } from "../hooks/useBookingHook";
 import BookingGuestCountInput from "../ui/BookingGuestCountInput";
 import BookingNoBookingAfterHoursInfo from "./BookingNoBookingAfterHoursInfo";

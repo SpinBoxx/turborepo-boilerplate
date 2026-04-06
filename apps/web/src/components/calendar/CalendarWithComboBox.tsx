@@ -2,7 +2,6 @@
 
 import { cn } from "@zanadeal/ui";
 import { stringToDate } from "@zanadeal/utils";
-import { format } from "date-fns";
 import { date as dateFormat } from "intlayer";
 import { CalendarIcon } from "lucide-react";
 import * as React from "react";
@@ -62,7 +61,9 @@ function CalendarDropdown(props: DropdownProps) {
 				onFocus={(e) => e.currentTarget.select()}
 			/>
 			<ComboboxPopup aria-label={ariaLabel}>
-				<ComboboxEmpty>{useIntlayer("common").noItemsFound.value}</ComboboxEmpty>
+				<ComboboxEmpty>
+					{useIntlayer("common").noItemsFound.value}
+				</ComboboxEmpty>
 				<ComboboxList>
 					{(item: DropdownItem) => (
 						<ComboboxItem

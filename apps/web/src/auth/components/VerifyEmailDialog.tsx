@@ -11,6 +11,10 @@ import {
 	DialogPopup,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import {
+	buildEmailVerifiedCallbackUrl,
+	sanitizeRedirectTo,
+} from "@/auth/services/auth-dialog.service";
 import { useAuth } from "../providers/AuthProvider";
 
 const RESEND_COOLDOWN = 60;
@@ -22,13 +26,20 @@ function maskEmail(email: string): string {
 	return `${local[0]}${"•".repeat(Math.min(local.length - 2, 6))}${local[local.length - 1]}@${domain}`;
 }
 
-export default function VerifyEmailDialog({ email }: { email: string }) {
+export default function VerifyEmailDialog({
+	email,
+	redirectTo,
+}: {
+	email: string;
+	redirectTo?: string;
+}) {
 	const content = useIntlayer("verify-email-dialog");
 	const navigate = useNavigate();
 	const [cooldown, setCooldown] = useState(0);
 	const [isResending, setIsResending] = useState(false);
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const { sendVerificationEmail } = useAuth();
+	const safeRedirectTo = sanitizeRedirectTo(redirectTo);
 
 	const startCooldown = useCallback(() => {
 		setCooldown(RESEND_COOLDOWN);
@@ -52,7 +63,13 @@ export default function VerifyEmailDialog({ email }: { email: string }) {
 	const handleResend = async () => {
 		if (cooldown > 0 || isResending) return;
 		setIsResending(true);
-		await sendVerificationEmail({ email });
+		await sendVerificationEmail({
+			email,
+			callbackURL: buildEmailVerifiedCallbackUrl(
+				window.location.origin,
+				safeRedirectTo,
+			),
+		});
 		setIsResending(false);
 		startCooldown();
 	};
@@ -106,7 +123,14 @@ export default function VerifyEmailDialog({ email }: { email: string }) {
 						<Button
 							variant="ghost"
 							className="mx-auto text-muted-foreground"
-							onClick={() => navigate({ to: "/login" })}
+							onClick={() =>
+								navigate({
+									to: "/login",
+									search: {
+										redirectTo: safeRedirectTo,
+									},
+								})
+							}
 						>
 							<ArrowLeftIcon className="size-4" />
 							{content.backToLogin.value}

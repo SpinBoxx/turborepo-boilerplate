@@ -3,6 +3,7 @@ import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
 import { useIntlayer } from "react-intlayer";
+import { sanitizeRedirectTo } from "@/auth/services/auth-dialog.service";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useAuth } from "../providers/AuthProvider";
@@ -22,6 +23,7 @@ export default function LoginForm({
 	const { signInWithEmail } = useAuth();
 	const navigate = useNavigate();
 	const router = useRouter();
+	const safeRedirectTo = sanitizeRedirectTo(redirectTo) ?? "/";
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
@@ -32,7 +34,7 @@ export default function LoginForm({
 			await signInWithEmail(value, {
 				onSuccess: () => {
 					router.invalidate();
-					navigate({ to: redirectTo });
+					navigate({ to: safeRedirectTo });
 				},
 			});
 		},
