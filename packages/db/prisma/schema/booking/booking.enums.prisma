@@ -16,6 +16,7 @@ enum PaymentAttemptStatus {
 
 enum PaymentProvider {
   ORANGE_MONEY
+  STRIPE
   MANUAL
 }
 
@@ -52,4 +53,15 @@ enum BookingEventType {
   BOOKING_CHECKED_OUT
   BOOKING_NO_SHOW
   REFUND_RECORDED
+}
+
+enum BookingNotificationType {
+  HOTEL_BOOKING_REQUEST
+}
+
+enum BookingNotificationStatus {
+  PENDING
+  PROCESSING
+  SENT
+  FAILED
 }

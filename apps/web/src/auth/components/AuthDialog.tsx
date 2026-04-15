@@ -1,4 +1,4 @@
-import { type ReactPortal, useMemo, useState } from "react";
+import { type ReactElement, useMemo, useState } from "react";
 import { useIntlayer } from "react-intlayer";
 import {
 	buildRedirectTo,
@@ -17,7 +17,7 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
 interface AuthDialogProps {
-	children?: ReactPortal;
+	children?: ReactElement;
 	defaultOpen?: boolean;
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;

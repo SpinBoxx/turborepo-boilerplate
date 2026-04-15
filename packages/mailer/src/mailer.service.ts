@@ -3,6 +3,10 @@ import {
 	sendForgotPasswordMail,
 } from "./ForgotPasswordMail";
 import {
+	sendHotelBookingRequestMail,
+	type SendHotelBookingRequestMailInput,
+} from "./HotelBookingRequestMail";
+import {
 	sendVerifyAccountMail,
 	type VerifyAccountMailInput,
 } from "./VerifyAccountMail";
@@ -25,6 +29,11 @@ export const createMailService = () => {
 			}),
 		sendForgotPasswordMail: (input: ForgotPasswordInput) =>
 			sendForgotPasswordMail({
+				...input,
+				from,
+			}),
+		sendHotelBookingRequestMail: (input: SendHotelBookingRequestMailInput) =>
+			sendHotelBookingRequestMail({
 				...input,
 				from,
 			}),

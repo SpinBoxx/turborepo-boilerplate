@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-	getNightlyBreakdown,
-	getTotalPriceByRange,
-	type NightBreakdownItem,
-} from "./money";
+import { getNightlyBreakdown, getTotalPriceByRange } from "./money";
 
 // Helper: create a UTC date at midnight for a given YYYY-MM-DD string
 const d = (dateStr: string) => new Date(`${dateStr}T00:00:00.000Z`);
@@ -13,26 +9,44 @@ const dMG = (dateStr: string) => new Date(`${dateStr}T22:00:00.000Z`);
 
 describe("getNightlyBreakdown", () => {
 	it("returns one entry per night between check-in and check-out", () => {
-		const prices = [{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-12") }];
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-11"));
+		const prices = [
+			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-12") },
+		];
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-11"),
+		);
 
 		expect(breakdown).toHaveLength(3);
 		expect(breakdown.map((b) => b.price)).toEqual([100, 100, 100]);
 	});
 
 	it("returns 0 nights for same check-in and check-out", () => {
-		const prices = [{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-12") }];
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-08"));
+		const prices = [
+			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-12") },
+		];
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-08"),
+		);
 
 		expect(breakdown).toHaveLength(0);
 	});
 
 	it("returns 1 night for consecutive days", () => {
-		const prices = [{ price: 150, startDate: d("2026-04-08"), endDate: d("2026-04-09") }];
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-09"));
+		const prices = [
+			{ price: 150, startDate: d("2026-04-08"), endDate: d("2026-04-09") },
+		];
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-09"),
+		);
 
 		expect(breakdown).toHaveLength(1);
-		expect(breakdown[0]!.price).toBe(150);
+		expect(breakdown[0]?.price).toBe(150);
 	});
 
 	it("picks the correct price per night from multiple ranges", () => {
@@ -40,7 +54,11 @@ describe("getNightlyBreakdown", () => {
 			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-10") },
 			{ price: 200, startDate: d("2026-04-11"), endDate: d("2026-04-13") },
 		];
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-13"));
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-13"),
+		);
 
 		expect(breakdown).toHaveLength(5);
 		expect(breakdown.map((b) => b.price)).toEqual([100, 100, 100, 200, 200]);
@@ -50,7 +68,11 @@ describe("getNightlyBreakdown", () => {
 		const prices = [
 			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-09") },
 		];
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-11"));
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-11"),
+		);
 
 		expect(breakdown).toHaveLength(3);
 		expect(breakdown.map((b) => b.price)).toEqual([100, 100, 0]);
@@ -66,7 +88,11 @@ describe("getNightlyBreakdown", () => {
 		];
 
 		// Check-in/out also stored as T22:00Z
-		const breakdown = getNightlyBreakdown(prices, dMG("2026-04-07"), dMG("2026-04-11"));
+		const breakdown = getNightlyBreakdown(
+			prices,
+			dMG("2026-04-07"),
+			dMG("2026-04-11"),
+		);
 
 		// 4 nights: April 8, 9, 10, 11 (local)
 		expect(breakdown).toHaveLength(4);
@@ -84,7 +110,11 @@ describe("getNightlyBreakdown", () => {
 			{ price: 200, startDate: dMG("2026-04-07"), endDate: dMG("2026-04-10") },
 		];
 
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-12"));
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-12"),
+		);
 
 		expect(breakdown).toHaveLength(4);
 		// Night 4 (April 11 00:00Z) > endDate (April 10 22:00Z) → price 0
@@ -99,7 +129,11 @@ describe("getNightlyBreakdown", () => {
 		const prices = [
 			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-10") },
 		];
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-11"));
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-11"),
+		);
 
 		expect(breakdown).toHaveLength(3);
 		expect(breakdown.map((b) => b.price)).toEqual([100, 100, 100]);
@@ -110,7 +144,11 @@ describe("getNightlyBreakdown", () => {
 			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-09") },
 			{ price: 300, startDate: d("2026-04-11"), endDate: d("2026-04-12") },
 		];
-		const breakdown = getNightlyBreakdown(prices, d("2026-04-08"), d("2026-04-13"));
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-13"),
+		);
 
 		expect(breakdown).toHaveLength(5);
 		// April 8=100, 9=100, 10=0 (gap), 11=300, 12=300
@@ -124,15 +162,25 @@ describe("getTotalPriceByRange", () => {
 			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-10") },
 			{ price: 200, startDate: d("2026-04-11"), endDate: d("2026-04-12") },
 		];
-		const total = getTotalPriceByRange(prices, d("2026-04-08"), d("2026-04-13"));
+		const total = getTotalPriceByRange(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-13"),
+		);
 
 		// 3 nights × 100 + 2 nights × 200 = 700
 		expect(total).toBe(700);
 	});
 
 	it("returns 0 for zero nights", () => {
-		const prices = [{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-12") }];
-		const total = getTotalPriceByRange(prices, d("2026-04-08"), d("2026-04-08"));
+		const prices = [
+			{ price: 100, startDate: d("2026-04-08"), endDate: d("2026-04-12") },
+		];
+		const total = getTotalPriceByRange(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-08"),
+		);
 
 		expect(total).toBe(0);
 	});
@@ -141,7 +189,11 @@ describe("getTotalPriceByRange", () => {
 		const prices = [
 			{ price: 200, startDate: dMG("2026-04-07"), endDate: dMG("2026-04-10") },
 		];
-		const total = getTotalPriceByRange(prices, dMG("2026-04-07"), dMG("2026-04-11"));
+		const total = getTotalPriceByRange(
+			prices,
+			dMG("2026-04-07"),
+			dMG("2026-04-11"),
+		);
 
 		// 4 nights × 200 = 800
 		expect(total).toBe(800);

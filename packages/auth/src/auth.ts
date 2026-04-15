@@ -1,6 +1,6 @@
 import prisma from "@zanadeal/db";
 import { mailService } from "@zanadeal/mailer";
-import { verifyLocale } from "@zanadeal/mailer/resend";
+import { verifyLocale } from "@zanadeal/mailer/mail-locales";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import type { User } from "../../db/prisma/generated/client";

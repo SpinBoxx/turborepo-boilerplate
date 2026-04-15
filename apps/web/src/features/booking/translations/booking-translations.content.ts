@@ -28,6 +28,26 @@ const bookingTranslationsContent = {
 			fr: "Rechercher",
 			mg: "Mitady",
 		}),
+		termsAgreement: t({
+			fr: "En cliquant sur « Confirmer la réservation », vous acceptez nos",
+			en: 'By clicking "Confirm Booking", you agree to our',
+			mg: 'Amin\'ny fanindronana "Manamafisa", manaiky ny',
+		}),
+		termsOfService: t({
+			fr: "Conditions générales",
+			en: "Terms of Service",
+			mg: "Fepetra ankapobeny",
+		}),
+		and: t({
+			fr: "et",
+			en: "and",
+			mg: "sy",
+		}),
+		privacyPolicy: t({
+			fr: "Politique de confidentialité",
+			en: "Privacy Policy",
+			mg: "Politika tsiambaratelo",
+		}),
 		errors: {
 			invalidDates: t({
 				en: "Please select valid check-in and check-out dates.",

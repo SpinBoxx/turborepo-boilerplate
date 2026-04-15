@@ -21,7 +21,10 @@ export default function StaySummaryCard() {
 
 	const firstImage = room.images[0]?.publicId ?? null;
 	const image = firstImage
-		? buildCloudinaryImage({ publicId: firstImage }, { variant: "listing-card" })
+		? buildCloudinaryImage(
+				{ publicId: firstImage },
+				{ variant: "listing-card" },
+			)
 		: null;
 
 	return (
@@ -47,9 +50,7 @@ export default function StaySummaryCard() {
 								{room.title}
 							</span>
 						</div>
-						<p className="text-muted-foreground text-sm">
-							{hotel.address}
-						</p>
+						<p className="text-muted-foreground text-sm">{hotel.address}</p>
 					</div>
 				</div>
 

@@ -2,6 +2,10 @@ import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon, MailIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIntlayer } from "react-intlayer";
+import {
+	buildEmailVerifiedCallbackUrl,
+	sanitizeRedirectTo,
+} from "@/auth/services/auth-dialog.service";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -11,10 +15,6 @@ import {
 	DialogPopup,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import {
-	buildEmailVerifiedCallbackUrl,
-	sanitizeRedirectTo,
-} from "@/auth/services/auth-dialog.service";
 import { useAuth } from "../providers/AuthProvider";
 
 const RESEND_COOLDOWN = 60;

@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { LOCALES } from "../resend";
+import { LOCALES } from "../mail-locales";
 
 export const VerifyAccountMailInputSchema = z.object({
 	to: z.email(),

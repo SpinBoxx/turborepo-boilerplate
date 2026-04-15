@@ -27,12 +27,7 @@ const LocalePopover = ({ className }: Props) => {
 		<Menu>
 			<MenuTrigger
 				render={
-					<Button
-						onClick={() => {}}
-						size={"icon"}
-						className={cn(className)}
-						variant="ghost"
-					/>
+					<Button size={"icon"} className={cn(className)} variant="ghost" />
 				}
 			>
 				<Globe />

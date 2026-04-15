@@ -1,14 +1,13 @@
-import { stringToDate } from "@zanadeal/utils";
-import { getNightlyBreakdown } from "@zanadeal/utils";
+import { getNightlyBreakdown, stringToDate } from "@zanadeal/utils";
 import { fromStoredMoneyAmount } from "../../money";
-import { getRoomById } from "../room/room.store";
 import { getHotel } from "../hotel/hotel.store";
-import type { BookingQuoteDB } from "./booking-quote.store";
-import { createBookingQuoteInDb } from "./booking-quote.store";
+import { getRoomById } from "../room/room.store";
 import type {
 	BookingQuoteComputed,
 	CreateBookingQuoteInput,
 } from "./booking-quote.schemas";
+import type { BookingQuoteDB } from "./booking-quote.store";
+import { createBookingQuoteInDb } from "./booking-quote.store";
 
 const QUOTE_EXPIRATION_HOURS = 24;
 const TAX_RATE_BASIS_POINTS = 0; // No tax for now, can be configured later
@@ -55,7 +54,8 @@ export async function createBookingQuote(
 	}
 
 	// Subtotal = sum of nightly prices (stored in cents) * quantity
-	const subtotalAmount = breakdown.reduce((sum, n) => sum + n.price, 0) * input.quantity;
+	const subtotalAmount =
+		breakdown.reduce((sum, n) => sum + n.price, 0) * input.quantity;
 
 	// Tax calculation
 	const taxAmount = Math.round(

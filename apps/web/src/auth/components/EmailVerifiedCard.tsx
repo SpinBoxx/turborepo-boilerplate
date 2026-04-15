@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { CheckIcon } from "lucide-react";
 import { useIntlayer } from "react-intlayer";
+import { sanitizeRedirectTo } from "@/auth/services/auth-dialog.service";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -10,7 +11,6 @@ import {
 	DialogPopup,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { sanitizeRedirectTo } from "@/auth/services/auth-dialog.service";
 
 export default function EmailVerifiedCard({
 	redirectTo,

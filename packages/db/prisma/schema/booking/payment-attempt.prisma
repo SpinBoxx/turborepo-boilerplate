@@ -16,6 +16,7 @@ model PaymentAttempt {
   initiatedAt       DateTime             @default(now())
   completedAt       DateTime?
   events            BookingEvent[]
+  notifications     BookingNotification[]
   booking           Booking?
 
   createdAt DateTime @default(now())

@@ -47,6 +47,11 @@ const priceDetailsCardContent = {
 			en: "Taxes & Fees",
 			mg: "Hetra sy sara",
 		}),
+		discount: t({
+			fr: "Réduction",
+			en: "Discount",
+			mg: "Fihenam-bidy",
+		}),
 		taxesInfo: t({
 			fr: "Inclut les taxes applicables et les frais de service.",
 			en: "Includes applicable taxes and service fees.",

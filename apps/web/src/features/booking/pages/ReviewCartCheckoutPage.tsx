@@ -15,6 +15,7 @@ import type { GuestDetailsValues } from "@/features/booking/forms/GuestDetailsFo
 import NeedHelpCard from "@/features/booking/ui/NeedHelpCard";
 import PriceDetailsCard from "@/features/booking/ui/PriceDetailsCard";
 import StaySummaryCard from "@/features/booking/ui/StaySummaryCard";
+import BookingTermsMessage from "../ui/BookingTermsMessage";
 
 interface ReviewCartCheckoutPageProps {
 	room: RoomUserComputed;
@@ -55,7 +56,7 @@ function ReviewCartCheckoutContent() {
 		if (!canSubmit) return;
 		setIsSubmitting(true);
 		try {
-			await createBookingQuote({
+			const quote = await createBookingQuote({
 				roomId: room.id,
 				checkInDate,
 				checkOutDate,
@@ -68,7 +69,12 @@ function ReviewCartCheckoutContent() {
 				specialRequests: values.specialRequests || undefined,
 			});
 			toast.success(t.bookingSuccess.value);
-			navigate({ to: "/" });
+			navigate({
+				to: "/checkout",
+				search: {
+					quoteId: quote.id,
+				},
+			});
 		} catch (error) {
 			toast.error(t.bookingError.value, {
 				description: error instanceof Error ? error.message : undefined,
@@ -84,7 +90,7 @@ function ReviewCartCheckoutContent() {
 	return (
 		<div className="py-8">
 			{/* Page header */}
-			<div className="mb-8 flex items-center justify-between">
+			<div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
 				<h1 className="font-bold text-2xl">{t.pageTitle}</h1>
 				<Button variant="outline" onClick={() => navigate({ to: "/" })}>
 					<CornerDownLeft />
@@ -109,17 +115,7 @@ function ReviewCartCheckoutContent() {
 
 					<NeedHelpCard />
 					{/* Terms agreement */}
-					<p className="text-muted-foreground text-xs">
-						{t.termsAgreement}{" "}
-						<a href="/terms-of-service" className="underline">
-							{t.termsOfService}
-						</a>{" "}
-						{t.and}{" "}
-						<a href="/privacy-policy" className="underline">
-							{t.privacyPolicy}
-						</a>
-						.
-					</p>
+					<BookingTermsMessage />
 				</div>
 			</div>
 		</div>

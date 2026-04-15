@@ -1,4 +1,5 @@
 import { useIntlayer } from "react-intlayer";
+import AuthDialog from "@/auth/components/AuthDialog";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -14,16 +15,17 @@ import NightlySummaryRow from "@/features/booking/ui/NightlySummaryRow";
 import PriceTotalRow from "@/features/booking/ui/PriceTotalRow";
 import TaxesRow from "@/features/booking/ui/TaxesRow";
 import { useBookingCheckoutContext } from "../components/BookingCheckoutProvider";
-import AuthDialog from "@/auth/components/AuthDialog";
 
 interface PriceDetailsCardProps {
-	onConfirm: () => void;
-	isSubmitting: boolean;
+	onConfirm?: () => void;
+	isSubmitting?: boolean;
+	type?: "action" | "summary";
 }
 
 export default function PriceDetailsCard({
 	onConfirm,
 	isSubmitting,
+	type = "action",
 }: PriceDetailsCardProps) {
 	const t = useIntlayer("price-details-card");
 	const { canSubmit } = useBookingCheckoutContext();
@@ -40,30 +42,32 @@ export default function PriceDetailsCard({
 				<Separator />
 				<PriceTotalRow />
 			</CardPanel>
-			<CardFooter>
-				{canSubmit ? (
-					<Button
-						type="button"
-						className="w-full"
-						disabled={isSubmitting}
-						onClick={onConfirm}
-					>
-						{isSubmitting && <Spinner aria-hidden="true" />}
-						{t.confirmBooking}
-					</Button>
-				) : (
-					<AuthDialog
-						loginTitle={t.authDialogLoginTitle.value}
-						loginDescription={t.authDialogLoginDescription.value}
-						registerTitle={t.authDialogRegisterTitle.value}
-						registerDescription={t.authDialogRegisterDescription.value}
-					>
-						<Button className="w-full" type="button">
+			{type === "action" && (
+				<CardFooter>
+					{canSubmit ? (
+						<Button
+							type="button"
+							className="w-full"
+							disabled={isSubmitting}
+							onClick={onConfirm}
+						>
+							{isSubmitting && <Spinner aria-hidden="true" />}
 							{t.confirmBooking}
 						</Button>
-					</AuthDialog>
-				)}
-			</CardFooter>
+					) : (
+						<AuthDialog
+							loginTitle={t.authDialogLoginTitle.value}
+							loginDescription={t.authDialogLoginDescription.value}
+							registerTitle={t.authDialogRegisterTitle.value}
+							registerDescription={t.authDialogRegisterDescription.value}
+						>
+							<Button className="w-full" type="button">
+								{t.confirmBooking}
+							</Button>
+						</AuthDialog>
+					)}
+				</CardFooter>
+			)}
 		</Card>
 	);
 }

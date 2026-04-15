@@ -16,9 +16,7 @@ export default function NeedHelpCard() {
 				</div>
 				<div className="flex flex-col gap-0.5">
 					<p className="font-medium text-sm">{t.title}</p>
-					<p className="text-muted-foreground text-sm">
-						{t.description}
-					</p>
+					<p className="text-muted-foreground text-sm">{t.description}</p>
 				</div>
 			</CardPanel>
 		</Card>

@@ -44,7 +44,10 @@ describe("auth-dialog.service", () => {
 
 	it("omits unsafe redirectTo values from the email verified callback", () => {
 		expect(
-			buildEmailVerifiedCallbackUrl("https://zanadeal.test", "https://evil.test"),
+			buildEmailVerifiedCallbackUrl(
+				"https://zanadeal.test",
+				"https://evil.test",
+			),
 		).toBe("https://zanadeal.test/email-verified");
 	});
 });

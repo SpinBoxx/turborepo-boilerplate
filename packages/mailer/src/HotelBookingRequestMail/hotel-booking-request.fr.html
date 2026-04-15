@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Nouvelle reservation en attente de validation</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background-color: #f8f2f7;
+				font-family: Lufga, Inter, Arial, sans-serif;
+				color: #37263a;
+			}
+
+			table {
+				border-collapse: collapse;
+			}
+
+			a {
+				color: inherit;
+			}
+
+			@media only screen and (max-width: 640px) {
+				.email-shell {
+					padding: 16px !important;
+				}
+
+				.email-card {
+					border-radius: 20px !important;
+				}
+
+				.email-header,
+				.email-section,
+				.email-footer {
+					padding-left: 20px !important;
+					padding-right: 20px !important;
+				}
+
+				.email-actions td {
+					display: block !important;
+					width: 100% !important;
+					padding-right: 0 !important;
+					padding-bottom: 12px !important;
+				}
+
+				.email-actions a {
+					display: block !important;
+					width: 100% !important;
+					box-sizing: border-box !important;
+					text-align: center !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">
+			Nouvelle reservation en attente de validation - {{{bookingReference}}}
+		</div>
+		<table role="presentation" width="100%" style="width: 100%; background-color: #f8f2f7;">
+			<tr>
+				<td class="email-shell" style="padding: 28px 16px;">
+					<table role="presentation" width="100%" style="max-width: 640px; margin: 0 auto;">
+						<tr>
+							<td class="email-card" style="background-color: #ffffff; border: 1px solid #eadbe6; border-radius: 24px; box-shadow: 0 12px 30px rgba(55, 38, 58, 0.06); overflow: hidden;">
+								<div class="email-header" style="background: linear-gradient(135deg, #fffafb 0%, #f6edf4 52%, #f2e8f1 100%); padding: 32px 32px 24px;">
+									<span style="display: inline-block; padding: 7px 12px; border-radius: 999px; background-color: #f2e5ee; color: #8b3d74; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;">Nouvelle demande de reservation</span>
+									<h1 style="margin: 18px 0 10px; font-size: 30px; line-height: 1.15; color: #37263a; letter-spacing: -0.02em;">Une reservation attend votre validation</h1>
+									<p style="margin: 0; color: #6d5a70; font-size: 15px; line-height: 1.7;">Un voyageur a termine sa reservation et attend maintenant votre decision.</p>
+								</div>
+
+								<div class="email-section" style="padding: 0 32px 28px;">
+									<div style="margin-top: 24px; padding: 16px; border-radius: 18px; background-color: #fbf7fa; border: 1px solid #eddfe8;">
+										<p style="margin: 0; color: #8b3d74; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">{{{hotelName}}}</p>
+										<p style="margin: 6px 0 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">Le moyen de paiement du voyageur est deja securise. Confirmez le sejour pour le finaliser, ou refusez-le pour liberer l'autorisation.</p>
+									</div>
+
+									<p style="margin: 24px 0 0; color: #6d5a70; font-size: 15px; line-height: 1.7;">Utilisez une des actions securisees ci-dessous pour accepter ou refuser cette demande.</p>
+
+									<table role="presentation" width="100%" class="email-actions" style="margin-top: 24px; width: 100%;">
+										<tr>
+											<td style="padding: 0 12px 0 0;">
+												<a href="{{{acceptUrl}}}" style="display: inline-block; padding: 14px 22px; border-radius: 999px; background-color: #8b3d74; color: #fff7fc; font-size: 15px; font-weight: 600; line-height: 1; text-decoration: none;">Accepter la reservation</a>
+											</td>
+											<td>
+												<a href="{{{rejectUrl}}}" style="display: inline-block; padding: 14px 22px; border-radius: 999px; background-color: #ffffff; color: #8b3d74; font-size: 15px; font-weight: 600; line-height: 1; text-decoration: none; border: 1px solid #d9bfd3;">Refuser la reservation</a>
+											</td>
+										</tr>
+									</table>
+
+									<div style="margin-top: 28px; padding: 22px; border-radius: 20px; background-color: #ffffff; border: 1px solid #eadbe6;">
+										<h2 style="margin: 0 0 18px; font-size: 18px; line-height: 1.3; color: #37263a;">Details de la demande</h2>
+										<table role="presentation" width="100%" style="width: 100%; border-collapse: separate; border-spacing: 0 12px;">
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top; width: 42%;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Reference de reservation</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{bookingReference}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Voyageur</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{guestName}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Chambre</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{roomTitle}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Arrivee</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{checkInDate}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Depart</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{checkOutDate}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Voyageurs</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{guestCount}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Montant total</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{priceLabel}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Devise</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{currency}}}</p></td>
+											</tr>
+											{{#if reviewDeadline}}
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Repondre avant</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{reviewDeadline}}}</p></td>
+											</tr>
+											{{/if}}
+											{{#if specialRequests}}
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #7f6b81; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Demandes speciales</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #37263a; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{specialRequests}}}</p></td>
+											</tr>
+											{{/if}}
+										</table>
+									</div>
+
+									<p style="margin: 22px 0 0; color: #7b687d; font-size: 13px; line-height: 1.7;">Si le bouton ne fonctionne pas, acceptez ici :<br /><a href="{{{acceptUrl}}}" style="color: #8b3d74; text-decoration: underline;">{{{acceptUrl}}}</a></p>
+									<p style="margin: 14px 0 0; color: #7b687d; font-size: 13px; line-height: 1.7;">Si le bouton ne fonctionne pas, refusez ici :<br /><a href="{{{rejectUrl}}}" style="color: #8b3d74; text-decoration: underline;">{{{rejectUrl}}}</a></p>
+									<p style="margin: 24px 0 0; color: #6d5a70; font-size: 13px; line-height: 1.7;">Besoin d'aide ? Contactez <a href="mailto:{{{supportEmail}}}" style="color: #8b3d74; text-decoration: underline;">{{{supportEmail}}}</a>.</p>
+								</div>
+
+								<div class="email-footer" style="padding: 20px 32px 32px; border-top: 1px solid #efe3ec; background-color: #fcf8fb;">
+									<p style="margin: 0; color: #7b687d; font-size: 12px; line-height: 1.8;">Cette demande a ete envoyee sur Zanadeal apres une autorisation de paiement reussie. Le debit final n'intervient qu'apres validation de l'hotel.</p>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

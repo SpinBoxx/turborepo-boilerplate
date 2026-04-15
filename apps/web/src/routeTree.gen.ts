@@ -18,6 +18,7 @@ import { Route as LegalTermsOfServiceRouteImport } from './routes/_legal/terms-o
 import { Route as LegalTermsAndConditionsOfSaleRouteImport } from './routes/_legal/terms-and-conditions-of-sale'
 import { Route as CompanyContactRouteImport } from './routes/_company/contact'
 import { Route as CompanyAboutRouteImport } from './routes/_company/about'
+import { Route as CheckoutCheckoutRouteRouteImport } from './routes/_checkout/checkout/route'
 import { Route as AuthLoginRouteRouteImport } from './routes/_auth/login/route'
 import { Route as CheckoutReviewCartCheckoutIndexRouteImport } from './routes/_checkout/review-cart-checkout/index'
 import { Route as AuthVerifyEmailIndexRouteImport } from './routes/_auth/verify-email/index'
@@ -69,6 +70,11 @@ const CompanyAboutRoute = CompanyAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutCheckoutRouteRoute = CheckoutCheckoutRouteRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => CheckoutRouteRoute,
+} as any)
 const AuthLoginRouteRoute = AuthLoginRouteRouteImport.update({
   id: '/login',
   path: '/login',
@@ -114,6 +120,7 @@ const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof AuthLoginRouteRouteWithChildren
+  '/checkout': typeof CheckoutCheckoutRouteRoute
   '/about': typeof CompanyAboutRoute
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
+  '/checkout': typeof CheckoutCheckoutRouteRoute
   '/about': typeof CompanyAboutRoute
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/_checkout': typeof CheckoutRouteRouteWithChildren
   '/_legal': typeof LegalRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRouteRouteWithChildren
+  '/_checkout/checkout': typeof CheckoutCheckoutRouteRoute
   '/_company/about': typeof CompanyAboutRoute
   '/_company/contact': typeof CompanyContactRoute
   '/_legal/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/checkout'
     | '/about'
     | '/contact'
     | '/terms-and-conditions-of-sale'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/checkout'
     | '/about'
     | '/contact'
     | '/terms-and-conditions-of-sale'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/_checkout'
     | '/_legal'
     | '/_auth/login'
+    | '/_checkout/checkout'
     | '/_company/about'
     | '/_company/contact'
     | '/_legal/terms-and-conditions-of-sale'
@@ -284,6 +296,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/about'
       preLoaderRoute: typeof CompanyAboutRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_checkout/checkout': {
+      id: '/_checkout/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutCheckoutRouteRouteImport
+      parentRoute: typeof CheckoutRouteRoute
     }
     '/_auth/login': {
       id: '/_auth/login'
@@ -391,10 +410,12 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 )
 
 interface CheckoutRouteRouteChildren {
+  CheckoutCheckoutRouteRoute: typeof CheckoutCheckoutRouteRoute
   CheckoutReviewCartCheckoutIndexRoute: typeof CheckoutReviewCartCheckoutIndexRoute
 }
 
 const CheckoutRouteRouteChildren: CheckoutRouteRouteChildren = {
+  CheckoutCheckoutRouteRoute: CheckoutCheckoutRouteRoute,
   CheckoutReviewCartCheckoutIndexRoute: CheckoutReviewCartCheckoutIndexRoute,
 }
 

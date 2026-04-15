@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { getHotelById } from "@/features/hotels/hotel.api";
 import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import ReviewCartCheckoutPage from "@/features/booking/pages/ReviewCartCheckoutPage";
+import { getHotelById } from "@/features/hotels/hotel.api";
 import { orpc } from "@/lib/orpc";
 
 export const Route = createFileRoute("/_checkout/review-cart-checkout/")({

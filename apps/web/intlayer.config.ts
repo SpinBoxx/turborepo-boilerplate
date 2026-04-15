@@ -6,6 +6,9 @@ const config: IntlayerConfig = {
 		defaultLocale: Locales.ENGLISH,
 		requiredLocales: [Locales.FRENCH, Locales.ENGLISH],
 	},
+	routing: {
+		storage: ["localStorage"],
+	},
 	compiler: {
 		enabled: false,
 		output: ({ fileName }) => `./${fileName}.content.ts`,

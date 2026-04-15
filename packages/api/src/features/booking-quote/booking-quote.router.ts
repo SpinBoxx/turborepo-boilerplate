@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/server";
-import { publicProcedure } from "../../index";
+import { protectedProcedure } from "../../index";
 import {
 	BookingQuoteComputedSchema,
 	CancelBookingQuoteInputSchema,
@@ -15,7 +15,7 @@ import {
 	updateBookingQuoteStatus,
 } from "./booking-quote.store";
 
-export const createBookingQuoteRoute = publicProcedure
+export const createBookingQuoteRoute = protectedProcedure
 	.route({
 		method: "POST",
 		path: "/booking-quotes",
@@ -25,16 +25,12 @@ export const createBookingQuoteRoute = publicProcedure
 	.input(CreateBookingQuoteInputSchema)
 	.output(BookingQuoteComputedSchema)
 	.handler(async ({ input, context }) => {
-		const userId = context.session?.user?.id ?? null;
-
-		if (!userId) {
-			throw new ORPCError("UNAUTHORIZED");
-		}
+		const userId = context.session.user.id;
 
 		return await createBookingQuote(input, userId);
 	});
 
-export const getBookingQuoteRoute = publicProcedure
+export const getBookingQuoteRoute = protectedProcedure
 	.route({
 		method: "GET",
 		path: "/booking-quotes/{id}",
@@ -43,15 +39,15 @@ export const getBookingQuoteRoute = publicProcedure
 	})
 	.input(GetBookingQuoteInputSchema)
 	.output(BookingQuoteComputedSchema)
-	.handler(async ({ input }) => {
+	.handler(async ({ input, context }) => {
 		const quote = await getBookingQuote(input.id);
-		if (!quote) {
+		if (!quote || quote.userId !== context.session.user.id) {
 			throw new ORPCError("NOT_FOUND");
 		}
 		return computeBookingQuote(quote);
 	});
 
-export const cancelBookingQuoteRoute = publicProcedure
+export const cancelBookingQuoteRoute = protectedProcedure
 	.route({
 		method: "POST",
 		path: "/booking-quotes/{id}/cancel",
@@ -62,7 +58,7 @@ export const cancelBookingQuoteRoute = publicProcedure
 	.output(BookingQuoteComputedSchema)
 	.handler(async ({ input, context }) => {
 		const quote = await getBookingQuote(input.id);
-		if (!quote) {
+		if (!quote || quote.userId !== context.session.user.id) {
 			throw new ORPCError("NOT_FOUND");
 		}
 		if (quote.status !== "ACTIVE") {

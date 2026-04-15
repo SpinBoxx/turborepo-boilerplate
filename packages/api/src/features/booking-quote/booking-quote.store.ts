@@ -1,9 +1,11 @@
 import prisma from "@zanadeal/db";
 import type { Prisma } from "../../../../db/prisma/generated/client";
+type BookingQuoteStoreClient = typeof prisma | Prisma.TransactionClient;
 
 const bookingQuoteInclude = {
 	hotel: {
 		select: {
+			email: true,
 			name: true,
 			address: true,
 		},
@@ -24,8 +26,9 @@ export type BookingQuoteDB = Prisma.BookingQuoteGetPayload<{
 
 export async function getBookingQuote(
 	id: string,
+	client: BookingQuoteStoreClient = prisma,
 ): Promise<BookingQuoteDB | null> {
-	return await prisma.bookingQuote.findUnique({
+	return await client.bookingQuote.findUnique({
 		where: { id },
 		include: bookingQuoteInclude,
 	});
@@ -33,8 +36,9 @@ export async function getBookingQuote(
 
 export async function createBookingQuoteInDb(
 	data: Prisma.BookingQuoteCreateInput,
+	client: BookingQuoteStoreClient = prisma,
 ): Promise<BookingQuoteDB> {
-	return await prisma.bookingQuote.create({
+	return await client.bookingQuote.create({
 		data,
 		include: bookingQuoteInclude,
 	});
@@ -43,8 +47,9 @@ export async function createBookingQuoteInDb(
 export async function updateBookingQuoteStatus(
 	id: string,
 	data: Prisma.BookingQuoteUpdateInput,
+	client: BookingQuoteStoreClient = prisma,
 ): Promise<BookingQuoteDB> {
-	return await prisma.bookingQuote.update({
+	return await client.bookingQuote.update({
 		where: { id },
 		data,
 		include: bookingQuoteInclude,
