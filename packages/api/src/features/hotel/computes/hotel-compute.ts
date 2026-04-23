@@ -2,25 +2,41 @@ import { Role } from "../../../../../db/prisma/generated/enums";
 import type { UserComputed } from "../../user";
 import { getRolesByPriority } from "../../user/user-roles";
 import type { HotelDB } from "../hotel.store";
-import type { HotelComputed } from "../schemas/hotel.schema";
+import {
+	type HotelAdminComputed,
+	type HotelComputed,
+	type HotelUserComputed,
+	HotelAdminComputedSchema,
+	HotelUserComputedSchema,
+} from "../schemas/hotel.schema";
 import type { HotelComputeOptions } from "../services/hotel.service";
-import { hotelAdminCompute } from "./computeByRole/hotel-admin-compute";
-import { hotelUserCompute } from "./computeByRole/hotel-user-compute";
+import { computeHotelFull } from "../services/hotel.service";
+
+function resolveHotelViewerRole(
+	user: UserComputed | null | undefined,
+): Role {
+	const highestRole = getRolesByPriority(user?.roles)[0];
+	return highestRole ?? Role.USER;
+}
+
+function projectHotelForRole(
+	hotel: Awaited<ReturnType<typeof computeHotelFull>>,
+	role: Role,
+): HotelComputed {
+	if (role === Role.ADMIN) {
+		return HotelAdminComputedSchema.parse(hotel) satisfies HotelAdminComputed;
+	}
+
+	return HotelUserComputedSchema.parse(hotel) satisfies HotelUserComputed;
+}
 
 export const computeHotel = async (
 	hotel: HotelDB,
 	user: UserComputed | null | undefined,
 	options?: HotelComputeOptions,
 ): Promise<HotelComputed> => {
-	const rolesSortedByPriority = getRolesByPriority(user?.roles);
-	const highestRole = rolesSortedByPriority[0];
-	const compute = {
-		[Role.ADMIN]: async () => await hotelAdminCompute(hotel, user, options),
-		[Role.USER]: async () => await hotelUserCompute(hotel, user, options),
-	};
+	const role = resolveHotelViewerRole(user);
+	const computedHotel = await computeHotelFull(hotel, user, options);
 
-	if (!highestRole || highestRole === Role.USER) {
-		return await compute[Role.USER].call(hotel);
-	}
-	return await compute[highestRole].call(hotel);
+	return projectHotelForRole(computedHotel, role);
 };

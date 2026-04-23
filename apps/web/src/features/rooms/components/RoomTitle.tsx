@@ -12,7 +12,7 @@ export default function RoomTitle({
 	return (
 		<p
 			className={cn(
-				"line-clamp-3 text-[1.05rem] text-muted-foreground leading-snug md:text-[1.15rem]",
+				"line-clamp-3 text-[1.05rem] leading-snug md:text-[1.15rem]",
 				className,
 			)}
 			{...props}

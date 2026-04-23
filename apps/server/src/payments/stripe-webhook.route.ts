@@ -68,11 +68,11 @@ export async function registerStripeWebhookRoute(fastify: FastifyInstance) {
 				}
 
 				const result = await handleStripeCheckoutSessionCompletedWebhook({
-					logger: request.log,
 					paymentAttemptId,
 					providerPaymentStatus: session.payment_status ?? null,
 					providerSessionId: session.id,
 					providerSessionStatus: session.status ?? "complete",
+					transactionId: getStripePaymentIntentId(session.payment_intent),
 				});
 
 				reply.code(200).send({
@@ -84,6 +84,16 @@ export async function registerStripeWebhookRoute(fastify: FastifyInstance) {
 			},
 		);
 	});
+}
+
+function getStripePaymentIntentId(
+	paymentIntent: Stripe.Checkout.Session["payment_intent"],
+) {
+	if (!paymentIntent) {
+		return null;
+	}
+
+	return typeof paymentIntent === "string" ? paymentIntent : paymentIntent.id;
 }
 
 function getStripeWebhookConfig(processEnv: NodeJS.ProcessEnv = process.env) {

@@ -1,6 +1,7 @@
 import z from "zod";
 import {
 	BookingNotificationStatus,
+	BookingStatus,
 	PaymentAttemptStatus,
 	PaymentProvider,
 } from "../../../../db/prisma/generated/enums";
@@ -35,6 +36,8 @@ export const StartPaymentResultSchema = z.discriminatedUnion("provider", [
 
 export const PaymentAttemptStatusSchema = z.enum(PaymentAttemptStatus);
 export const BookingNotificationStatusSchema = z.enum(BookingNotificationStatus);
+export const BookingStatusSchema = z.enum(BookingStatus);
+export const BookingReviewDecisionSchema = z.enum(["ACCEPT", "REJECT"]);
 
 export const GetPaymentStatusInputSchema = z.object({
 	paymentAttemptId: z.string().min(1),
@@ -51,7 +54,26 @@ export const GetPaymentStatusResultSchema = z.object({
 		BookingNotificationStatusSchema.nullable(),
 });
 
+export const ReviewBookingRequestInputSchema = z.object({
+	decision: BookingReviewDecisionSchema,
+	paymentAttemptId: z.string().min(1),
+	rejectionReason: z.string().min(1).optional(),
+	validationNote: z.string().min(1).optional(),
+});
+
+export const ReviewBookingRequestResultSchema = z.object({
+	bookingId: z.string().min(1),
+	decision: BookingReviewDecisionSchema,
+	status: BookingStatusSchema,
+});
+
 export type StartPaymentInput = z.infer<typeof StartPaymentInputSchema>;
 export type StartPaymentResult = z.infer<typeof StartPaymentResultSchema>;
 export type GetPaymentStatusInput = z.infer<typeof GetPaymentStatusInputSchema>;
 export type GetPaymentStatusResult = z.infer<typeof GetPaymentStatusResultSchema>;
+export type ReviewBookingRequestInput = z.infer<
+	typeof ReviewBookingRequestInputSchema
+>;
+export type ReviewBookingRequestResult = z.infer<
+	typeof ReviewBookingRequestResultSchema
+>;

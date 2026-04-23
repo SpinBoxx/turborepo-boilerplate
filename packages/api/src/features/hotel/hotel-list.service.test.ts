@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { stringToDate } from "@zanadeal/utils";
 import { Role } from "../../../../db/prisma/generated/enums";
 import { computeHotel } from "./computes/hotel-compute";
+import { getReservedRoomQuantitiesByIds } from "../room/room.store";
 import { countHotelsFromDb, listHotelsFromDb } from "./hotel.store";
 import { listHotels } from "./hotel-list.service";
 import { ListHotelsInputSchema } from "./schemas/hotel.schema";
@@ -12,6 +14,10 @@ vi.mock("./hotel.store", () => ({
 
 vi.mock("./computes/hotel-compute", () => ({
 	computeHotel: vi.fn(),
+}));
+
+vi.mock("../room/room.store", () => ({
+	getReservedRoomQuantitiesByIds: vi.fn(),
 }));
 
 describe("hotel list service", () => {
@@ -272,5 +278,50 @@ describe("hotel list service", () => {
 			limit: 10,
 			pageCount: 1,
 		});
+	});
+
+	it("resolves room availability and forwards it to hotel compute when dates are provided", async () => {
+		const roomAvailabilityById = new Map([["room_1", 2]]);
+		vi.mocked(listHotelsFromDb).mockResolvedValue([
+			{
+				id: "1",
+				name: "Hotel A",
+				rooms: [{ id: "room_1" }],
+			},
+		] as never);
+		vi.mocked(getReservedRoomQuantitiesByIds).mockResolvedValue(
+			roomAvailabilityById,
+		);
+		vi.mocked(computeHotel).mockResolvedValue({
+			id: "1",
+			name: "Hotel A",
+			startingPrice: 150,
+			rating: 4.6,
+			rooms: [],
+		} as never);
+
+		const input = ListHotelsInputSchema.parse({
+			checkInDate: "2026-06-10",
+			checkOutDate: "2026-06-12",
+			page: 1,
+			limit: 10,
+		});
+
+		await listHotels(input, undefined);
+
+		expect(getReservedRoomQuantitiesByIds).toHaveBeenCalledWith({
+			checkInDate: stringToDate("2026-06-10"),
+			checkOutDate: stringToDate("2026-06-12"),
+			roomIds: ["room_1"],
+		});
+		expect(computeHotel).toHaveBeenCalledWith(
+			expect.objectContaining({ id: "1" }),
+			undefined,
+			expect.objectContaining({
+				checkInDate: stringToDate("2026-06-10"),
+				checkOutDate: stringToDate("2026-06-12"),
+				roomAvailabilityById,
+			}),
+		);
 	});
 });

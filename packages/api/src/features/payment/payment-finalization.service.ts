@@ -6,11 +6,15 @@ import {
 	BookingQuoteStatus,
 	PaymentAttemptStatus,
 } from "../../../../db/prisma/generated/enums";
-import type { LoggerLike } from "../../context";
 import {
 	getBookingQuote,
 	updateBookingQuoteStatus,
 } from "../booking-quote/booking-quote.store";
+import {
+	createBookingInDb,
+	getBookingByPaymentAttemptId,
+	type BookingCreateInput,
+} from "./booking.store";
 import {
 	createBookingNotificationInDb,
 	getBookingNotificationByIdempotencyKey,
@@ -40,10 +44,10 @@ interface PersistCompletedStripePaymentResult {
 }
 
 export interface FinalizeStripeCheckoutSessionInput {
-	logger?: LoggerLike;
 	paymentAttempt: PaymentAttemptStatusDB;
 	providerPaymentStatus: string | null;
 	providerSessionStatus: string | null;
+	transactionId?: string | null;
 	userId?: string;
 }
 
@@ -54,10 +58,10 @@ export interface FinalizeStripeCheckoutSessionResult {
 }
 
 export async function finalizeStripeCheckoutSession({
-	logger,
 	paymentAttempt,
 	providerPaymentStatus,
 	providerSessionStatus,
+	transactionId,
 	userId,
 }: FinalizeStripeCheckoutSessionInput): Promise<FinalizeStripeCheckoutSessionResult | null> {
 	if (providerSessionStatus !== "complete") {
@@ -68,6 +72,7 @@ export async function finalizeStripeCheckoutSession({
 		paymentAttempt,
 		providerPaymentStatus,
 		providerSessionStatus,
+		transactionId,
 		userId,
 	});
 
@@ -80,7 +85,6 @@ export async function finalizeStripeCheckoutSession({
 	}
 
 	const processedNotification = await processHotelBookingRequestNotification({
-		logger,
 		notificationId: persistedResult.notification.id,
 	});
 
@@ -97,11 +101,13 @@ async function persistCompletedStripePayment({
 	paymentAttempt,
 	providerPaymentStatus,
 	providerSessionStatus,
+	transactionId,
 	userId,
 }: {
 	paymentAttempt: PaymentAttemptStatusDB;
 	providerPaymentStatus: string | null;
 	providerSessionStatus: string;
+	transactionId?: string | null;
 	userId?: string;
 }): Promise<PersistCompletedStripePaymentResult> {
 	return await prisma.$transaction(async (transaction) => {
@@ -118,6 +124,7 @@ async function persistCompletedStripePayment({
 
 		const callbackPayload = getCallbackPayloadRecord(paymentAttempt.callbackPayload);
 		const completedAt = paymentAttempt.completedAt ?? new Date();
+		const resolvedTransactionId = transactionId ?? paymentAttempt.transactionId ?? null;
 		const mergedCallbackPayload = {
 			...callbackPayload,
 			providerPaymentStatus,
@@ -127,6 +134,7 @@ async function persistCompletedStripePayment({
 		if (
 			paymentAttempt.status !== PaymentAttemptStatus.SUCCEEDED ||
 			paymentAttempt.providerStatus !== providerSessionStatus ||
+			paymentAttempt.transactionId !== resolvedTransactionId ||
 			!paymentAttempt.completedAt
 		) {
 			await updatePaymentAttemptInDb(
@@ -153,6 +161,7 @@ async function persistCompletedStripePayment({
 							  },
 					providerStatus: providerSessionStatus,
 					status: PaymentAttemptStatus.SUCCEEDED,
+					transactionId: resolvedTransactionId,
 				},
 				transaction,
 			);
@@ -180,6 +189,14 @@ async function persistCompletedStripePayment({
 				transaction,
 			);
 		}
+
+		await ensurePendingValidationBooking({
+			completedAt,
+			paymentAttempt,
+			quote,
+			transaction,
+			userId,
+		});
 
 		if (hasHotelBookingRequestLegacySentMarker(paymentAttempt.callbackPayload)) {
 			return {
@@ -242,4 +259,72 @@ async function persistCompletedStripePayment({
 			providerStatus: providerSessionStatus,
 		};
 	});
+}
+
+async function ensurePendingValidationBooking({
+	completedAt,
+	paymentAttempt,
+	quote,
+	transaction,
+	userId,
+}: {
+	completedAt: Date;
+	paymentAttempt: PaymentAttemptStatusDB;
+	quote: NonNullable<Awaited<ReturnType<typeof getBookingQuote>>>;
+	transaction: Prisma.TransactionClient;
+	userId?: string;
+}) {
+	const existingBooking = await getBookingByPaymentAttemptId(
+		paymentAttempt.id,
+		transaction,
+	);
+
+	if (existingBooking) {
+		return existingBooking;
+	}
+
+	const bookingData: BookingCreateInput = {
+		checkInDate: quote.checkInDate,
+		checkOutDate: quote.checkOutDate,
+		confirmedAt: null,
+		currency: quote.currency,
+		customerEmail: quote.customerEmail,
+		customerFirstName: quote.customerFirstName,
+		customerLastName: quote.customerLastName,
+		customerPhoneNumber: quote.customerPhoneNumber,
+		discountAmount: quote.discountAmount,
+		guestCount: quote.guestCount,
+		hotel: { connect: { id: quote.hotelId } },
+		hotelPayoutAmount: quote.hotelPayoutAmount,
+		nights: quote.nights,
+		paidAmount: quote.totalAmount,
+		paidAt: completedAt,
+		paymentAttempt: { connect: { id: paymentAttempt.id } },
+		platformFeeAmount: quote.platformFeeAmount,
+		platformFeePercentageBasisPoints:
+			quote.platformFeePercentageBasisPoints,
+		quantity: quote.quantity,
+		quote: { connect: { id: quote.id } },
+		refundedAmount: 0,
+		room: { connect: { id: quote.roomId } },
+		specialRequests: quote.specialRequests,
+		status: "PENDING_VALIDATION",
+		subtotalAmount: quote.subtotalAmount,
+		taxAmount: quote.taxAmount,
+		totalAmount: quote.totalAmount,
+		user: quote.userId ? { connect: { id: quote.userId } } : undefined,
+		events: {
+			create: {
+				actorUser: userId ? { connect: { id: userId } } : undefined,
+				metadata: {
+					paymentAttemptId: paymentAttempt.id,
+					quoteId: quote.id,
+				},
+				note: "Booking created after successful payment authorization",
+				type: "BOOKING_PENDING_VALIDATION",
+			},
+		},
+	};
+
+	return await createBookingInDb(bookingData, transaction);
 }

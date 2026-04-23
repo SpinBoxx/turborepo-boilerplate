@@ -3,7 +3,6 @@ import type {
 	MailService,
 } from "@zanadeal/mailer";
 import { BookingNotificationStatus } from "../../../../db/prisma/generated/enums";
-import type { LoggerLike } from "../../context";
 import {
 	acquireBookingNotificationForProcessing,
 	getBookingNotificationById,
@@ -20,12 +19,10 @@ import {
 import { getPaymentAttemptById, updatePaymentAttemptInDb } from "./payment.store";
 
 export interface ProcessHotelBookingRequestNotificationInput {
-	logger?: LoggerLike;
 	notificationId: string;
 }
 
 export async function processHotelBookingRequestNotification({
-	logger,
 	notificationId,
 }: ProcessHotelBookingRequestNotificationInput): Promise<BookingNotificationDB> {
 	const existingNotification = await getBookingNotificationById(notificationId);
@@ -108,14 +105,11 @@ export async function processHotelBookingRequestNotification({
 			}
 		}
 
-		logger?.info?.(
-			{
-				emailId: sendResult.emailId,
-				notificationId,
-				recipient: lockedNotification.recipient,
-			},
-			"Hotel booking request notification sent",
-		);
+		console.log("Hotel booking request notification sent", {
+			emailId: sendResult.emailId,
+			notificationId,
+			recipient: lockedNotification.recipient,
+		});
 
 		return await updateBookingNotificationInDb(notificationId, {
 			status: BookingNotificationStatus.SENT,
@@ -129,14 +123,11 @@ export async function processHotelBookingRequestNotification({
 		const message =
 			error instanceof Error ? error.message : "Unknown notification delivery failure";
 
-		logger?.error?.(
-			{
-				error,
-				notificationId,
-				recipient: lockedNotification.recipient,
-			},
-			"Failed to send hotel booking request notification",
-		);
+		console.error("Failed to send hotel booking request notification", {
+			error,
+			notificationId,
+			recipient: lockedNotification.recipient,
+		});
 
 		return await updateBookingNotificationInDb(notificationId, {
 			status: BookingNotificationStatus.FAILED,

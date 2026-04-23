@@ -29,6 +29,7 @@ const RoomComputedSchemaBase = z.object({
 	baths: z.number().int(),
 	areaM2: z.number(),
 	quantity: z.number().int(),
+	availableCapacity: z.number().int(),
 	images: z.array(RoomImageSchema),
 	amenities: z.array(AmenityComputedSchema),
 	price: z.number(),

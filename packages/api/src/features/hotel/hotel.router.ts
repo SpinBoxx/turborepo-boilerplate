@@ -3,6 +3,7 @@ import { stringToDate } from "@zanadeal/utils";
 import { z } from "zod";
 import { adminProcedure, publicProcedure } from "../../index";
 import { createPaginatedResultSchema } from "../../listing/paginated-result";
+import { getReservedRoomQuantitiesByIds } from "../room/room.store";
 import { computeHotel } from "./computes/hotel-compute";
 import { computeUpsertHotelInput } from "./computes/upsert-compute";
 import { isHotelVisibleToUser } from "./hotel-visibility";
@@ -16,6 +17,34 @@ import {
 	UpsertHotelInputSchema,
 } from "./schemas/hotel.schema";
 import type { HotelComputeOptions } from "./services/hotel.service";
+
+async function buildGetHotelComputeOptions(
+	hotel: NonNullable<Awaited<ReturnType<typeof getHotel>>>,
+	input: { checkInDate?: string; checkOutDate?: string },
+): Promise<HotelComputeOptions | undefined> {
+	if (!input.checkInDate || !input.checkOutDate) {
+		return undefined;
+	}
+
+	const computeOptions: HotelComputeOptions = {
+		checkInDate: stringToDate(input.checkInDate),
+		checkOutDate: stringToDate(input.checkOutDate),
+	};
+	const roomIds = hotel.rooms.map((room) => room.id);
+
+	if (roomIds.length === 0) {
+		return computeOptions;
+	}
+
+	return {
+		...computeOptions,
+		roomAvailabilityById: await getReservedRoomQuantitiesByIds({
+			checkInDate: computeOptions.checkInDate,
+			checkOutDate: computeOptions.checkOutDate,
+			roomIds,
+		}),
+	};
+}
 
 export const listHotelsRoute = publicProcedure
 	.route({
@@ -45,13 +74,7 @@ export const getHotelRoute = publicProcedure
 			throw new ORPCError("NOT_FOUND");
 		}
 
-		const computeOptions: HotelComputeOptions | undefined =
-			input.checkInDate && input.checkOutDate
-				? {
-						checkInDate: stringToDate(input.checkInDate),
-						checkOutDate: stringToDate(input.checkOutDate),
-					}
-				: undefined;
+		const computeOptions = await buildGetHotelComputeOptions(hotel, input);
 
 		const computedHotel = await computeHotel(
 			hotel,

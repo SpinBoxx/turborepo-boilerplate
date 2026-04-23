@@ -1,10 +1,13 @@
-import { protectedProcedure } from "../../index";
+import { adminProcedure, protectedProcedure } from "../../index";
 import {
 	GetPaymentStatusInputSchema,
 	GetPaymentStatusResultSchema,
+	ReviewBookingRequestInputSchema,
+	ReviewBookingRequestResultSchema,
 	StartPaymentInputSchema,
 	StartPaymentResultSchema,
 } from "./payment.schemas";
+import { reviewBookingRequest } from "./booking-review.service";
 import { getPaymentStatus } from "./payment-query.service";
 import { startPayment } from "./payment.service";
 
@@ -22,11 +25,32 @@ export const startPaymentRoute = protectedProcedure
 			quoteId: input.quoteId,
 			provider: input.provider,
 			userId: context.session.user.id,
-			logger: context.logger,
 		});
 	});
 
 export const paymentRouter = {
+	reviewBookingRequest: adminProcedure
+		.route({
+			method: "POST",
+			path: "/bookings/requests/review",
+			summary: "Accept or reject a hotel booking request backed by an authorized payment",
+			tags: ["Payment", "Booking"],
+		})
+		.input(ReviewBookingRequestInputSchema)
+		.output(ReviewBookingRequestResultSchema)
+		.handler(async ({ input, context }) => {
+			if (!context.session?.user) {
+				throw new Error("Authenticated admin session is required");
+			}
+
+			return await reviewBookingRequest({
+				actorUserId: context.session.user.id,
+				decision: input.decision,
+				paymentAttemptId: input.paymentAttemptId,
+				rejectionReason: input.rejectionReason,
+				validationNote: input.validationNote,
+			});
+		}),
 	getStatus: protectedProcedure
 		.route({
 			method: "GET",
@@ -40,7 +64,6 @@ export const paymentRouter = {
 			return await getPaymentStatus({
 				paymentAttemptId: input.paymentAttemptId,
 				userId: context.session.user.id,
-				logger: context.logger,
 			});
 		}),
 	start: startPaymentRoute,

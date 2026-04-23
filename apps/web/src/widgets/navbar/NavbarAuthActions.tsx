@@ -33,7 +33,7 @@ export default function NavbarAuthActions() {
 				</MenuTrigger>
 				<MenuPopup align="end">
 					<MenuGroup>
-						<MenuGroupLabel>{t.profile.value}</MenuGroupLabel>
+						<MenuGroupLabel>{user.email}</MenuGroupLabel>
 						<MenuItem>
 							<UserCog2 className="size-5" />
 							<span>{t.profile.value}</span>

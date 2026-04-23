@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { isAdmin } from "@zanadeal/utils";
 import AuthLayout from "@/auth/components/AuthLayout";
 
 export const Route = createFileRoute("/login")({
@@ -6,7 +7,7 @@ export const Route = createFileRoute("/login")({
 	beforeLoad: async ({ context }) => {
 		const user = await context.auth.loadSession();
 
-		if (user) {
+		if (isAdmin(user)) {
 			throw redirect({
 				to: "/dashboard",
 			});

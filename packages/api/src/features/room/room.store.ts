@@ -1,6 +1,7 @@
 import prisma from "@zanadeal/db";
 
 import type { Prisma } from "../../../../db/prisma/generated/client";
+import { BookingStatus } from "../../../../db/prisma/generated/enums";
 import type {
 	DeleteRoomInput,
 	ListRoomsInput,
@@ -34,6 +35,44 @@ export async function listRooms(input: ListRoomsInput): Promise<RoomDB[]> {
 		},
 		include: roomInclude,
 	});
+}
+
+export async function getReservedRoomQuantitiesByIds(params: {
+	roomIds: string[];
+	checkInDate: Date;
+	checkOutDate: Date;
+}): Promise<Map<string, number>> {
+	if (params.roomIds.length === 0) {
+		return new Map();
+	}
+
+	const groupedBookings = await prisma.booking.groupBy({
+		by: ["roomId"],
+		where: {
+			roomId: {
+				in: params.roomIds,
+			},
+			checkInDate: {
+				lt: params.checkOutDate,
+			},
+			checkOutDate: {
+				gt: params.checkInDate,
+			},
+			status: {
+				notIn: [BookingStatus.CANCELLED, BookingStatus.REJECTED],
+			},
+		},
+		_sum: {
+			quantity: true,
+		},
+	});
+
+	return new Map(
+		groupedBookings.map((booking) => [
+			booking.roomId,
+			booking._sum.quantity ?? 0,
+		]),
+	);
 }
 
 export const createRoom = async (

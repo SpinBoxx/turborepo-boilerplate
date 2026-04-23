@@ -1,5 +1,4 @@
 import { ORPCError } from "@orpc/server";
-import type { LoggerLike } from "../../context";
 import type { GetPaymentStatusResult } from "./payment.schemas";
 import {
 	getLatestHotelBookingRequestNotificationByPaymentAttemptId,
@@ -10,13 +9,11 @@ import { getPaymentAttemptById } from "./payment.store";
 export interface GetPaymentStatusInput {
 	paymentAttemptId: string;
 	userId: string;
-	logger?: LoggerLike;
 }
 
 export async function getPaymentStatus({
 	paymentAttemptId,
 	userId,
-	logger,
 }: GetPaymentStatusInput): Promise<GetPaymentStatusResult> {
 	const paymentAttempt = await getPaymentAttemptById(paymentAttemptId);
 
@@ -35,8 +32,8 @@ export async function getPaymentStatus({
 							id: paymentAttempt.id,
 							providerReference: paymentAttempt.providerReference,
 							providerStatus: paymentAttempt.providerStatus,
+							transactionId: paymentAttempt.transactionId,
 						},
-						logger,
 					})
 				: {
 						providerSessionStatus: null,

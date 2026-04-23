@@ -13,9 +13,14 @@ vi.mock("@zanadeal/db", () => {
 		description: string;
 		address: string;
 		mapLink: string;
+		email: string | null;
 		isArchived: boolean;
+		bankAccount: unknown | null;
+		favorites: unknown[];
 		latitude: string;
 		longitude: string;
+		phoneNumber: string | null;
+		platformFeePercentageBasisPoints: number;
 		createdAt: Date;
 		updatedAt: Date;
 		amenities: unknown[];
@@ -57,9 +62,14 @@ vi.mock("@zanadeal/db", () => {
 						name: data.name,
 						description: data.description,
 						address: data.address,
+						email: null,
 						mapLink: data.mapLink,
+						bankAccount: null,
+						favorites: [],
 						latitude: data.latitude,
 						longitude: data.longitude,
+						phoneNumber: null,
+						platformFeePercentageBasisPoints: 0,
 						isArchived: data.isArchived ?? false,
 						createdAt: now,
 						updatedAt: now,

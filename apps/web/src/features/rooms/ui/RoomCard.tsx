@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import RoomArea from "../components/RoomArea";
+import RoomAvailableQuantity from "../components/RoomAvailableQuantity";
 import RoomBaths from "../components/RoomBaths";
 import RoomBeds from "../components/RoomBeds";
 import RoomDescription from "../components/RoomDescription";
@@ -50,6 +51,10 @@ const RoomCard = ({ className, onViewDetails }: Props) => {
 						className="aspect-[1.65/1] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
 					/>
 
+					<RoomAvailableQuantity
+						className="absolute top-3 left-4 z-10"
+						type="overlay"
+					/>
 					<RoomType className="absolute top-3 right-4" display={"badge"} />
 				</div>
 

@@ -4,6 +4,7 @@ import { PaymentProvider } from "../../../../../../db/prisma/generated/enums";
 import type {
 	GetProviderPaymentStatusInput,
 	PaymentProviderHandler,
+	ReviewProviderPaymentInput,
 	StartProviderPaymentInput,
 } from "../payment-provider.types";
 import { PaymentProviderError } from "../payment-provider.types";
@@ -83,7 +84,7 @@ function getStripeConfig(processEnv: NodeJS.ProcessEnv = process.env) {
 		secretKey: parsed.data.STRIPE_SECRET_KEY,
 		clientUrl: parsed.data.CLIENT_URL,
 	};
-	}
+}
 
 function getStripeClient(processEnv: NodeJS.ProcessEnv = process.env) {
 	if (stripeClient) {
@@ -263,7 +264,80 @@ async function getStripePaymentStatus({
 	}
 }
 
+async function resolveStripePaymentIntentId(
+	paymentAttempt: ReviewProviderPaymentInput["paymentAttempt"],
+) {
+	if (paymentAttempt.transactionId) {
+		return paymentAttempt.transactionId;
+	}
+
+	if (!paymentAttempt.providerReference) {
+		throw new PaymentProviderError(
+			"missing_transaction_id",
+			"Stripe payment intent id is missing and no checkout session id is available",
+		);
+	}
+
+	try {
+		const session = await getStripeClient().checkout.sessions.retrieve(
+			paymentAttempt.providerReference,
+		);
+		const transactionId = getStripePaymentIntentId(session.payment_intent);
+
+		if (!transactionId) {
+			throw new PaymentProviderError(
+				"missing_transaction_id",
+				"Stripe payment intent id could not be recovered from the checkout session",
+			);
+		}
+
+		return transactionId;
+	} catch (error) {
+		throw toPaymentProviderError(error);
+	}
+}
+
+async function captureAuthorizedStripePayment({
+	paymentAttempt,
+}: ReviewProviderPaymentInput) {
+	const transactionId = await resolveStripePaymentIntentId(paymentAttempt);
+
+	try {
+		const paymentIntent = await getStripeClient().paymentIntents.capture(
+			transactionId,
+		);
+
+		return {
+			providerStatus: paymentIntent.status ?? null,
+			transactionId,
+		};
+	} catch (error) {
+		throw toPaymentProviderError(error);
+	}
+}
+
+async function cancelAuthorizedStripePayment({
+	paymentAttempt,
+}: ReviewProviderPaymentInput) {
+	const transactionId = await resolveStripePaymentIntentId(paymentAttempt);
+
+	try {
+		const paymentIntent = await getStripeClient().paymentIntents.cancel(
+			transactionId,
+		);
+
+		return {
+			providerStatus: paymentIntent.status ?? null,
+			transactionId,
+		};
+	} catch (error) {
+		throw toPaymentProviderError(error);
+	}
+}
+
 export const stripePaymentProvider: PaymentProviderHandler = {
+	cancelAuthorizedPayment: cancelAuthorizedStripePayment,
+	captureAuthorizedPayment: captureAuthorizedStripePayment,
 	provider: PaymentProvider.STRIPE,
 	startPayment: startStripePayment,
 	getPaymentStatus: getStripePaymentStatus,

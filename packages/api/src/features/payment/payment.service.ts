@@ -4,7 +4,6 @@ import {
 	PaymentAttemptStatus,
 } from "../../../../db/prisma/generated/enums";
 import type { PaymentProvider } from "../../../../db/prisma/generated/enums";
-import type { LoggerLike } from "../../context";
 import { getBookingQuote } from "../booking-quote/booking-quote.store";
 import type { StartPaymentResult } from "./payment.schemas";
 import {
@@ -22,7 +21,6 @@ export interface StartPaymentInput {
 	quoteId: string;
 	provider: PaymentProvider;
 	userId: string;
-	logger?: LoggerLike;
 }
 
 function toPublicStartPaymentError(
@@ -52,7 +50,6 @@ export async function startPayment({
 	quoteId,
 	provider,
 	userId,
-	logger,
 }: StartPaymentInput): Promise<StartPaymentResult> {
 	const quote = await getBookingQuote(quoteId);
 
@@ -93,7 +90,6 @@ export async function startPayment({
 		const providerResult = await paymentProvider.startPayment({
 			paymentAttemptId: paymentAttempt.id,
 			quote,
-			logger,
 		});
 
 		await updatePaymentAttemptInDb(paymentAttempt.id, {
@@ -131,15 +127,12 @@ export async function startPayment({
 						: "Unknown payment provider error",
 				);
 
-		logger?.error?.(
-			{
-				paymentAttemptId: paymentAttempt.id,
-				quoteId: quote.id,
-				provider,
-				providerError,
-			},
-			"Failed to start provider payment session",
-		);
+		console.error("Failed to start provider payment session", {
+			paymentAttemptId: paymentAttempt.id,
+			quoteId: quote.id,
+			provider,
+			providerError,
+		});
 
 		await updatePaymentAttemptInDb(paymentAttempt.id, {
 			status: PaymentAttemptStatus.FAILED,

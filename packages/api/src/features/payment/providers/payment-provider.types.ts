@@ -1,12 +1,10 @@
 import type { PaymentProvider } from "../../../../../db/prisma/generated/enums";
-import type { LoggerLike } from "../../../context";
 import type { BookingQuoteDB } from "../../booking-quote/booking-quote.store";
 import type { StartPaymentResult } from "../payment.schemas";
 
 export interface StartProviderPaymentInput {
 	paymentAttemptId: string;
 	quote: BookingQuoteDB;
-	logger?: LoggerLike;
 }
 
 export interface ProviderPaymentPersistenceFields {
@@ -21,16 +19,25 @@ export interface PaymentAttemptStatusSnapshot {
 	id: string;
 	providerReference: string | null;
 	providerStatus: string | null;
+	transactionId: string | null;
 }
 
 export interface GetProviderPaymentStatusInput {
 	paymentAttempt: PaymentAttemptStatusSnapshot;
-	logger?: LoggerLike;
+}
+
+export interface ReviewProviderPaymentInput {
+	paymentAttempt: PaymentAttemptStatusSnapshot;
 }
 
 export interface ProviderPaymentStatusOutput {
 	providerSessionStatus?: string | null;
 	providerPaymentStatus?: string | null;
+}
+
+export interface ReviewProviderPaymentOutput {
+	providerStatus?: string | null;
+	transactionId?: string | null;
 }
 
 export interface StartProviderPaymentOutput {
@@ -43,6 +50,12 @@ export interface PaymentProviderHandler {
 	startPayment(
 		input: StartProviderPaymentInput,
 	): Promise<StartProviderPaymentOutput>;
+	captureAuthorizedPayment?(
+		input: ReviewProviderPaymentInput,
+	): Promise<ReviewProviderPaymentOutput>;
+	cancelAuthorizedPayment?(
+		input: ReviewProviderPaymentInput,
+	): Promise<ReviewProviderPaymentOutput>;
 	getPaymentStatus?(
 		input: GetProviderPaymentStatusInput,
 	): Promise<ProviderPaymentStatusOutput>;

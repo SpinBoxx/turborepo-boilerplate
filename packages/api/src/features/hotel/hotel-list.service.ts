@@ -10,6 +10,7 @@ import {
 	type PaginatedResult,
 	toPaginatedResult,
 } from "../../listing/paginated-result";
+import { getReservedRoomQuantitiesByIds } from "../room/room.store";
 import type { UserComputed } from "../user";
 import { computeHotel } from "./computes/hotel-compute";
 import { countHotelsFromDb, listHotelsFromDb } from "./hotel.store";
@@ -29,6 +30,18 @@ const HOTEL_FALLBACK_DB_ORDER: Prisma.HotelOrderByWithRelationInput[] = [
 	{ updatedAt: "desc" },
 	{ id: "desc" },
 ];
+
+interface HotelCollectionContext {
+	computedFilters: ReturnType<typeof buildHybridListExecutionPlan>["computed"]["filters"];
+	computedSort: ReturnType<typeof buildHybridListExecutionPlan>["computed"]["sort"];
+	mode: "db" | "post-compute";
+	user: UserComputed | null | undefined;
+}
+
+type HotelCollectionRule = (
+	hotels: HotelComputed[],
+	context: HotelCollectionContext,
+) => HotelComputed[];
 
 function buildHotelWhere(
 	filters: ListHotelsInput["filters"],
@@ -66,7 +79,7 @@ function buildHotelDbOrder(
 	] as Prisma.HotelOrderByWithRelationInput[];
 }
 
-function buildComputeOptions(
+function buildHotelComputeOptions(
 	input: ListHotelsInput,
 ): HotelComputeOptions | undefined {
 	if (!input.checkInDate || !input.checkOutDate) return undefined;
@@ -76,13 +89,111 @@ function buildComputeOptions(
 	};
 }
 
+function buildHotelCollectionContext(
+	plan: ReturnType<typeof buildHybridListExecutionPlan>,
+	user: UserComputed | null | undefined,
+	mode: HotelCollectionContext["mode"],
+): HotelCollectionContext {
+	return {
+		computedFilters: plan.computed.filters,
+		computedSort: plan.computed.sort,
+		mode,
+		user,
+	};
+}
+
+const filterVisibleHotelsRule: HotelCollectionRule = (hotels, context) => {
+	if (context.mode !== "post-compute") {
+		return hotels;
+	}
+
+	return filterVisibleHotelsForUser(hotels, context.user);
+};
+
+const applyComputedFiltersRule: HotelCollectionRule = (hotels, context) => {
+	if (context.mode !== "post-compute") {
+		return hotels;
+	}
+
+	return applyComputedFilters(hotels, context.computedFilters);
+};
+
+const applyComputedSortRule: HotelCollectionRule = (hotels, context) => {
+	if (context.mode !== "post-compute") {
+		return hotels;
+	}
+
+	return applyComputedSort(hotels, context.computedSort);
+};
+
+function buildHotelCollectionRules(
+	context: HotelCollectionContext,
+): HotelCollectionRule[] {
+	if (context.mode !== "post-compute") {
+		return [];
+	}
+
+	return [
+		filterVisibleHotelsRule,
+		applyComputedFiltersRule,
+		applyComputedSortRule,
+	];
+}
+
+function applyHotelCollectionRules(
+	hotels: HotelComputed[],
+	context: HotelCollectionContext,
+): HotelComputed[] {
+	return buildHotelCollectionRules(context).reduce(
+		(currentHotels, rule) => rule(currentHotels, context),
+		hotels,
+	);
+}
+
+function collectRoomIds(rows: Awaited<ReturnType<typeof listHotelsFromDb>>): string[] {
+	return [...new Set(rows.flatMap((row) => row.rooms.map((room) => room.id)))];
+}
+
+async function resolveHotelComputeOptions(
+	rows: Awaited<ReturnType<typeof listHotelsFromDb>>,
+	computeOptions?: HotelComputeOptions,
+): Promise<HotelComputeOptions | undefined> {
+	if (!computeOptions?.checkInDate || !computeOptions?.checkOutDate) {
+		return computeOptions;
+	}
+
+	const roomIds = collectRoomIds(rows);
+	if (roomIds.length === 0) {
+		return computeOptions;
+	}
+
+	return {
+		...computeOptions,
+		roomAvailabilityById: await getReservedRoomQuantitiesByIds({
+			checkInDate: computeOptions.checkInDate,
+			checkOutDate: computeOptions.checkOutDate,
+			roomIds,
+		}),
+	};
+}
+
+async function computeHotelsCollection(
+	rows: Awaited<ReturnType<typeof listHotelsFromDb>>,
+	user: UserComputed | null | undefined,
+	computeOptions?: HotelComputeOptions,
+): Promise<HotelComputed[]> {
+	return await Promise.all(
+		rows.map(async (row) => await computeHotel(row, user, computeOptions)),
+	);
+}
+
 export async function listHotels(
 	input: ListHotelsInput,
 	user: UserComputed | null | undefined,
 ): Promise<PaginatedResult<HotelComputed>> {
 	const plan = buildHybridListExecutionPlan(input, hotelListConfig);
 	const where = buildHotelWhere(input.filters, user);
-	const computeOptions = buildComputeOptions(input);
+	const computeOptions = buildHotelComputeOptions(input);
 
 	// When dates are provided, room filtering happens post-compute so we must
 	// go through the post-compute branch to get accurate pagination.
@@ -99,9 +210,15 @@ export async function listHotels(
 			}),
 			countHotelsFromDb({ where }),
 		]);
+		const resolvedComputeOptions = await resolveHotelComputeOptions(
+			rows,
+			computeOptions,
+		);
 
-		const items = await Promise.all(
-			rows.map(async (row) => await computeHotel(row, user)),
+		const items = await computeHotelsCollection(
+			rows,
+			user,
+			resolvedComputeOptions,
 		);
 
 		return {
@@ -117,17 +234,20 @@ export async function listHotels(
 		where,
 		orderBy: buildHotelDbOrder(plan),
 	});
-
-	const computedHotels = await Promise.all(
-		rows.map(async (row) => await computeHotel(row, user, computeOptions)),
+	const resolvedComputeOptions = await resolveHotelComputeOptions(
+		rows,
+		computeOptions,
 	);
 
-	const visibleHotels = filterVisibleHotelsForUser(computedHotels, user);
-	const filteredHotels = applyComputedFilters(
-		visibleHotels,
-		plan.computed.filters,
+	const computedHotels = await computeHotelsCollection(
+		rows,
+		user,
+		resolvedComputeOptions,
 	);
-	const sortedHotels = applyComputedSort(filteredHotels, plan.computed.sort);
+	const processedHotels = applyHotelCollectionRules(
+		computedHotels,
+		buildHotelCollectionContext(plan, user, "post-compute"),
+	);
 
-	return toPaginatedResult(sortedHotels, input.page, input.limit);
+	return toPaginatedResult(processedHotels, input.page, input.limit);
 }

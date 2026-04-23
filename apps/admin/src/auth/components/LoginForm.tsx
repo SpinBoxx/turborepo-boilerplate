@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { cn } from "@zanadeal/ui";
+import { isAdmin } from "@zanadeal/utils";
 import type { ComponentProps } from "react";
 
 import { useAppForm } from "@/hooks/useAppForm";
@@ -24,9 +25,11 @@ export default function LoginForm({
 		},
 		onSubmit: async ({ value }) => {
 			await signInWithEmail(value, {
-				onSuccess: () => {
+				onSuccess: (user) => {
 					router.invalidate();
-					navigate({ to: redirectTo });
+					navigate({
+						to: isAdmin(user) ? redirectTo : "/login",
+					});
 				},
 			});
 		},

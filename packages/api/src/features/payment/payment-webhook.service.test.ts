@@ -22,6 +22,7 @@ describe("payment-webhook.service", () => {
 			id: "payment_attempt_123",
 			provider: PaymentProvider.STRIPE,
 			providerReference: "cs_test_123",
+			transactionId: null,
 			quote: {
 				id: "quote_123",
 				userId: "user_123",
@@ -38,17 +39,18 @@ describe("payment-webhook.service", () => {
 			providerPaymentStatus: "paid",
 			providerSessionId: "cs_test_123",
 			providerSessionStatus: "complete",
+			transactionId: "pi_123",
 		});
 
 		expect(result).toEqual({ handled: true, hotelEmailStatus: "sent" });
 
 		expect(finalizeStripeCheckoutSession).toHaveBeenCalledWith({
-			logger: undefined,
 			paymentAttempt: expect.objectContaining({
 				id: "payment_attempt_123",
 			}),
 			providerPaymentStatus: "paid",
 			providerSessionStatus: "complete",
+			transactionId: "pi_123",
 			userId: "user_123",
 		});
 	});

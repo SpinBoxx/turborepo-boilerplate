@@ -24,7 +24,40 @@ describe("payment-notification.service", () => {
 				contacts: [{ email: "reservations@hotel.test" }],
 				email: null,
 			}),
-		).toEqual([]);
+		).toEqual(["reservations@hotel.test"]);
+	});
+
+	it("falls back to the first hotel contact when hotel.email is missing", () => {
+		const draft = buildHotelBookingRequestNotificationDraft({
+			completedAt: new Date("2026-04-15T10:00:00.000Z"),
+			paymentAttemptId: "pay_contact_only",
+			quote: {
+				checkInDate: new Date("2026-05-01T00:00:00.000Z"),
+				checkOutDate: new Date("2026-05-03T00:00:00.000Z"),
+				contacts: [],
+				currency: "MGA",
+				customerFirstName: "Ada",
+				customerLastName: "Lovelace",
+				guestCount: 2,
+				hotel: {
+					address: "Beach road",
+					contacts: [{ email: "reservations@hotel.test" }],
+					email: null,
+					name: "Hotel Test",
+				},
+				id: "quote_contact_only",
+				room: {
+					images: [],
+					prices: [],
+					title: "Ocean Suite",
+					type: "SUITE",
+				},
+				specialRequests: null,
+				totalAmount: 125000,
+			} as never,
+		});
+
+		expect(draft?.recipient).toBe("reservations@hotel.test");
 	});
 
 	it("builds stable approve and reject admin URLs", () => {
