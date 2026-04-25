@@ -11,7 +11,14 @@ import {
 	useSidebar,
 } from "@zanadeal/ui";
 import { motion } from "framer-motion";
-import { BedDouble, Home, HotelIcon, ScrollText, Utensils } from "lucide-react";
+import {
+	BedDouble,
+	Home,
+	HotelIcon,
+	ScrollText,
+	Users,
+	Utensils,
+} from "lucide-react";
 import SidebarSignOutButton from "@/components/sidebar/SidebarSignOutButton";
 import Logo from "../Logo";
 import DashboardNavigation, { type Route } from "./DashboardNavigation";
@@ -47,6 +54,12 @@ const dashboardRoutes: Route[] = [
 		title: "Terms",
 		icon: <ScrollText className="size-4" />,
 		link: "/dashboard/terms",
+	},
+	{
+		id: "users",
+		title: "Users",
+		icon: <Users className="size-4" />,
+		link: "/dashboard/users",
 	},
 ];
 

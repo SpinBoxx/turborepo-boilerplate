@@ -74,6 +74,12 @@ export const auth = betterAuth({
 				input: false,
 				type: "string[]",
 			},
+			disabledAt: {
+				required: false,
+				returned: true,
+				input: false,
+				type: "date",
+			},
 		},
 		deleteUser: {
 			enabled: true,

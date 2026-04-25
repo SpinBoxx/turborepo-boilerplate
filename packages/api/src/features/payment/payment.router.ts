@@ -1,4 +1,5 @@
-import { adminProcedure, protectedProcedure } from "../../index";
+import { hotelReviewerProcedure, protectedProcedure } from "../../index";
+import { reviewBookingRequest } from "./booking-review.service";
 import {
 	GetPaymentStatusInputSchema,
 	GetPaymentStatusResultSchema,
@@ -7,9 +8,8 @@ import {
 	StartPaymentInputSchema,
 	StartPaymentResultSchema,
 } from "./payment.schemas";
-import { reviewBookingRequest } from "./booking-review.service";
-import { getPaymentStatus } from "./payment-query.service";
 import { startPayment } from "./payment.service";
+import { getPaymentStatus } from "./payment-query.service";
 
 export const startPaymentRoute = protectedProcedure
 	.route({
@@ -29,18 +29,19 @@ export const startPaymentRoute = protectedProcedure
 	});
 
 export const paymentRouter = {
-	reviewBookingRequest: adminProcedure
+	reviewBookingRequest: hotelReviewerProcedure
 		.route({
 			method: "POST",
 			path: "/bookings/requests/review",
-			summary: "Accept or reject a hotel booking request backed by an authorized payment",
+			summary:
+				"Accept or reject a hotel booking request backed by an authorized payment",
 			tags: ["Payment", "Booking"],
 		})
 		.input(ReviewBookingRequestInputSchema)
 		.output(ReviewBookingRequestResultSchema)
 		.handler(async ({ input, context }) => {
 			if (!context.session?.user) {
-				throw new Error("Authenticated admin session is required");
+				throw new Error("Authenticated hotel reviewer session is required");
 			}
 
 			return await reviewBookingRequest({

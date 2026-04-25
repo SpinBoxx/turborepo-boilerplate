@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-	buildHotelBookingRequestNotificationDraft,
 	buildHotelBookingRequestActionUrls,
+	buildHotelBookingRequestNotificationDraft,
 	getHotelBookingRequestRecipients,
 	shouldNotifyHotelBookingRequestEmail,
 } from "./payment-notification.service";
@@ -60,7 +60,7 @@ describe("payment-notification.service", () => {
 		expect(draft?.recipient).toBe("reservations@hotel.test");
 	});
 
-	it("builds stable approve and reject admin URLs", () => {
+	it("builds stable approve and reject hotel reviewer URLs", () => {
 		expect(
 			buildHotelBookingRequestActionUrls({
 				adminUrl: "https://admin.zanadeal.test",
@@ -69,9 +69,9 @@ describe("payment-notification.service", () => {
 			}),
 		).toEqual({
 			acceptUrl:
-				"https://admin.zanadeal.test/bookings/requests/approve?paymentAttemptId=pay_123&quoteId=quote_123",
+				"https://admin.zanadeal.test/hotel-reviewer/bookings/requests/approve?paymentAttemptId=pay_123&quoteId=quote_123",
 			rejectUrl:
-				"https://admin.zanadeal.test/bookings/requests/reject?paymentAttemptId=pay_123&quoteId=quote_123",
+				"https://admin.zanadeal.test/hotel-reviewer/bookings/requests/reject?paymentAttemptId=pay_123&quoteId=quote_123",
 		});
 	});
 
@@ -89,7 +89,9 @@ describe("payment-notification.service", () => {
 		expect(
 			shouldNotifyHotelBookingRequestEmail({
 				paymentAttempt: {
-					callbackPayload: { hotelBookingRequestEmailSentAt: "2026-04-11T18:00:00.000Z" },
+					callbackPayload: {
+						hotelBookingRequestEmailSentAt: "2026-04-11T18:00:00.000Z",
+					},
 					provider: "STRIPE",
 				},
 				providerSessionStatus: "complete",

@@ -10,7 +10,8 @@ export const getRolesByPriority = (
 
 	const ROLE_PRIORITY = {
 		ADMIN: 0,
-		USER: 1,
+		HOTEL_REVIEWER: 1,
+		USER: 2,
 	};
 
 	return roles.sort((a, b) => ROLE_PRIORITY[a] - ROLE_PRIORITY[b]);

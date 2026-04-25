@@ -35,8 +35,8 @@ export default function BookingRequestReviewPage({
 					decision,
 					paymentAttemptId,
 					...(decision === "ACCEPT"
-						? { validationNote: "Reviewed from admin email link" }
-						: { rejectionReason: "Rejected from admin email link" }),
+						? { validationNote: "Reviewed from hotel reviewer email link" }
+						: { rejectionReason: "Rejected from hotel reviewer email link" }),
 				});
 
 				if (!isActive) {

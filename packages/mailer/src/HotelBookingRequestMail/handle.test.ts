@@ -19,7 +19,8 @@ const validInput = {
 	locale: "en" as const,
 	to: "hotel@example.com",
 	variables: {
-		acceptUrl: "https://admin.zanadeal.test/bookings/requests/approve?paymentAttemptId=pay_123&quoteId=quote_123",
+		acceptUrl:
+			"https://admin.zanadeal.test/hotel-reviewer/bookings/requests/approve?paymentAttemptId=pay_123&quoteId=quote_123",
 		bookingReference: "quote_123",
 		checkInDate: new Date("2026-04-20T00:00:00.000Z"),
 		checkOutDate: new Date("2026-04-22T00:00:00.000Z"),
@@ -28,7 +29,8 @@ const validInput = {
 		guestName: "Jane Doe",
 		hotelName: "Test Hotel",
 		priceLabel: "MGA 125,000",
-		rejectUrl: "https://admin.zanadeal.test/bookings/requests/reject?paymentAttemptId=pay_123&quoteId=quote_123",
+		rejectUrl:
+			"https://admin.zanadeal.test/hotel-reviewer/bookings/requests/reject?paymentAttemptId=pay_123&quoteId=quote_123",
 		roomTitle: "Ocean Suite",
 	},
 };

@@ -1,6 +1,6 @@
 import {
-	HotelBookingRequestMailInputSchema,
 	type HotelBookingRequestMailInput,
+	HotelBookingRequestMailInputSchema,
 	type HotelBookingRequestMailLocale,
 } from "@zanadeal/mailer/contracts";
 import {
@@ -9,9 +9,7 @@ import {
 } from "../../../../db/prisma/generated/enums";
 import { fromStoredMoneyAmount } from "../../money";
 import type { BookingQuoteDB } from "../booking-quote/booking-quote.store";
-import {
-	getCallbackPayloadRecord,
-} from "./payment-json.service";
+import { getCallbackPayloadRecord } from "./payment-json.service";
 
 const HOTEL_REVIEW_DEADLINE_HOURS = 24;
 const DEFAULT_ADMIN_URL = "http://localhost:3000";
@@ -67,11 +65,17 @@ export function buildHotelBookingRequestActionUrls({
 	paymentAttemptId,
 	quoteId,
 }: ActionUrlInput) {
-	const acceptUrl = new URL("/bookings/requests/approve", adminUrl);
+	const acceptUrl = new URL(
+		"/hotel-reviewer/bookings/requests/approve",
+		adminUrl,
+	);
 	acceptUrl.searchParams.set("paymentAttemptId", paymentAttemptId);
 	acceptUrl.searchParams.set("quoteId", quoteId);
 
-	const rejectUrl = new URL("/bookings/requests/reject", adminUrl);
+	const rejectUrl = new URL(
+		"/hotel-reviewer/bookings/requests/reject",
+		adminUrl,
+	);
 	rejectUrl.searchParams.set("paymentAttemptId", paymentAttemptId);
 	rejectUrl.searchParams.set("quoteId", quoteId);
 
@@ -162,9 +166,8 @@ export function buildHotelBookingRequestNotificationDraft({
 export function parseHotelBookingRequestNotificationPayload(
 	payload: unknown,
 ): HotelBookingRequestNotificationPayload | null {
-	const parsed = HotelBookingRequestMailInputSchema.shape.variables.safeParse(
-		payload,
-	);
+	const parsed =
+		HotelBookingRequestMailInputSchema.shape.variables.safeParse(payload);
 
 	return parsed.success ? parsed.data : null;
 }
@@ -204,4 +207,3 @@ function formatPriceLabel({
 		style: "currency",
 	}).format(fromStoredMoneyAmount(amount));
 }
-

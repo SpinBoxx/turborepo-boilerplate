@@ -15,6 +15,12 @@ export default function FindHotelsOnMap({ className }: Props) {
 	const t = useIntlayer("find-hotels-on-map");
 
 	const hotelsQuery = useHotels({
+		filters: {},
+		page: 1,
+		sort: {
+			direction: "asc",
+			field: "name",
+		},
 		skip: 0,
 		limit: 20,
 		take: 20,
