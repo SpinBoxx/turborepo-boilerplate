@@ -1,4 +1,4 @@
-import type { RoomComputed } from "@zanadeal/api/features/room/room.schemas";
+import type { RoomComputed } from "@zanadeal/api/features/room";
 import { Card, cn } from "@zanadeal/ui";
 import { Calendar, Pen } from "lucide-react";
 import type { ComponentProps } from "react";

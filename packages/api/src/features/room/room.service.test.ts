@@ -11,7 +11,11 @@ function createRoom(overrides?: Record<string, unknown>) {
 		hotelId: "hotel_1",
 		type: "STANDARD",
 		title: "Standard Room",
-		description: "A quiet room",
+		descriptionTranslations: {
+			fr: { description: "A quiet room" },
+			en: { description: "A quiet room" },
+			mg: { description: "A quiet room" },
+		},
 		beds: 1,
 		maxGuests: 2,
 		baths: 1,

@@ -12,7 +12,7 @@ export default function RoomDescription({ className, ...props }: Props) {
 			className={cn("line-clamp-3 text-muted-foreground text-sm", className)}
 			{...props}
 		>
-			{room.description}
+			{room.descriptionTranslations.fr.description}
 		</p>
 	);
 }

@@ -1,5 +1,5 @@
 import { cn } from "@zanadeal/ui";
-import { formatPrice } from "@zanadeal/utils";
+import { currency } from "@zanadeal/utils";
 import type { ComponentProps } from "react";
 import { useIntlayer } from "react-intlayer";
 import { useHotelContext } from "./HotelProvider";
@@ -24,7 +24,7 @@ export default function HotelPricePerNight({
 				className={cn("font-bold text-2xl text-primary", priceClassName)}
 				{...props}
 			>
-				{formatPrice(hotel.startingPrice)}
+				{currency(hotel.startingPrice)}
 			</span>
 			<span
 				className={cn(

@@ -27,7 +27,7 @@ export const auth = betterAuth({
 
 			const locale = verifyLocale(localeFromHeaders);
 
-			const mail = await mailService.sendVerifyAccountMail({
+			void mailService.sendVerifyAccountMail({
 				locale,
 				to: user.email,
 				variables: {
@@ -37,12 +37,25 @@ export const auth = betterAuth({
 				},
 				subject: "Veuillez vérifier votre compte",
 			});
-
-			console.log(mail);
 		},
 		expiresIn: 60 * 60, // 1 hour
-
 		sendOnSignUp: false,
+	},
+	rateLimit: {
+		enabled: true,
+		window: 60, // 1 minute window
+		max: 10, // 10 requests max per 1 minute
+		customRules: {
+			"/verify-email": {
+				window: 300, // 5 hours
+				max: 3, // 3 call max
+			},
+			// Reset password
+			"/forget-password": {
+				window: 3600, // 1 hour
+				max: 3, // 3 call max
+			},
+		},
 	},
 	user: {
 		additionalFields: {

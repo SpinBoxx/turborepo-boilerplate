@@ -12,6 +12,10 @@ import {
 	RoomPriceSchema,
 	UpsertRoomPriceInputSchema,
 } from "./room-price.schema";
+import {
+	RoomDescriptionTranslationInputListSchema,
+	RoomDescriptionTranslationSchema,
+} from "./room-description-translation.schemas";
 
 // Zod schema derived from the Prisma RoomType enum
 export const RoomTypeSchema = z.enum(RoomType);
@@ -23,7 +27,7 @@ const RoomComputedSchemaBase = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
 	title: z.string().min(1),
-	description: z.string().min(1),
+	descriptionTranslations: RoomDescriptionTranslationSchema,
 	beds: z.number().int(),
 	maxGuests: z.number().int(),
 	baths: z.number().int(),
@@ -55,7 +59,7 @@ export const UpsertRoomInputSchema = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
 	title: z.string().min(1),
-	description: z.string().min(1),
+	descriptionTranslations: RoomDescriptionTranslationInputListSchema,
 	beds: z.string().or(z.number().int()),
 	maxGuests: z.string().or(z.number().int()),
 	baths: z.string().or(z.number().int()),
@@ -70,7 +74,7 @@ export const UpsertRoomComputedInputSchema = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
 	title: z.string().min(1),
-	description: z.string().min(1),
+	descriptionTranslations: RoomDescriptionTranslationSchema,
 	beds: z.number().int(),
 	maxGuests: z.number().int(),
 	baths: z.number().int(),

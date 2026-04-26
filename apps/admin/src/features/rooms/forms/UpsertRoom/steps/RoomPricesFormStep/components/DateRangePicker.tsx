@@ -1,6 +1,6 @@
 "use client";
 
-import type { CreateRoomPriceInput } from "@zanadeal/api/features/room/room.schemas";
+import type { UpsertRoomPriceInput } from "@zanadeal/api/features/room";
 import {
 	Button,
 	cn,
@@ -18,7 +18,7 @@ interface DateRangePickerProps {
 	dateRange: DateRange | undefined;
 	onDateRangeChange: (range: DateRange | undefined) => void;
 	className?: string;
-	prices: CreateRoomPriceInput[];
+	prices: UpsertRoomPriceInput[];
 }
 
 export default function DateRangePicker({

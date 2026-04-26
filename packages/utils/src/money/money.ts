@@ -1,7 +1,7 @@
 type RangePrice = {
 	price: number;
 	startDate: Date;
-	endDate: Date;
+	endDate: Date | null;
 };
 
 export type NightBreakdownItem = {
@@ -23,7 +23,9 @@ export const getNightlyBreakdown = (
 	for (let i = 0; i < totalNights; i++) {
 		const currentDate = new Date(startDate.getTime() + i * dayInMs);
 		const priceForCurrentDate = prices.find(
-			(price) => currentDate >= price.startDate && currentDate <= price.endDate,
+			(price) =>
+				currentDate >= price.startDate &&
+				(!price.endDate || currentDate <= price.endDate),
 		);
 		breakdown.push({
 			date: currentDate,

@@ -61,7 +61,7 @@ export default function BookingCheckoutProvider({
 			room.prices.map((p) => ({
 				price: p.price,
 				startDate: new Date(p.startDate),
-				endDate: new Date(p.endDate),
+				endDate: p.endDate ? new Date(p.endDate) : null,
 			})),
 			checkIn,
 			checkOut,

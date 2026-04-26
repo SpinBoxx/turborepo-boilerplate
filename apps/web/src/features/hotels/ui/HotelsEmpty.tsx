@@ -1,15 +1,22 @@
+import { cn } from "@zanadeal/ui";
 import { CalendarX2Icon, HotelIcon } from "lucide-react";
 import { useIntlayer } from "react-intlayer";
 
 interface HotelsEmptyProps {
 	hasDates: boolean;
+	className?: string;
 }
 
-export default function HotelsEmpty({ hasDates }: HotelsEmptyProps) {
+export default function HotelsEmpty({ hasDates, className }: HotelsEmptyProps) {
 	const t = useIntlayer("hotels-empty");
 
 	return (
-		<div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-border/60 border-dashed bg-card/70 px-6 py-16 text-center">
+		<div
+			className={cn(
+				"flex flex-col items-center justify-center gap-3 rounded-3xl border border-border/60 border-dashed bg-card/70 px-6 py-16 text-center",
+				className,
+			)}
+		>
 			{hasDates ? (
 				<>
 					<CalendarX2Icon className="size-8 text-muted-foreground" />

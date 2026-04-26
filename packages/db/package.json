@@ -14,7 +14,8 @@
 		"db:generate": "prisma generate",
 		"db:migrate": "prisma migrate dev",
 		"db:studio": "prisma studio",
-		"db:seed": "tsx seeds/index.ts"
+		"db:seed": "tsx seeds/index.ts",
+		"db:migrate:room-description-translations": "tsx scripts/migrate-room-description-translations.ts"
 	},
 	"devDependencies": {
 		"prisma": "^7.1.0",

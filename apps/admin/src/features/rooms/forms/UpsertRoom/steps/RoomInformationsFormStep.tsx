@@ -1,4 +1,5 @@
 import { withForm } from "@/hooks/useAppForm";
+import { TranslationTabsForm } from "@/components/TranslationTabsForm";
 import { RoomType } from "../../../../../../../../packages/db/prisma/generated/enums";
 import { ROOM_UPSERT_DEFAULT_VALUES } from "../upsertRoom.config";
 
@@ -30,12 +31,21 @@ const RoomInformationsFormStep = withForm({
 						/>
 					)}
 				</form.AppField>
-				<form.AppField name="description">
+				<form.AppField name="descriptionTranslations">
 					{(field) => (
-						<field.TextArea
-							label="Description"
-							placeholder="Description de la chambre d'hotel"
-						/>
+						<div className="space-y-2">
+							<p className="font-medium text-sm">Description</p>
+							<TranslationTabsForm
+								fieldKey="description"
+								value={field.state.value}
+								onChange={field.handleChange}
+								inputType="textarea"
+							/>
+							<p className="text-pretty text-muted-foreground text-xs">
+								Markdown accepté : retours à la ligne, **gras**, _italique_,
+								- liste, [lien](https://...).
+							</p>
+						</div>
 					)}
 				</form.AppField>
 				<div className="grid grid-cols-2 gap-5 lg:grid-cols-3">

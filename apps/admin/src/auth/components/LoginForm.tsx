@@ -27,6 +27,7 @@ export default function LoginForm({
 			await signInWithEmail(value, {
 				onSuccess: (user) => {
 					router.invalidate();
+
 					navigate({
 						to: isAdmin(user) ? redirectTo : "/login",
 					});

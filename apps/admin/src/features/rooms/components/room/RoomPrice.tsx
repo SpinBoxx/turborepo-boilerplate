@@ -1,4 +1,5 @@
 import { cn } from "@zanadeal/ui";
+import { currency } from "@zanadeal/utils";
 import { AlertTriangle } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useRoomContext } from "./RoomProvider";
@@ -49,7 +50,7 @@ export default function RoomPrice({ className, ...props }: Props) {
 
 	return (
 		<div className={cn("flex items-baseline gap-1", className)} {...props}>
-			<span className="font-bold text-2xl">{basePrice}€</span>
+			<span className="font-bold text-2xl">{currency(basePrice)}</span>
 			<span className="text-muted-foreground text-sm">/ nuit</span>
 		</div>
 	);

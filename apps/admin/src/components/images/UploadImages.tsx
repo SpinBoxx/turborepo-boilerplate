@@ -10,8 +10,8 @@ import {
 	FileUploadTrigger,
 } from "@zanadeal/ui";
 import { Upload, X } from "lucide-react";
+import type { SetStateAction } from "react";
 import * as React from "react";
-import { type SetStateAction } from "react";
 import { toast } from "sonner";
 
 type UploadOptions = {
@@ -57,7 +57,7 @@ export function UploadImages({ files, setFiles, options }: Props) {
 					<p className="font-medium text-sm">Drag & drop files here</p>
 					<p className="text-muted-foreground text-xs">
 						Or click to browse (max {MAX_FILES} files, up to{" "}
-						{MAX_SIZE / 1024 / 1024}MB each)
+						{MAX_SIZE / 1024 / 1024}MB total size)
 					</p>
 				</div>
 				<FileUploadTrigger asChild>

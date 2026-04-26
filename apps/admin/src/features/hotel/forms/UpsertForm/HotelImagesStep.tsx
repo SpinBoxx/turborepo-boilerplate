@@ -24,6 +24,7 @@ const HotelImagesStep = withForm({
 							}}
 							options={{
 								maxFiles: 7,
+								maxSize: 100 * 1024 * 1024, // 100 MB
 							}}
 						/>
 					)}

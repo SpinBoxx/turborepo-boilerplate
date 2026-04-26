@@ -1,6 +1,7 @@
 import { ORPCError } from "@orpc/server";
 import { BookingStatus } from "../../../../db/prisma/generated/enums";
 import { fromStoredMoneyAmount } from "../../money";
+import { currency as formatCurrency } from "@zanadeal/utils";
 import {
 	getBookingByPaymentAttemptId,
 	updateBookingInDb,
@@ -166,7 +167,7 @@ async function sendBookingDecisionEmail({
 			guestName:
 				`${booking.customerFirstName} ${booking.customerLastName}`.trim(),
 			hotelName: booking.hotel.name,
-			priceLabel: formatPriceLabel({
+			priceLabel: currencyLabelFromStoredAmount({
 				amount: booking.totalAmount,
 				currency: booking.currency,
 			}),
@@ -207,7 +208,7 @@ async function getMailService() {
 	return mailService;
 }
 
-function formatPriceLabel({
+function currencyLabelFromStoredAmount({
 	amount,
 	currency,
 }: {
@@ -215,6 +216,12 @@ function formatPriceLabel({
 	currency: string;
 }): string {
 	const normalizedCurrency = currency.toUpperCase();
+	const humanAmount = fromStoredMoneyAmount(amount);
+
+	if (normalizedCurrency === "MGA") {
+		return formatCurrency(humanAmount);
+	}
+
 	const fractionDigits = normalizedCurrency === "MGA" ? 0 : 2;
 
 	return new Intl.NumberFormat("en-US", {
@@ -222,5 +229,5 @@ function formatPriceLabel({
 		maximumFractionDigits: fractionDigits,
 		minimumFractionDigits: fractionDigits,
 		style: "currency",
-	}).format(fromStoredMoneyAmount(amount));
+	}).format(humanAmount);
 }

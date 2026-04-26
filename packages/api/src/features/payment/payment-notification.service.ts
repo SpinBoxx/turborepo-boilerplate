@@ -8,6 +8,7 @@ import {
 	PaymentProvider,
 } from "../../../../db/prisma/generated/enums";
 import { fromStoredMoneyAmount } from "../../money";
+import { currency as formatCurrency } from "@zanadeal/utils";
 import type { BookingQuoteDB } from "../booking-quote/booking-quote.store";
 import { getCallbackPayloadRecord } from "./payment-json.service";
 
@@ -56,8 +57,15 @@ export function getHotelBookingRequestRecipients(
 	source: HotelRecipientSource,
 ): string[] {
 	const normalizedEmail = source.email?.trim().toLowerCase();
+	if (normalizedEmail) return [normalizedEmail];
 
-	return normalizedEmail ? [normalizedEmail] : [];
+	return Array.from(
+		new Set(
+			source.contacts
+				?.map((contact) => contact.email?.trim().toLowerCase())
+				.filter((email): email is string => Boolean(email)) ?? [],
+		),
+	);
 }
 
 export function buildHotelBookingRequestActionUrls({
@@ -148,7 +156,7 @@ export function buildHotelBookingRequestNotificationDraft({
 			guestCount: quote.guestCount,
 			guestName: `${quote.customerFirstName} ${quote.customerLastName}`.trim(),
 			hotelName: quote.hotel.name,
-			priceLabel: formatPriceLabel({
+			priceLabel: currencyLabelFromStoredAmount({
 				amount: quote.totalAmount,
 				currency: quote.currency,
 			}),
@@ -190,7 +198,7 @@ export function mapNotificationStatusToHotelEmailStatus(
 	return "pending";
 }
 
-function formatPriceLabel({
+function currencyLabelFromStoredAmount({
 	amount,
 	currency,
 }: {
@@ -198,6 +206,12 @@ function formatPriceLabel({
 	currency: string;
 }): string {
 	const normalizedCurrency = currency.toUpperCase();
+	const humanAmount = fromStoredMoneyAmount(amount);
+
+	if (normalizedCurrency === "MGA") {
+		return formatCurrency(humanAmount);
+	}
+
 	const fractionDigits = normalizedCurrency === "MGA" ? 0 : 2;
 
 	return new Intl.NumberFormat("en-US", {
@@ -205,5 +219,5 @@ function formatPriceLabel({
 		maximumFractionDigits: fractionDigits,
 		minimumFractionDigits: fractionDigits,
 		style: "currency",
-	}).format(fromStoredMoneyAmount(amount));
+	}).format(humanAmount);
 }

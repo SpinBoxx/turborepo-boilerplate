@@ -1,5 +1,5 @@
 import type { BookingQuoteComputed } from "@zanadeal/api/features/booking-quote";
-import { formatPrice } from "@zanadeal/utils";
+import { currency } from "@zanadeal/utils";
 import { Info } from "lucide-react";
 import { useIntlayer } from "react-intlayer";
 import {
@@ -34,13 +34,13 @@ export default function CheckoutQuotePriceDetailsCard({
 							count: priceDetails.nights,
 						})}
 					</span>
-					<span>{formatPrice(priceDetails.subtotalAmount)}</span>
+					<span>{currency(priceDetails.subtotalAmount)}</span>
 				</div>
 
 				{priceDetails.hasDiscount ? (
 					<div className="flex items-center justify-between text-sm text-success">
 						<span>{t.discount}</span>
-						<span>-{formatPrice(priceDetails.discountAmount)}</span>
+						<span>{currency(-priceDetails.discountAmount)}</span>
 					</div>
 				) : null}
 
@@ -62,7 +62,7 @@ export default function CheckoutQuotePriceDetailsCard({
 							<TooltipPopup>{t.taxesInfo}</TooltipPopup>
 						</Tooltip>
 					</span>
-					<span>{formatPrice(priceDetails.taxAmount)}</span>
+					<span>{currency(priceDetails.taxAmount)}</span>
 				</div>
 
 				<Separator />
@@ -71,7 +71,7 @@ export default function CheckoutQuotePriceDetailsCard({
 					<span className="font-semibold">{t.totalPrice}</span>
 					<div className="text-right">
 						<span className="font-bold text-lg text-primary">
-							{formatPrice(priceDetails.totalAmount)}
+							{currency(priceDetails.totalAmount)}
 						</span>
 						<p className="text-muted-foreground text-xs uppercase">
 							{t.inclusiveOfTaxes}

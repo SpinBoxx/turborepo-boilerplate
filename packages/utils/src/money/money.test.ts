@@ -154,6 +154,19 @@ describe("getNightlyBreakdown", () => {
 		// April 8=100, 9=100, 10=0 (gap), 11=300, 12=300
 		expect(breakdown.map((b) => b.price)).toEqual([100, 100, 0, 300, 300]);
 	});
+
+	it("uses open-ended price ranges after their start date", () => {
+		const prices = [
+			{ price: 100, startDate: d("2026-04-08"), endDate: null },
+		];
+		const breakdown = getNightlyBreakdown(
+			prices,
+			d("2026-04-08"),
+			d("2026-04-11"),
+		);
+
+		expect(breakdown.map((b) => b.price)).toEqual([100, 100, 100]);
+	});
 });
 
 describe("getTotalPriceByRange", () => {

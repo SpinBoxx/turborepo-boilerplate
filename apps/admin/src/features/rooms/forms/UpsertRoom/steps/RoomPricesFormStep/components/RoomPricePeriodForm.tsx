@@ -1,19 +1,20 @@
 "use client";
 
-import type { CreateRoomPriceInput } from "@zanadeal/api/features/room/room.schemas";
-import { Button, cn, Input, Label } from "@zanadeal/ui";
+import type { UpsertRoomPriceInput } from "@zanadeal/api/features/room";
+import { Button, cn } from "@zanadeal/ui";
 import { Pen, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
+import PriceInput from "@/features/currency/PriceInput";
 import DateRangePicker from "./DateRangePicker";
 
 interface RoomPricePeriodFormProps {
-	onAddPeriod: (period: CreateRoomPriceInput) => void;
-	onEditPeriod?: (period: CreateRoomPriceInput) => void;
-	editingPeriod?: CreateRoomPriceInput | null;
+	onAddPeriod: (period: UpsertRoomPriceInput) => void;
+	onEditPeriod?: (period: UpsertRoomPriceInput) => void;
+	editingPeriod?: UpsertRoomPriceInput | null;
 	onCancelEdit?: () => void;
 	className?: string;
-	prices: CreateRoomPriceInput[];
+	prices: UpsertRoomPriceInput[];
 }
 
 export default function RoomPricePeriodForm({
@@ -25,8 +26,8 @@ export default function RoomPricePeriodForm({
 	className,
 }: RoomPricePeriodFormProps) {
 	const [dateRange, setDateRange] = useState<DateRange | undefined>();
-	const [price, setPrice] = useState<string>("");
-	const [promoPrice, setPromoPrice] = useState<string>("");
+	const [price, setPrice] = useState<number | null>(null);
+	const [promoPrice, setPromoPrice] = useState<number | null>(null);
 
 	const isEditing = !!editingPeriod;
 
@@ -36,10 +37,8 @@ export default function RoomPricePeriodForm({
 				from: editingPeriod.startDate,
 				to: editingPeriod.endDate ?? undefined,
 			});
-			setPrice(String(editingPeriod.price));
-			setPromoPrice(
-				editingPeriod.promoPrice > 0 ? String(editingPeriod.promoPrice) : "",
-			);
+			setPrice(editingPeriod.price);
+			setPromoPrice(editingPeriod.promoPrice > 0 ? editingPeriod.promoPrice : null);
 		}
 	}, [editingPeriod]);
 
@@ -48,9 +47,9 @@ export default function RoomPricePeriodForm({
 			return;
 		}
 
-		const periodData: CreateRoomPriceInput = {
-			price: Number.parseFloat(price),
-			promoPrice: promoPrice ? Number.parseFloat(promoPrice) : 0,
+		const periodData: UpsertRoomPriceInput = {
+			price,
+			promoPrice: promoPrice ?? 0,
 			startDate: dateRange.from,
 			endDate: dateRange.to ?? null,
 		};
@@ -63,18 +62,20 @@ export default function RoomPricePeriodForm({
 
 		// Reset form
 		setDateRange(undefined);
-		setPrice("");
-		setPromoPrice("");
+		setPrice(null);
+		setPromoPrice(null);
 	};
 
 	const handleCancel = () => {
 		setDateRange(undefined);
-		setPrice("");
-		setPromoPrice("");
+		setPrice(null);
+		setPromoPrice(null);
 		onCancelEdit?.();
 	};
 
-	const isFormValid = dateRange?.from && price && Number.parseFloat(price) > 0;
+	const hasValidPromoPrice =
+		promoPrice === null || (promoPrice >= 0 && price !== null && promoPrice < price);
+	const isFormValid = !!dateRange?.from && price !== null && price > 0 && hasValidPromoPrice;
 
 	return (
 		<div
@@ -96,48 +97,21 @@ export default function RoomPricePeriodForm({
 				prices={prices}
 			/>
 
-			<div className="grid grid-cols-2 gap-4">
-				<div className="space-y-1.5">
-					<Label htmlFor="price" className="text-xs">
-						Prix (€)
-					</Label>
-					<div className="relative">
-						<Input
-							id="price"
-							type="number"
-							min="0"
-							step="0.01"
-							placeholder="250"
-							value={price}
-							onChange={(e) => setPrice(e.target.value)}
-							className="pr-8"
-						/>
-						<span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground text-sm">
-							€
-						</span>
-					</div>
-				</div>
+			<div className="grid gap-4 md:grid-cols-2">
+				<PriceInput
+					id="price"
+					label="Prix"
+					value={price}
+					onValueChange={setPrice}
+				/>
 
-				<div className="space-y-1.5">
-					<Label htmlFor="promoPrice" className="text-xs">
-						Prix promo (€)
-					</Label>
-					<div className="relative">
-						<Input
-							id="promoPrice"
-							type="number"
-							min="0"
-							step="0.01"
-							placeholder="200"
-							value={promoPrice}
-							onChange={(e) => setPromoPrice(e.target.value)}
-							className="pr-8"
-						/>
-						<span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground text-sm">
-							€
-						</span>
-					</div>
-				</div>
+				<PriceInput
+					id="promoPrice"
+					label="Prix promo"
+					value={promoPrice}
+					onValueChange={setPromoPrice}
+					aria-invalid={!hasValidPromoPrice}
+				/>
 			</div>
 
 			<div className="flex gap-2">

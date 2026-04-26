@@ -1,4 +1,4 @@
-import { formatPrice } from "@zanadeal/utils";
+import { currency } from "@zanadeal/utils";
 import { date as formatDate } from "intlayer";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -17,8 +17,6 @@ export default function NightlyBreakdown() {
 	const [open, setOpen] = useState(false);
 
 	const { breakdown } = pricePreview;
-	console.log(breakdown);
-
 	const firstPrice = breakdown[0]?.price;
 	const hasMixedPrices =
 		breakdown.length > 1 && breakdown.some((n) => n.price !== firstPrice);
@@ -50,7 +48,7 @@ export default function NightlyBreakdown() {
 								})}
 							</span>
 							<span className="font-medium text-foreground">
-								{formatPrice(item.price)}
+								{currency(item.price)}
 							</span>
 						</div>
 					))}

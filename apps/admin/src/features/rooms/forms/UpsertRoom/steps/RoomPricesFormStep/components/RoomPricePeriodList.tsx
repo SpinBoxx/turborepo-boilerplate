@@ -1,9 +1,9 @@
-import type { CreateRoomPriceInput } from "@zanadeal/api/features/room/room.schemas";
+import type { UpsertRoomPriceInput } from "@zanadeal/api/features/room";
 import { cn } from "@zanadeal/ui";
 import RoomPricePeriodItem from "./RoomPricePeriodItem";
 
 interface RoomPricePeriodListProps {
-	periods: CreateRoomPriceInput[];
+	periods: UpsertRoomPriceInput[];
 	onEditPeriod?: (index: number) => void;
 	onDeletePeriod?: (index: number) => void;
 	className?: string;

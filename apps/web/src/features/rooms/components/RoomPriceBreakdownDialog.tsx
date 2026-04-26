@@ -1,5 +1,5 @@
 import {
-	formatPrice,
+	currency,
 	getNightlyBreakdown,
 	type NightBreakdownItem,
 	stringToDate,
@@ -81,7 +81,7 @@ export default function RoomPriceBreakdownDialog({ children }: Props) {
 										locale,
 									})}
 								</span>
-								<span className="font-medium">{formatPrice(item.price)}</span>
+								<span className="font-medium">{currency(item.price)}</span>
 							</div>
 						))}
 
@@ -90,7 +90,7 @@ export default function RoomPriceBreakdownDialog({ children }: Props) {
 						<div className="flex items-center justify-between px-1 pt-1.5">
 							<span className="font-semibold">{t.total.value}</span>
 							<span className="font-bold text-lg text-primary">
-								{formatPrice(totalPrice)}
+								{currency(totalPrice)}
 							</span>
 						</div>
 					</div>

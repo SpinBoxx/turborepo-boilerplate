@@ -62,6 +62,17 @@ const computeRoomPrices = (prices: UpsertRoomInput["prices"] | undefined) => {
 	}));
 };
 
+const computeRoomDescriptionTranslations = (
+	descriptionTranslations: UpsertRoomInput["descriptionTranslations"],
+): UpsertRoomComputedInput["descriptionTranslations"] => {
+	return Object.fromEntries(
+		descriptionTranslations.map(({ locale, ...translation }) => [
+			locale,
+			translation,
+		]),
+	) as UpsertRoomComputedInput["descriptionTranslations"];
+};
+
 // Create: tous les champs requis → retour complet
 export async function computeUpsertRoomInput(
 	input: UpsertRoomInput,
@@ -77,11 +88,17 @@ export async function computeUpsertRoomInput(
 ): Promise<
 	UpsertRoomComputedInput | (Partial<UpsertRoomComputedInput> & { id: string })
 > {
-	const { images, ...roomData } = input;
+	const { descriptionTranslations, images, ...roomData } = input;
 
 	const result: Record<string, unknown> = {
 		...computedStringToNumbers(roomData),
 	};
+
+	if (descriptionTranslations !== undefined) {
+		result.descriptionTranslations = computeRoomDescriptionTranslations(
+			descriptionTranslations,
+		);
+	}
 
 	if (roomData.prices !== undefined) {
 		result.prices = computeRoomPrices(roomData.prices);

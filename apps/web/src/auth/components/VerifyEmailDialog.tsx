@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon, MailIcon } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useIntlayer } from "react-intlayer";
 import {
 	buildEmailVerifiedCallbackUrl,
@@ -15,9 +15,11 @@ import {
 	DialogPopup,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { useStoredCooldown } from "@/hooks/useStoredCooldown";
 import { useAuth } from "../providers/AuthProvider";
 
 const RESEND_COOLDOWN = 60;
+const RESEND_COOLDOWN_STORAGE_PREFIX = "zanadeal:verify-email:resend-cooldown";
 
 function maskEmail(email: string): string {
 	const [local, domain] = email.split("@");
@@ -35,43 +37,29 @@ export default function VerifyEmailDialog({
 }) {
 	const content = useIntlayer("verify-email-dialog");
 	const navigate = useNavigate();
-	const [cooldown, setCooldown] = useState(0);
 	const [isResending, setIsResending] = useState(false);
-	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const { sendVerificationEmail } = useAuth();
 	const safeRedirectTo = sanitizeRedirectTo(redirectTo);
-
-	const startCooldown = useCallback(() => {
-		setCooldown(RESEND_COOLDOWN);
-		timerRef.current = setInterval(() => {
-			setCooldown((prev) => {
-				if (prev <= 1) {
-					if (timerRef.current) clearInterval(timerRef.current);
-					return 0;
-				}
-				return prev - 1;
-			});
-		}, 1000);
-	}, []);
-
-	useEffect(() => {
-		return () => {
-			if (timerRef.current) clearInterval(timerRef.current);
-		};
-	}, []);
+	const { remainingSeconds, isCoolingDown, startCooldown } = useStoredCooldown({
+		storageKey: `${RESEND_COOLDOWN_STORAGE_PREFIX}:${email.toLowerCase()}`,
+		durationSeconds: RESEND_COOLDOWN,
+	});
 
 	const handleResend = async () => {
-		if (cooldown > 0 || isResending) return;
+		if (isCoolingDown || isResending) return;
 		setIsResending(true);
-		await sendVerificationEmail({
-			email,
-			callbackURL: buildEmailVerifiedCallbackUrl(
-				window.location.origin,
-				safeRedirectTo,
-			),
-		});
-		setIsResending(false);
-		startCooldown();
+		try {
+			await sendVerificationEmail({
+				email,
+				callbackURL: buildEmailVerifiedCallbackUrl(
+					window.location.origin,
+					safeRedirectTo,
+				),
+			});
+			startCooldown();
+		} finally {
+			setIsResending(false);
+		}
 	};
 
 	return (
@@ -112,10 +100,10 @@ export default function VerifyEmailDialog({
 								onClick={handleResend}
 								variant="outline"
 								className="w-full"
-								disabled={cooldown > 0 || isResending}
+								disabled={isCoolingDown || isResending}
 							>
-								{cooldown > 0
-									? `${content.resendIn.value} ${cooldown}${content.seconds.value}`
+								{isCoolingDown
+									? `${content.resendIn.value} ${remainingSeconds}${content.seconds.value}`
 									: content.resendEmail.value}
 							</Button>
 						</div>

@@ -1,5 +1,5 @@
 import { useStore } from "@tanstack/react-form";
-import type { CreateRoomPriceInput } from "@zanadeal/api/features/room/room.schemas";
+import type { UpsertRoomPriceInput } from "@zanadeal/api/features/room";
 import { useState } from "react";
 import { withForm } from "@/hooks/useAppForm";
 import { ROOM_UPSERT_DEFAULT_VALUES } from "../../upsertRoom.config";
@@ -17,14 +17,14 @@ const RoomPricesFormStep = withForm({
 		const editingPeriod =
 			editingIndex !== null ? (prices[editingIndex] ?? null) : null;
 
-		const handleAddPeriod = (period: CreateRoomPriceInput) => {
+		const handleAddPeriod = (period: UpsertRoomPriceInput) => {
 			form.setFieldValue("prices", [
 				...cleanPricesData(prices),
 				cleanPriceData(period),
 			]);
 		};
 
-		const handleEditPeriod = (period: CreateRoomPriceInput) => {
+		const handleEditPeriod = (period: UpsertRoomPriceInput) => {
 			if (editingIndex === null) return;
 			const updatedPrices = [...prices];
 			updatedPrices[editingIndex] = cleanPriceData(period);

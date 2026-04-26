@@ -6,7 +6,7 @@ export const RoomPriceSchema = z.object({
 	price: z.number(),
 	promoPrice: z.number(),
 	startDate: z.date(),
-	endDate: z.date(),
+	endDate: z.date().nullable(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
@@ -15,7 +15,7 @@ export const UpsertRoomPriceInputSchema = z.object({
 	price: z.number(),
 	promoPrice: z.number(),
 	startDate: z.date(),
-	endDate: z.date(),
+	endDate: z.date().nullable(),
 });
 
 export type RoomPrice = z.infer<typeof RoomPriceSchema>;

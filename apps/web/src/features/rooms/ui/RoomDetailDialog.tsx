@@ -46,7 +46,7 @@ export default function RoomDetailDialog({ children }: Props) {
 	return (
 		<Dialog modal>
 			<DialogTrigger render={children} />
-			<DialogPopup showCloseButton={false}>
+			<DialogPopup showCloseButton={false} className={"md:max-w-xl"}>
 				<div className="flex min-h-0 flex-1 flex-col gap-3.5 space-y-1 p-4 pb-6">
 					<DialogClose
 						className={

@@ -1,4 +1,4 @@
-import { formatPrice } from "@zanadeal/utils";
+import { currency } from "@zanadeal/utils";
 import { useIntlayer } from "react-intlayer";
 import { Slider } from "@/components/ui/slider";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -22,7 +22,7 @@ export default function HotelPriceSlideRange() {
 					{t.priceRange.value}
 				</p>
 				<p className="font-medium text-sm">
-					{formatPrice(priceRange.min)} - {formatPrice(priceRange.max)}
+					{currency(priceRange.min)} - {currency(priceRange.max)}
 				</p>
 			</div>
 			<Slider
@@ -43,13 +43,13 @@ export default function HotelPriceSlideRange() {
 					<p className="text-muted-foreground text-xs uppercase">
 						{t.min.value}
 					</p>
-					<p className="mt-1 font-medium">{formatPrice(priceRange.min)}</p>
+					<p className="mt-1 font-medium">{currency(priceRange.min)}</p>
 				</div>
 				<div className="rounded-xl border bg-muted/40 px-3 py-2">
 					<p className="text-muted-foreground text-xs uppercase">
 						{t.max.value}
 					</p>
-					<p className="mt-1 font-medium">{formatPrice(priceRange.max)}</p>
+					<p className="mt-1 font-medium">{currency(priceRange.max)}</p>
 				</div>
 			</div>
 		</section>

@@ -1,5 +1,5 @@
 import {
-	formatPrice,
+	currency,
 	getTotalPriceByRange,
 	stringToDate,
 } from "@zanadeal/utils";
@@ -58,7 +58,7 @@ export default function RoomTotalPrice({
 						<span
 							className={cn("font-bold text-2xl text-primary", priceClassName)}
 						>
-							{formatPrice(totalPrice)}
+							{currency(totalPrice)}
 						</span>
 						<Info className="size-4.5" />
 					</div>

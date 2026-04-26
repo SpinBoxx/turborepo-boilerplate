@@ -14,7 +14,7 @@ function RouteComponent() {
 	useDocumentTitle(t.login.value);
 	return (
 		<div>
-			<AuthDialog redirectTo={redirectTo} />
+			<AuthDialog redirectTo={redirectTo} open />
 		</div>
 	);
 }

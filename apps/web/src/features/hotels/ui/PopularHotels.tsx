@@ -5,6 +5,7 @@ import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import { useHotels } from "../hotel.queries";
 import HotelsCardList from "./HotelsCardList";
+import HotelsEmpty from "./HotelsEmpty";
 import { DEFAULT_HOTELS_PAGE_SEARCH } from "./HotelToolbar/hotel-toolbar.options";
 
 interface Props {
@@ -44,7 +45,9 @@ export default function PopularHotels({ className }: Props) {
 
 			{hotels.isLoading && !hotels.data ? (
 				<HotelsCardList.Skeleton className="mt-4" />
-			) : hotels.data ? (
+			) : hotels.data && hotels.data.total === 0 ? (
+				<HotelsEmpty className="mt-4" hasDates={false} />
+			) : hotels.data && hotels.data.total > 0 ? (
 				<HotelsCardList hotels={hotels.data.items} className="mt-4" />
 			) : null}
 		</div>
