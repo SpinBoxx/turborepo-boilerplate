@@ -5,7 +5,9 @@ import {
 } from "../schemas/room.schemas";
 import { computeUpsertRoomInput } from "./upsert-compute";
 
-function createRoomInput(overrides?: Partial<UpsertRoomInput>): UpsertRoomInput {
+function createRoomInput(
+	overrides?: Partial<UpsertRoomInput>,
+): UpsertRoomInput {
 	return {
 		hotelId: "hotel_1",
 		type: "STANDARD",

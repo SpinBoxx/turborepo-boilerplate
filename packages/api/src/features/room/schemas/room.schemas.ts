@@ -9,13 +9,13 @@ import {
 	RoomImageSchema,
 } from "../../room-image/room-image.schemas";
 import {
-	RoomPriceSchema,
-	UpsertRoomPriceInputSchema,
-} from "./room-price.schema";
-import {
 	RoomDescriptionTranslationInputListSchema,
 	RoomDescriptionTranslationSchema,
 } from "./room-description-translation.schemas";
+import {
+	RoomPriceSchema,
+	UpsertRoomPriceInputSchema,
+} from "./room-price.schema";
 
 // Zod schema derived from the Prisma RoomType enum
 export const RoomTypeSchema = z.enum(RoomType);

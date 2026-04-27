@@ -30,7 +30,9 @@ export default function MarkdownDescription({
 						<a
 							{...anchorProps}
 							rel="noopener noreferrer"
-							target={anchorProps.href?.startsWith("http") ? "_blank" : undefined}
+							target={
+								anchorProps.href?.startsWith("http") ? "_blank" : undefined
+							}
 						/>
 					),
 				}}

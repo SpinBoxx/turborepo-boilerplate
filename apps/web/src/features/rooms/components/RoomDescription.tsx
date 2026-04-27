@@ -13,7 +13,8 @@ export default function RoomDescription({
 	const { room } = useRoomContext();
 	const { locale } = useIntlayerContext();
 	const description =
-		children ?? getLocalizedRoomDescription(room.descriptionTranslations, locale);
+		children ??
+		getLocalizedRoomDescription(room.descriptionTranslations, locale);
 
 	return (
 		<MarkdownDescription

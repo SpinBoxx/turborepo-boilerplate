@@ -29,7 +29,9 @@ export default function PopularHotels({ className }: Props) {
 			<div className="flex items-end justify-between">
 				<div>
 					<h3 className="font-semibold text-xl md:text-2xl">{t.title.value}</h3>
-					<p className="mt-1 text-muted-foreground">{t.description.value}</p>
+					<p className="mt-1 text-balance text-muted-foreground">
+						{t.description.value}
+					</p>
 				</div>
 
 				<Link to="/hotels" search={DEFAULT_HOTELS_PAGE_SEARCH}>

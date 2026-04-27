@@ -1,14 +1,15 @@
+import { LOCALES } from "@zanadeal/api/constants";
 import type {
 	RoomAdminComputed,
 	UpsertRoomInput,
 } from "@zanadeal/api/features/room";
-import { LOCALES } from "@zanadeal/api/constants";
 
-const createEmptyDescriptionTranslations = (): UpsertRoomInput["descriptionTranslations"] =>
-	LOCALES.map((locale) => ({
-		locale,
-		description: "",
-	}));
+const createEmptyDescriptionTranslations =
+	(): UpsertRoomInput["descriptionTranslations"] =>
+		LOCALES.map((locale) => ({
+			locale,
+			description: "",
+		}));
 
 export const ROOM_UPSERT_DEFAULT_VALUES: UpsertRoomInput = {
 	amenityIds: [],

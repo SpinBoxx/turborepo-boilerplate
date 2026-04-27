@@ -19,7 +19,9 @@ export const RoomDescriptionTranslationInputListSchema = z
 	.array(RoomDescriptionTranslationInputSchema)
 	.length(LOCALES.length)
 	.superRefine((translations, context) => {
-		const locales = new Set(translations.map((translation) => translation.locale));
+		const locales = new Set(
+			translations.map((translation) => translation.locale),
+		);
 
 		for (const locale of LOCALES) {
 			if (!locales.has(locale)) {

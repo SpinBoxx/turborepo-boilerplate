@@ -17,6 +17,9 @@ import { useHotelToolbarStore } from "./hotel-toolbar.store";
 
 export default function HotelFiltersDrawer() {
 	const drawerOpen = useHotelToolbarStore((state) => state.drawerOpen);
+	const drawerDismissDisabled = useHotelToolbarStore(
+		(state) => state.drawerDismissDisabled,
+	);
 	const setDrawerOpen = useHotelToolbarStore((state) => state.setDrawerOpen);
 	const applyDraft = useHotelToolbarStore((state) => state.applyDraft);
 	const reset = useHotelToolbarStore((state) => state.reset);
@@ -29,6 +32,7 @@ export default function HotelFiltersDrawer() {
 	const t = useIntlayer("hotel-filters-drawer");
 	return (
 		<Drawer
+			disablePointerDismissal={drawerDismissDisabled}
 			open={drawerOpen}
 			onOpenChange={setDrawerOpen}
 			position={isMobile ? "bottom" : "right"}

@@ -1,5 +1,5 @@
-import { withForm } from "@/hooks/useAppForm";
 import { TranslationTabsForm } from "@/components/TranslationTabsForm";
+import { withForm } from "@/hooks/useAppForm";
 import { RoomType } from "../../../../../../../../packages/db/prisma/generated/enums";
 import { ROOM_UPSERT_DEFAULT_VALUES } from "../upsertRoom.config";
 
@@ -42,8 +42,8 @@ const RoomInformationsFormStep = withForm({
 								inputType="textarea"
 							/>
 							<p className="text-pretty text-muted-foreground text-xs">
-								Markdown accepté : retours à la ligne, **gras**, _italique_,
-								- liste, [lien](https://...).
+								Markdown accepté : retours à la ligne, **gras**, _italique_, -
+								liste, [lien](https://...).
 							</p>
 						</div>
 					)}

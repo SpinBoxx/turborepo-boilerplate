@@ -12,7 +12,9 @@ const rooms = [
 	{ id: "room_3", availableCapacity: 1, price: 150 },
 ] as never;
 
-function createContext(overrides?: Partial<RoomCollectionContext>): RoomCollectionContext {
+function createContext(
+	overrides?: Partial<RoomCollectionContext>,
+): RoomCollectionContext {
 	return {
 		mode: "detail",
 		viewerRole: "USER" as never,

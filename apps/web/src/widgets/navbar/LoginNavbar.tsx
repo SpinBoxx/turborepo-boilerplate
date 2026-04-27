@@ -2,9 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { Home } from "lucide-react";
 import { useIntlayer } from "react-intlayer";
 import Logo from "../../components/Logo";
-import ToggleThemeButton from "../../components/theme/ToggleThemeButton";
 import { Button } from "../../components/ui/button";
-import LocalePopover from "../../features/locale/ui/LocalePopover";
+import NavbarPreferencesMenu from "./NavbarPreferencesMenu";
 
 export default function LoginNavbar() {
 	const t = useIntlayer("navbar");
@@ -13,9 +12,8 @@ export default function LoginNavbar() {
 			<Link to="/">
 				<Logo />
 			</Link>
-			<div className="space-x-2">
-				<LocalePopover />
-				<ToggleThemeButton />
+			<div className="flex items-center gap-2">
+				<NavbarPreferencesMenu />
 				<Link to="/">
 					<Button variant={"outline"}>
 						<Home />

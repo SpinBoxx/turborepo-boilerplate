@@ -1,4 +1,5 @@
 import { currency } from "@zanadeal/utils";
+import { useCallback, useEffect } from "react";
 import { useIntlayer } from "react-intlayer";
 import { Slider } from "@/components/ui/slider";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -15,6 +16,26 @@ export default function HotelPriceSlideRange() {
 	const setPriceRange = useHotelToolbarStore((state) =>
 		isMobile ? state.setDraftPriceRange : state.setPriceRange,
 	);
+	const setDrawerDismissDisabled = useHotelToolbarStore(
+		(state) => state.setDrawerDismissDisabled,
+	);
+
+	const disableDrawerDismiss = useCallback(() => {
+		if (isMobile) {
+			setDrawerDismissDisabled(true);
+		}
+	}, [isMobile, setDrawerDismissDisabled]);
+
+	const enableDrawerDismiss = useCallback(() => {
+		setDrawerDismissDisabled(false);
+	}, [setDrawerDismissDisabled]);
+
+	useEffect(() => {
+		return () => {
+			setDrawerDismissDisabled(false);
+		};
+	}, [setDrawerDismissDisabled]);
+
 	return (
 		<section className="space-y-4">
 			<div className="flex items-center justify-between gap-3">
@@ -26,10 +47,15 @@ export default function HotelPriceSlideRange() {
 				</p>
 			</div>
 			<Slider
+				data-base-ui-swipe-ignore=""
 				max={HOTEL_PRICE_RANGE_LIMITS.max}
 				min={HOTEL_PRICE_RANGE_LIMITS.min}
 				step={10}
 				value={[priceRange.min, priceRange.max]}
+				onPointerCancel={enableDrawerDismiss}
+				onPointerDown={disableDrawerDismiss}
+				onPointerUp={enableDrawerDismiss}
+				onValueCommitted={enableDrawerDismiss}
 				onValueChange={(value) => {
 					if (!Array.isArray(value) || value.length < 2) {
 						return;
