@@ -20,12 +20,15 @@ import { Route as CompanyContactRouteImport } from './routes/_company/contact'
 import { Route as CompanyAboutRouteImport } from './routes/_company/about'
 import { Route as CheckoutCheckoutRouteRouteImport } from './routes/_checkout/checkout/route'
 import { Route as AuthLoginRouteRouteImport } from './routes/_auth/login/route'
+import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as CheckoutReviewCartCheckoutIndexRouteImport } from './routes/_checkout/review-cart-checkout/index'
 import { Route as AuthVerifyEmailIndexRouteImport } from './routes/_auth/verify-email/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as AuthEmailVerifiedIndexRouteImport } from './routes/_auth/email-verified/index'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppHotelsIndexRouteImport } from './routes/_app/hotels/index'
 import { Route as AppHotelIdIndexRouteImport } from './routes/_app/$hotelId/index'
+import { Route as AppSettingsPersonalInformationRouteImport } from './routes/_app/settings/personal-information'
 import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId/rooms/index'
 
 const LegalRouteRoute = LegalRouteRouteImport.update({
@@ -80,6 +83,11 @@ const AuthLoginRouteRoute = AuthLoginRouteRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const CheckoutReviewCartCheckoutIndexRoute =
   CheckoutReviewCartCheckoutIndexRouteImport.update({
     id: '/review-cart-checkout/',
@@ -101,6 +109,11 @@ const AuthEmailVerifiedIndexRoute = AuthEmailVerifiedIndexRouteImport.update({
   path: '/email-verified/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
 const AppHotelsIndexRoute = AppHotelsIndexRouteImport.update({
   id: '/hotels/',
   path: '/hotels/',
@@ -111,6 +124,12 @@ const AppHotelIdIndexRoute = AppHotelIdIndexRouteImport.update({
   path: '/$hotelId/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppSettingsPersonalInformationRoute =
+  AppSettingsPersonalInformationRouteImport.update({
+    id: '/personal-information',
+    path: '/personal-information',
+    getParentRoute: () => AppSettingsRouteRoute,
+  } as any)
 const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
   id: '/$hotelId/rooms/',
   path: '/$hotelId/rooms/',
@@ -119,14 +138,17 @@ const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/settings': typeof AppSettingsRouteRouteWithChildren
   '/login': typeof AuthLoginRouteRouteWithChildren
   '/checkout': typeof CheckoutCheckoutRouteRoute
   '/about': typeof CompanyAboutRoute
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/terms-of-service': typeof LegalTermsOfServiceRoute
+  '/settings/personal-information': typeof AppSettingsPersonalInformationRoute
   '/$hotelId/': typeof AppHotelIdIndexRoute
   '/hotels/': typeof AppHotelsIndexRoute
+  '/settings/': typeof AppSettingsIndexRoute
   '/email-verified/': typeof AuthEmailVerifiedIndexRoute
   '/login/': typeof AuthLoginIndexRoute
   '/verify-email/': typeof AuthVerifyEmailIndexRoute
@@ -140,8 +162,10 @@ export interface FileRoutesByTo {
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/terms-of-service': typeof LegalTermsOfServiceRoute
+  '/settings/personal-information': typeof AppSettingsPersonalInformationRoute
   '/$hotelId': typeof AppHotelIdIndexRoute
   '/hotels': typeof AppHotelsIndexRoute
+  '/settings': typeof AppSettingsIndexRoute
   '/email-verified': typeof AuthEmailVerifiedIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/verify-email': typeof AuthVerifyEmailIndexRoute
@@ -154,6 +178,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_checkout': typeof CheckoutRouteRouteWithChildren
   '/_legal': typeof LegalRouteRouteWithChildren
+  '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRouteRouteWithChildren
   '/_checkout/checkout': typeof CheckoutCheckoutRouteRoute
   '/_company/about': typeof CompanyAboutRoute
@@ -161,8 +186,10 @@ export interface FileRoutesById {
   '/_legal/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/_legal/terms-of-service': typeof LegalTermsOfServiceRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/settings/personal-information': typeof AppSettingsPersonalInformationRoute
   '/_app/$hotelId/': typeof AppHotelIdIndexRoute
   '/_app/hotels/': typeof AppHotelsIndexRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
   '/_auth/email-verified/': typeof AuthEmailVerifiedIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/verify-email/': typeof AuthVerifyEmailIndexRoute
@@ -173,14 +200,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/settings'
     | '/login'
     | '/checkout'
     | '/about'
     | '/contact'
     | '/terms-and-conditions-of-sale'
     | '/terms-of-service'
+    | '/settings/personal-information'
     | '/$hotelId/'
     | '/hotels/'
+    | '/settings/'
     | '/email-verified/'
     | '/login/'
     | '/verify-email/'
@@ -194,8 +224,10 @@ export interface FileRouteTypes {
     | '/contact'
     | '/terms-and-conditions-of-sale'
     | '/terms-of-service'
+    | '/settings/personal-information'
     | '/$hotelId'
     | '/hotels'
+    | '/settings'
     | '/email-verified'
     | '/login'
     | '/verify-email'
@@ -207,6 +239,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_checkout'
     | '/_legal'
+    | '/_app/settings'
     | '/_auth/login'
     | '/_checkout/checkout'
     | '/_company/about'
@@ -214,8 +247,10 @@ export interface FileRouteTypes {
     | '/_legal/terms-and-conditions-of-sale'
     | '/_legal/terms-of-service'
     | '/_app/'
+    | '/_app/settings/personal-information'
     | '/_app/$hotelId/'
     | '/_app/hotels/'
+    | '/_app/settings/'
     | '/_auth/email-verified/'
     | '/_auth/login/'
     | '/_auth/verify-email/'
@@ -311,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_checkout/review-cart-checkout/': {
       id: '/_checkout/review-cart-checkout/'
       path: '/review-cart-checkout'
@@ -339,6 +381,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthEmailVerifiedIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
     '/_app/hotels/': {
       id: '/_app/hotels/'
       path: '/hotels'
@@ -353,6 +402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHotelIdIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/settings/personal-information': {
+      id: '/_app/settings/personal-information'
+      path: '/personal-information'
+      fullPath: '/settings/personal-information'
+      preLoaderRoute: typeof AppSettingsPersonalInformationRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
     '/_app/$hotelId/rooms/': {
       id: '/_app/$hotelId/rooms/'
       path: '/$hotelId/rooms'
@@ -363,7 +419,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppSettingsRouteRouteChildren {
+  AppSettingsPersonalInformationRoute: typeof AppSettingsPersonalInformationRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+}
+
+const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
+  AppSettingsPersonalInformationRoute: AppSettingsPersonalInformationRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+}
+
+const AppSettingsRouteRouteWithChildren =
+  AppSettingsRouteRoute._addFileChildren(AppSettingsRouteRouteChildren)
+
 interface AppRouteRouteChildren {
+  AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
   AppHotelIdIndexRoute: typeof AppHotelIdIndexRoute
   AppHotelsIndexRoute: typeof AppHotelsIndexRoute
@@ -371,6 +441,7 @@ interface AppRouteRouteChildren {
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
   AppHotelIdIndexRoute: AppHotelIdIndexRoute,
   AppHotelsIndexRoute: AppHotelsIndexRoute,

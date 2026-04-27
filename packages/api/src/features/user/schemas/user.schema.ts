@@ -42,6 +42,15 @@ export const ManagedUserSchema = z.object({
 	updatedAt: z.date(),
 });
 
+export const CurrentUserProfileSchema = z.object({
+	id: z.string(),
+	email: z.string(),
+	firstName: z.string(),
+	lastName: z.string(),
+	emailVerified: z.boolean(),
+	updatedAt: z.date(),
+});
+
 export const CreateManagedUserInputSchema = z.object({
 	email: z.email(),
 	firstName: z.string().min(1),
@@ -58,6 +67,12 @@ export const UpdateManagedUserInputSchema = z.object({
 	role: ManagedUserBusinessRoleSchema.optional(),
 });
 
+export const UpdateCurrentUserProfileInputSchema = z.object({
+	email: z.string().trim().pipe(z.email()),
+	firstName: z.string().trim().min(1),
+	lastName: z.string().trim().min(1),
+});
+
 export const DeactivateManagedUserInputSchema = z.object({
 	id: z.string().min(1),
 });
@@ -69,11 +84,15 @@ export type ManagedUserBusinessRole = z.infer<
 	typeof ManagedUserBusinessRoleSchema
 >;
 export type ManagedUser = z.infer<typeof ManagedUserSchema>;
+export type CurrentUserProfile = z.infer<typeof CurrentUserProfileSchema>;
 export type CreateManagedUserInput = z.infer<
 	typeof CreateManagedUserInputSchema
 >;
 export type UpdateManagedUserInput = z.infer<
 	typeof UpdateManagedUserInputSchema
+>;
+export type UpdateCurrentUserProfileInput = z.infer<
+	typeof UpdateCurrentUserProfileInputSchema
 >;
 export type DeactivateManagedUserInput = z.infer<
 	typeof DeactivateManagedUserInputSchema

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { CircleUserRound, LogOut, UserCog2 } from "lucide-react";
 import { useIntlayer } from "react-intlayer";
 import {
@@ -53,7 +54,10 @@ export default function MobileUserActions({
 							</span>
 						</span>
 					</MenuGroupLabel>
-					<MenuItem className="min-h-10 gap-3 rounded-md px-2.5 py-2">
+					<MenuItem
+						className="min-h-10 cursor-pointer gap-3 rounded-md px-2.5 py-2"
+						render={<Link to="/settings" />}
+					>
 						<span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
 							<UserCog2 className="size-4.5" />
 						</span>

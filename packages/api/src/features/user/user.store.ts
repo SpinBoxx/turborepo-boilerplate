@@ -5,8 +5,10 @@ import { hashPassword } from "better-auth/crypto";
 import type { Prisma } from "../../../../db/prisma/generated/client";
 import { Role } from "../../../../db/prisma/generated/enums";
 import type {
+	CurrentUserProfile,
 	CreateManagedUserInput,
 	ManagedUserBusinessRole,
+	UpdateCurrentUserProfileInput,
 	UpdateManagedUserInput,
 } from "./schemas/user.schema";
 
@@ -29,6 +31,15 @@ export type ManagedUserDB = Prisma.UserGetPayload<{
 	select: typeof managedUserSelect;
 }>;
 
+const currentUserProfileSelect = {
+	id: true,
+	email: true,
+	firstName: true,
+	lastName: true,
+	emailVerified: true,
+	updatedAt: true,
+} satisfies Prisma.UserSelect;
+
 function buildManagedUserRoles(role: ManagedUserBusinessRole): Role[] {
 	return [Role.USER, role];
 }
@@ -48,6 +59,22 @@ export async function getManagedUserByEmail(
 	return await prisma.user.findUnique({
 		where: { email },
 		select: managedUserSelect,
+	});
+}
+
+export async function getCurrentUserProfile(
+	id: string,
+): Promise<CurrentUserProfile | null> {
+	return await prisma.user.findUnique({
+		where: { id },
+		select: currentUserProfileSelect,
+	});
+}
+
+export async function getUserByEmail(email: string): Promise<{ id: string } | null> {
+	return await prisma.user.findUnique({
+		where: { email },
+		select: { id: true },
 	});
 }
 
@@ -102,6 +129,25 @@ export async function updateManagedUser(
 			roles: input.role ? buildManagedUserRoles(input.role) : undefined,
 		},
 		select: managedUserSelect,
+	});
+}
+
+export async function updateCurrentUserProfile(
+	userId: string,
+	input: UpdateCurrentUserProfileInput,
+): Promise<CurrentUserProfile> {
+	const currentProfile = await getCurrentUserProfile(userId);
+	const emailChanged = currentProfile?.email !== input.email;
+
+	return await prisma.user.update({
+		where: { id: userId },
+		data: {
+			email: input.email,
+			firstName: input.firstName,
+			lastName: input.lastName,
+			emailVerified: emailChanged ? false : undefined,
+		},
+		select: currentUserProfileSelect,
 	});
 }
 

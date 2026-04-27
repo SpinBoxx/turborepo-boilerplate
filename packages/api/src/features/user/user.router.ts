@@ -1,21 +1,62 @@
 import { ORPCError } from "@orpc/server";
 import { adminProcedure } from "../../index";
 import {
+	CurrentUserProfileSchema,
 	CreateManagedUserInputSchema,
 	DeactivateManagedUserInputSchema,
 	ManagedUserSchema,
+	UpdateCurrentUserProfileInputSchema,
 	UpdateManagedUserInputSchema,
 } from "./schemas/user.schema";
 import {
 	createManagedUser,
 	deactivateManagedUser,
+	getCurrentUserProfile,
 	getManagedUserByEmail,
 	getManagedUserById,
+	getUserByEmail,
 	listManagedUsers,
+	updateCurrentUserProfile,
 	updateManagedUser,
 } from "./user.store";
+import { protectedProcedure } from "../..";
 
 export const userRouter = {
+	me: protectedProcedure
+		.route({
+			method: "GET",
+			path: "/users/me",
+			summary: "Get current user profile",
+			tags: ["User"],
+		})
+		.output(CurrentUserProfileSchema)
+		.handler(async ({ context }) => {
+			const profile = await getCurrentUserProfile(context.session.user.id);
+			if (!profile) {
+				throw new ORPCError("NOT_FOUND");
+			}
+
+			return profile;
+		}),
+	updateMe: protectedProcedure
+		.route({
+			method: "PATCH",
+			path: "/users/me",
+			summary: "Update current user profile",
+			tags: ["User"],
+		})
+		.input(UpdateCurrentUserProfileInputSchema)
+		.output(CurrentUserProfileSchema)
+		.handler(async ({ input, context }) => {
+			const userWithEmail = await getUserByEmail(input.email);
+			if (userWithEmail && userWithEmail.id !== context.session.user.id) {
+				throw new ORPCError("CONFLICT", {
+					message: "A user with this email already exists.",
+				});
+			}
+
+			return await updateCurrentUserProfile(context.session.user.id, input);
+		}),
 	listManaged: adminProcedure
 		.route({
 			method: "GET",

@@ -1,4 +1,9 @@
-import { createFileRoute, Outlet, useMatch } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Outlet,
+	useMatch,
+	useRouterState,
+} from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import { cn } from "@/lib/utils";
@@ -16,6 +21,9 @@ function RouteComponent() {
 		from: "/_app/$hotelId/",
 		shouldThrow: false,
 	});
+	const isSettingsRoute = useRouterState({
+		select: (state) => state.location.pathname.startsWith("/settings"),
+	});
 
 	useEffect(() => {
 		refreshBooking();
@@ -23,12 +31,16 @@ function RouteComponent() {
 
 	return (
 		<>
-			<div className={cn(!hotelDetailMatch && "pb-[73px] md:pb-0")}>
-				<Navbar />
+			<div
+				className={cn(
+					!hotelDetailMatch && !isSettingsRoute && "pb-18.25 md:pb-0",
+				)}
+			>
+				{isSettingsRoute ? null : <Navbar />}
 				<Outlet />
-				<Footer className="mt-14" />
+				{isSettingsRoute ? null : <Footer className="mt-14" />}
 			</div>
-			<MobileBottomNav />
+			{isSettingsRoute ? null : <MobileBottomNav />}
 		</>
 	);
 }
