@@ -38,7 +38,7 @@ export default function MobileBottomNav() {
 	return (
 		<nav
 			aria-label={t.mobileNavigation.value}
-			className="fixed inset-x-0 bottom-0 z-50 border-t bg-background px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] shadow-lg md:hidden"
+			className="fixed inset-x-0 bottom-0 z-50 border-t bg-background px-2 py-1 shadow-lg md:hidden"
 		>
 			<div className="mx-auto flex max-w-md items-center justify-around gap-1">
 				<Link to="/" className={mobileBottomNavItemClassName(pathname === "/")}>

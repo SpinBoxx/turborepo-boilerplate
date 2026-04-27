@@ -16,7 +16,7 @@ function mobileBottomNavItemClassName(active?: boolean) {
 function MobileBottomNavLink({ icon: Icon, label }: MobileBottomNavLinkProps) {
 	return (
 		<>
-			<Icon aria-hidden className="size-6" />
+			<Icon aria-hidden className="size-5.5" />
 			<span className="max-w-full truncate font-medium text-xs">{label}</span>
 		</>
 	);
