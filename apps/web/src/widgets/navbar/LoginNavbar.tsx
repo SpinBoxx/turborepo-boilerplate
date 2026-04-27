@@ -17,7 +17,7 @@ export default function LoginNavbar() {
 				<Link to="/">
 					<Button variant={"outline"}>
 						<Home />
-						{t.home.value}
+						{t.navbarLinks.home.value}
 					</Button>
 				</Link>
 			</div>

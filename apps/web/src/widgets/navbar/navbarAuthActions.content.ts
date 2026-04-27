@@ -8,6 +8,18 @@ const navbarAuthActionsContent = {
 			en: "Profile",
 			mg: "Mombamomba",
 		}),
+		navbarLinks: {
+			home: t({
+				fr: "Accueil",
+				en: "Home",
+				mg: "Trano",
+			}),
+			hotels: t({
+				fr: "Hôtels",
+				en: "Hotels",
+				mg: "Hotely",
+			}),
+		},
 		myAccount: t({
 			fr: "Mon compte",
 			en: "My account",
@@ -53,10 +65,10 @@ const navbarAuthActionsContent = {
 			en: "Login",
 			mg: "Hiditra",
 		}),
-		home: t({
-			fr: "Accueil",
-			en: "Home",
-			mg: "Trano",
+		mobileNavigation: t({
+			fr: "Navigation principale",
+			en: "Primary navigation",
+			mg: "Fitetezana fototra",
 		}),
 	},
 } satisfies Dictionary;

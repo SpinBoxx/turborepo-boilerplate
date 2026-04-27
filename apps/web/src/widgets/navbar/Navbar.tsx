@@ -24,7 +24,7 @@ export default function Navbar() {
 				</span>
 			</button>
 
-			<div className="flex items-center gap-2">
+			<div className="hidden items-center gap-2 md:flex">
 				<NavbarMenu className="hidden md:mr-10 md:block" />
 				<NavbarAuthActions />
 			</div>

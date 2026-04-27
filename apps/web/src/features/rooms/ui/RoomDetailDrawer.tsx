@@ -14,11 +14,11 @@ import {
 import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import { cn } from "@/lib/utils";
 import RoomArea from "../components/RoomArea";
+import RoomAvailableQuantity from "../components/RoomAvailableQuantity";
 import RoomBaths from "../components/RoomBaths";
 import RoomBeds from "../components/RoomBeds";
 import RoomCarousel from "../components/RoomCarousel";
 import { useRoomContext } from "../components/RoomProvider";
-import RoomQuantity from "../components/RoomQuantity";
 import RoomTotalPrice from "../components/RoomTotalPrice";
 import RoomType from "../components/RoomType";
 import RoomDetailTabs from "./RoomDetailTabs/RoomDetailTabs";
@@ -72,7 +72,7 @@ export default function RoomDetailDrawer({ children, snapPoints }: Props) {
 						</div>
 
 						<div className="flex flex-wrap gap-2.5">
-							<RoomQuantity variant="badge" />
+							<RoomAvailableQuantity type="badge" className="[&_svg]:size-5!" />
 							<RoomArea variant="badge" />
 							<RoomBaths variant="badge" />
 							<RoomBeds variant="badge" />
