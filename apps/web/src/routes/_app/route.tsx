@@ -33,11 +33,16 @@ function RouteComponent() {
 		<>
 			<div
 				className={cn(
-					!hotelDetailMatch && !isSettingsRoute && "pb-18.25 md:pb-0",
+					"flex min-h-dvh flex-col",
+					!hotelDetailMatch &&
+						!isSettingsRoute &&
+						"pb-18.25 md:pb-0",
 				)}
 			>
 				{isSettingsRoute ? null : <Navbar />}
-				<Outlet />
+				<main className="flex flex-1 flex-col">
+					<Outlet />
+				</main>
 				{isSettingsRoute ? null : <Footer className="mt-14" />}
 			</div>
 			{isSettingsRoute ? null : <MobileBottomNav />}

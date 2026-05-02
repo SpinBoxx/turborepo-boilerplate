@@ -2,7 +2,7 @@ import { createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import type { AppRouterClient } from "@zanadeal/api/router";
 
-function getApiBaseUrl() {
+export function getApiBaseUrl() {
 	return (
 		import.meta.env.VITE_API_URL?.toString() ?? "http://localhost:8080" // apps/server default
 	);

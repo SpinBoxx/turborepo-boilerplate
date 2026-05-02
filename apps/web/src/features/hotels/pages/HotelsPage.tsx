@@ -56,7 +56,7 @@ export default function HotelsPage({
 	}, [initializeToolbar, onSearchChange, search, total]);
 
 	return (
-		<section className="mt-6 space-y-5">
+		<section className="mt-6 flex flex-1 flex-col space-y-5">
 			<HotelToolbar />
 
 			{hotelsQuery.isLoading && !hotelsQuery.data ? (

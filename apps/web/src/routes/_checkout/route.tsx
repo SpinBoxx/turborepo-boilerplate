@@ -8,10 +8,12 @@ export const Route = createFileRoute("/_checkout")({
 
 function RouteComponent() {
 	return (
-		<>
+		<div className="flex min-h-dvh flex-col">
 			<Navbar />
-			<Outlet />
+			<main className="flex flex-1 flex-col">
+				<Outlet />
+			</main>
 			<Footer />
-		</>
+		</div>
 	);
 }

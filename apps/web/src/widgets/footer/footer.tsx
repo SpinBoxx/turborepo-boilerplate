@@ -59,7 +59,7 @@ const Footer = ({ className }: { className?: string }) => {
 				className,
 			)}
 		>
-			<Container>
+			<Container className="min-h-0">
 				<div className="px-2 pt-6 pb-12">
 					<div className="mt-6 grid grid-cols-2 gap-12 sm:grid-cols-4 lg:grid-cols-6">
 						<div className="col-span-full lg:col-span-2">

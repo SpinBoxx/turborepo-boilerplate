@@ -8,11 +8,11 @@ export const Route = createFileRoute("/_legal")({
 
 function RouteComponent() {
 	return (
-		<div className="min-h-screen text-foreground">
+		<div className="flex min-h-dvh flex-col text-foreground">
 			<Navbar />
-			<div className="mt-8">
+			<main className="mt-8 flex flex-1 flex-col">
 				<Outlet />
-			</div>
+			</main>
 			<Footer className="mt-8" />
 		</div>
 	);

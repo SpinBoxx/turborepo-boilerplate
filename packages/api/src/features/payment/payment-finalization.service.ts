@@ -15,6 +15,7 @@ import {
 	getBookingByPaymentAttemptId,
 	type BookingCreateInput,
 } from "./booking.store";
+import { publishBookingStatsInvalidate } from "../booking-stats/booking-stats.events";
 import {
 	createBookingNotificationInDb,
 	getBookingNotificationByIdempotencyKey,
@@ -326,5 +327,15 @@ async function ensurePendingValidationBooking({
 		},
 	};
 
-	return await createBookingInDb(bookingData, transaction);
+	const booking = await createBookingInDb(bookingData, transaction);
+
+	publishBookingStatsInvalidate({
+		bookingId: booking.id,
+		hotelId: quote.hotelId,
+		occurredAt: completedAt,
+		status: "PENDING_VALIDATION",
+		type: "booking.created",
+	});
+
+	return booking;
 }

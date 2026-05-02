@@ -88,7 +88,7 @@ function ReviewCartCheckoutContent() {
 	};
 
 	return (
-		<div className="py-8">
+		<div className="flex flex-1 flex-col py-8">
 			{/* Page header */}
 			<div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
 				<h1 className="font-bold text-2xl">{t.pageTitle}</h1>

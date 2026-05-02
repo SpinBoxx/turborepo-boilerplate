@@ -16,7 +16,7 @@ const HotelRoomsPage = ({ hotel }: Props) => {
 
 	return (
 		<HotelProvider hotel={hotel}>
-			<div className="space-y-4">
+			<div className="flex flex-1 flex-col space-y-4">
 				<HotelBreadcrumb />
 				<BookingSearchBarMobile className="md:hidden" />
 				<BookingSearchBarDesktop

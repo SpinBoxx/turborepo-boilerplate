@@ -2,6 +2,7 @@ import { ORPCError } from "@orpc/server";
 import { BookingStatus } from "../../../../db/prisma/generated/enums";
 import { fromStoredMoneyAmount } from "../../money";
 import { currency as formatCurrency } from "@zanadeal/utils";
+import { publishBookingStatsInvalidate } from "../booking-stats/booking-stats.events";
 import {
 	getBookingByPaymentAttemptId,
 	updateBookingInDb,
@@ -122,6 +123,14 @@ export async function reviewBookingRequest({
 		providerStatus:
 			providerResult.providerStatus ?? paymentAttempt.providerStatus,
 		transactionId: providerResult.transactionId ?? paymentAttempt.transactionId,
+	});
+
+	publishBookingStatsInvalidate({
+		bookingId: booking.id,
+		hotelId: booking.hotelId,
+		occurredAt: decisionAt,
+		status: targetStatus,
+		type: "booking.reviewed",
 	});
 
 	await sendBookingDecisionEmail({

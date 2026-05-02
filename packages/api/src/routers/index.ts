@@ -1,5 +1,6 @@
 import type { RouterClient } from "@orpc/server";
 import { amenityRouter } from "../features/amenity/amenity.router";
+import { bookingStatsRouter } from "../features/booking-stats/booking-stats.router";
 import { bookingQuoteRouter } from "../features/booking-quote/booking-quote.router";
 import { hotelRouter } from "../features/hotel/hotel.router";
 import { paymentRouter } from "../features/payment/payment.router";
@@ -30,6 +31,7 @@ export const appRouter = {
 	terms: termsRouter,
 	room: roomRouter,
 	bookingQuote: bookingQuoteRouter,
+	bookingStats: bookingStatsRouter,
 	payment: paymentRouter,
 	user: userRouter,
 };
