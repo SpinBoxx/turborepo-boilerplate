@@ -33,6 +33,7 @@ const HotelComputedSchemaBase = z.object({
 	reviews: z.array(ReviewSchema),
 	rating: z.number(),
 	startingPrice: z.number(),
+	isAvailableForDates: z.boolean().optional(),
 	rooms: z.array(RoomComputedSchema),
 	createdAt: z.date(),
 	updatedAt: z.date(),

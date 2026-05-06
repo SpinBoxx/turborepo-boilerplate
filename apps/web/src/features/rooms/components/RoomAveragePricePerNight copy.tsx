@@ -1,8 +1,7 @@
 import type { ComponentProps } from "react";
 import { useIntlayer } from "react-intlayer";
-import HotelPricePerNight from "@/features/hotels/components/HotelPricePerNight";
+import HotelAvailabilityPrice from "@/features/hotels/components/HotelAvailabilityPrice";
 import { cn } from "@/lib/utils";
-import { useRoomContext } from "./RoomProvider";
 
 interface Props extends ComponentProps<"div"> {
 	labelClassName?: string;
@@ -19,7 +18,6 @@ export default function RoomAveragePricePerNight({
 	priceClassName,
 	...props
 }: Props) {
-	const { room } = useRoomContext();
 	const t = useIntlayer("common");
 
 	return (
@@ -28,7 +26,7 @@ export default function RoomAveragePricePerNight({
 				<span className="text-muted-foreground text-xs uppercase">
 					{t.averagePrice.value}
 				</span>
-				<HotelPricePerNight />
+				<HotelAvailabilityPrice showStartingLabel={false} />
 			</div>
 		</div>
 	);

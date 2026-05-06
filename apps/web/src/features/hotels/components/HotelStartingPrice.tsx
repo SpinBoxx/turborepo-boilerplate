@@ -1,15 +1,9 @@
-import { currency } from "@zanadeal/utils";
 import type { ComponentProps } from "react";
-import { useHotelContext } from "./HotelProvider";
+import HotelAvailabilityPrice from "./HotelAvailabilityPrice";
 
 export default function HotelPrice({
 	className,
 	...props
-}: ComponentProps<"span">) {
-	const { hotel } = useHotelContext();
-	return (
-		<span className={className} {...props}>
-			{currency(hotel.startingPrice)}
-		</span>
-	);
+}: ComponentProps<"div">) {
+	return <HotelAvailabilityPrice className={className} {...props} />;
 }

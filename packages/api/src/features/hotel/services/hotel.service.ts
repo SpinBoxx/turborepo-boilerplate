@@ -151,12 +151,16 @@ export const computeHotelFull = async (
 					),
 				}
 			: hotel;
+	const rooms = await computeHotelRooms(effectiveHotel, user, options);
+	const isAvailableForDates =
+		checkIn && checkOut ? rooms.length > 0 : undefined;
 
 	return {
 		...effectiveHotel,
 		rating: computeHotelRating(effectiveHotel),
 		startingPrice: computeHotelStartingPrice(effectiveHotel),
+		isAvailableForDates,
 		amenities: await computeHotelAmenities(effectiveHotel, user),
-		rooms: await computeHotelRooms(effectiveHotel, user, options),
+		rooms,
 	};
 };

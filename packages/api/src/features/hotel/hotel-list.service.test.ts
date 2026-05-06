@@ -280,6 +280,65 @@ describe("hotel list service", () => {
 		});
 	});
 
+	it("keeps unavailable hotels visible for date-scoped searches", async () => {
+		vi.mocked(listHotelsFromDb).mockResolvedValue([
+			{ id: "1", name: "Unavailable Hotel", rooms: [{ id: "room_1" }] },
+			{ id: "2", name: "Available Hotel", rooms: [{ id: "room_2" }] },
+		] as never);
+		vi.mocked(getReservedRoomQuantitiesByIds).mockResolvedValue(new Map());
+		vi.mocked(computeHotel)
+			.mockResolvedValueOnce({
+				id: "1",
+				name: "Unavailable Hotel",
+				startingPrice: 0,
+				rating: 4.4,
+				isAvailableForDates: false,
+			} as never)
+			.mockResolvedValueOnce({
+				id: "2",
+				name: "Available Hotel",
+				startingPrice: 90,
+				rating: 4.1,
+				isAvailableForDates: true,
+			} as never);
+
+		const input = ListHotelsInputSchema.parse({
+			checkInDate: "2026-06-10",
+			checkOutDate: "2026-06-12",
+			sort: {
+				field: "startingPrice",
+				direction: "asc",
+			},
+			page: 1,
+			limit: 10,
+		});
+
+		const result = await listHotels(input, undefined);
+
+		expect(result).toEqual({
+			items: [
+				{
+					id: "1",
+					name: "Unavailable Hotel",
+					startingPrice: 0,
+					rating: 4.4,
+					isAvailableForDates: false,
+				},
+				{
+					id: "2",
+					name: "Available Hotel",
+					startingPrice: 90,
+					rating: 4.1,
+					isAvailableForDates: true,
+				},
+			],
+			total: 2,
+			page: 1,
+			limit: 10,
+			pageCount: 1,
+		});
+	});
+
 	it("resolves room availability and forwards it to hotel compute when dates are provided", async () => {
 		const roomAvailabilityById = new Map([["room_1", 2]]);
 		vi.mocked(listHotelsFromDb).mockResolvedValue([

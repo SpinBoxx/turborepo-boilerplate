@@ -435,4 +435,45 @@ describe("hotel OpenAPI routes", () => {
 			await userServer.close();
 		}
 	});
+
+	it("GET /hotels/{id} keeps zero-price hotels visible for date-scoped user requests", async () => {
+		const createRes = await fetch(`${baseUrl}/hotels`, {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify({
+				name: "Unavailable For Dates Hotel",
+				description: "No available rooms for selected dates",
+				address: "4 Test Street",
+				mapLink: "https://maps.example/unavailable-for-dates",
+				latitude: "0",
+				longitude: "0",
+				amenityIds: [],
+				images: [],
+			}),
+		});
+
+		expect(createRes.status).toBe(200);
+		const created = (await createRes.json()) as HotelJson;
+		const userServer = await startOpenApiServer([Role.USER]);
+
+		try {
+			const getRes = await fetch(
+				`${userServer.baseUrl}/hotels/${created.id}?checkInDate=2026-06-10&checkOutDate=2026-06-12`,
+				{
+					method: "GET",
+				},
+			);
+
+			expect(getRes.status).toBe(200);
+			const payload = (await getRes.json()) as HotelJson & {
+				isAvailableForDates?: boolean;
+			};
+			expect(payload.id).toBe(created.id);
+			expect(payload.isAvailableForDates).toBe(false);
+		} finally {
+			await userServer.close();
+		}
+	});
 });

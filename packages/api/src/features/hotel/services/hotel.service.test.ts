@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	applyRoomCollectionRules,
 	buildRoomCollectionRules,
+	computeHotelFull,
 	computeHotelRooms,
 	type RoomCollectionContext,
 } from "./hotel.service";
@@ -110,5 +111,62 @@ describe("hotel.service room collection rules", () => {
 
 		expect(computedRooms.map((room) => room.id)).toEqual(["room_2"]);
 		expect(computedRooms[0]?.availableCapacity).toBe(1);
+	});
+
+	it("marks a date-scoped hotel unavailable when no rooms remain", async () => {
+		const hotel = {
+			id: "hotel_1",
+			name: "Hotel A",
+			description: "Description",
+			address: "Address",
+			mapLink: "https://example.com/map",
+			isArchived: false,
+			latitude: "0",
+			longitude: "0",
+			email: null,
+			platformFeePercentageBasisPoints: 0,
+			phoneNumber: null,
+			bankAccount: null,
+			amenities: [],
+			images: [],
+			reviews: [],
+			rooms: [],
+			createdAt: new Date("2026-01-01T00:00:00.000Z"),
+			updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+		} as never;
+
+		const computedHotel = await computeHotelFull(hotel, undefined, {
+			checkInDate: new Date("2026-06-10T00:00:00.000Z"),
+			checkOutDate: new Date("2026-06-12T00:00:00.000Z"),
+		});
+
+		expect(computedHotel.isAvailableForDates).toBe(false);
+	});
+
+	it("omits date availability when no date range is provided", async () => {
+		const hotel = {
+			id: "hotel_1",
+			name: "Hotel A",
+			description: "Description",
+			address: "Address",
+			mapLink: "https://example.com/map",
+			isArchived: false,
+			latitude: "0",
+			longitude: "0",
+			email: null,
+			platformFeePercentageBasisPoints: 0,
+			phoneNumber: null,
+			bankAccount: null,
+			amenities: [],
+			images: [],
+			reviews: [],
+			rooms: [],
+			createdAt: new Date("2026-01-01T00:00:00.000Z"),
+			updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+		} as never;
+
+		const computedHotel = await computeHotelFull(hotel, undefined);
+
+		expect(computedHotel.isAvailableForDates).toBeUndefined();
 	});
 });

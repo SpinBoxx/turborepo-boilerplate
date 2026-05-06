@@ -81,7 +81,8 @@ export const getHotelRoute = publicProcedure
 			context.user,
 			computeOptions,
 		);
-		if (!isHotelVisibleToUser(computedHotel, context.user)) {
+		const hasDateRange = !!(input.checkInDate && input.checkOutDate);
+		if (!hasDateRange && !isHotelVisibleToUser(computedHotel, context.user)) {
 			throw new ORPCError("NOT_FOUND");
 		}
 

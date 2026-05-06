@@ -34,6 +34,7 @@ const HOTEL_FALLBACK_DB_ORDER: Prisma.HotelOrderByWithRelationInput[] = [
 interface HotelCollectionContext {
 	computedFilters: ReturnType<typeof buildHybridListExecutionPlan>["computed"]["filters"];
 	computedSort: ReturnType<typeof buildHybridListExecutionPlan>["computed"]["sort"];
+	hasDateRange: boolean;
 	mode: "db" | "post-compute";
 	user: UserComputed | null | undefined;
 }
@@ -93,10 +94,12 @@ function buildHotelCollectionContext(
 	plan: ReturnType<typeof buildHybridListExecutionPlan>,
 	user: UserComputed | null | undefined,
 	mode: HotelCollectionContext["mode"],
+	computeOptions?: HotelComputeOptions,
 ): HotelCollectionContext {
 	return {
 		computedFilters: plan.computed.filters,
 		computedSort: plan.computed.sort,
+		hasDateRange: !!(computeOptions?.checkInDate && computeOptions.checkOutDate),
 		mode,
 		user,
 	};
@@ -104,6 +107,9 @@ function buildHotelCollectionContext(
 
 const filterVisibleHotelsRule: HotelCollectionRule = (hotels, context) => {
 	if (context.mode !== "post-compute") {
+		return hotels;
+	}
+	if (context.hasDateRange) {
 		return hotels;
 	}
 
@@ -246,7 +252,7 @@ export async function listHotels(
 	);
 	const processedHotels = applyHotelCollectionRules(
 		computedHotels,
-		buildHotelCollectionContext(plan, user, "post-compute"),
+		buildHotelCollectionContext(plan, user, "post-compute", computeOptions),
 	);
 
 	return toPaginatedResult(processedHotels, input.page, input.limit);
