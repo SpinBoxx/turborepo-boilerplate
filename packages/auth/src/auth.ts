@@ -13,6 +13,22 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 		requireEmailVerification: true,
+		resetPasswordTokenExpiresIn: 60 * 60,
+		revokeSessionsOnPasswordReset: true,
+		sendResetPassword: async ({ url, user }, request) => {
+			const localeFromHeaders = request?.headers.get("content-language");
+			const locale = verifyLocale(localeFromHeaders);
+			const userName = (user as User).firstName || user.email;
+
+			await mailService.sendForgotPasswordMail({
+				locale,
+				to: user.email,
+				variables: {
+					userName,
+					resetUrl: url,
+				},
+			});
+		},
 	},
 	baseURL: process.env.API_URL,
 	emailVerification: {
@@ -51,7 +67,7 @@ export const auth = betterAuth({
 				max: 3, // 3 call max
 			},
 			// Reset password
-			"/forget-password": {
+			"/request-password-reset": {
 				window: 3600, // 1 hour
 				max: 3, // 3 call max
 			},

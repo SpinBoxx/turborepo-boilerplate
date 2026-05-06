@@ -63,6 +63,36 @@ const authProviderContent = {
 			en: "Unable to sign out. Try again later.",
 			mg: "Tsy afaka mivoaka. Andramo indray aoriana.",
 		}),
+		passwordResetEmailSent: t({
+			fr: "E-mail de réinitialisation envoyé",
+			en: "Password reset email sent",
+			mg: "Lasa ny mailaka fanavaozana tenimiafina",
+		}),
+		passwordResetEmailInstructions: t({
+			fr: "Si ce compte existe, vous recevrez un lien de réinitialisation.",
+			en: "If this account exists, you will receive a reset link.",
+			mg: "Raha misy io kaonty io dia hahazo rohy fanavaozana ianao.",
+		}),
+		failedToSendPasswordResetEmail: t({
+			fr: "Échec de l'envoi de l'e-mail de réinitialisation",
+			en: "Failed to send password reset email",
+			mg: "Tsy nahomby ny fandefasana mailaka fanavaozana",
+		}),
+		passwordResetFailed: t({
+			fr: "Échec de la réinitialisation du mot de passe",
+			en: "Password reset failed",
+			mg: "Tsy nahomby ny fanavaozana tenimiafina",
+		}),
+		passwordResetSuccess: t({
+			fr: "Mot de passe réinitialisé",
+			en: "Password reset",
+			mg: "Voavao ny tenimiafina",
+		}),
+		passwordResetSuccessDescription: t({
+			fr: "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+			en: "You can now sign in with your new password.",
+			mg: "Afaka miditra amin'ny tenimiafina vaovao ianao izao.",
+		}),
 	},
 } satisfies Dictionary;
 

@@ -1,5 +1,9 @@
 import type { LoginInput, UpsertUserInput } from "@zanadeal/api/features/user";
-import type { sendVerificationEmailType } from "@zanadeal/auth/routes/schemas";
+import type {
+	RequestPasswordResetInput,
+	ResetPasswordInput,
+	sendVerificationEmailType,
+} from "@zanadeal/auth/routes/schemas";
 import {
 	createContext,
 	useCallback,
@@ -38,6 +42,11 @@ export type AuthResponseKO = {
 
 export type AuthResponse = AuthResponseOK | AuthResponseKO;
 
+type AuthStatusResponse = {
+	status: boolean;
+	message?: string;
+};
+
 type SignUpWithEmailInput = UpsertUserInput & {
 	callbackURL?: string;
 };
@@ -53,6 +62,8 @@ type AuthContextValue = {
 	user: User | null;
 	loadSession: () => Promise<User | null | undefined>;
 	refresh: () => Promise<void>;
+	requestPasswordReset: (body: RequestPasswordResetInput) => Promise<boolean>;
+	resetPassword: (body: ResetPasswordInput) => Promise<boolean>;
 	sendVerificationEmail: (body: sendVerificationEmailType) => Promise<void>;
 	signInWithEmail: (
 		input: LoginInput,
@@ -183,6 +194,78 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		}
 	};
 
+	const requestPasswordReset = useCallback(
+		async (body: RequestPasswordResetInput) => {
+			try {
+				const res = await $fetch<AuthStatusResponse>(
+					`${import.meta.env.VITE_API_URL}/api/auth/request-password-reset`,
+					{
+						method: "POST",
+						credentials: "include",
+						headers: {
+							"content-type": "application/json",
+						},
+						body: JSON.stringify(body),
+					},
+				);
+
+				if (!res || res.error) {
+					toast.error(authT.failedToSendPasswordResetEmail.value, {
+						description: res?.error?.message || authT.pleaseTryAgainLater.value,
+					});
+					return false;
+				}
+
+				toast.success(authT.passwordResetEmailSent.value, {
+					description: authT.passwordResetEmailInstructions.value,
+				});
+				return true;
+			} catch (_error) {
+				toast.error(authT.failedToSendPasswordResetEmail.value, {
+					description: authT.unexpectedError.value,
+				});
+				return false;
+			}
+		},
+		[authT],
+	);
+
+	const resetPassword = useCallback(
+		async (body: ResetPasswordInput) => {
+			try {
+				const res = await $fetch<AuthStatusResponse>(
+					`${import.meta.env.VITE_API_URL}/api/auth/reset-password`,
+					{
+						method: "POST",
+						credentials: "include",
+						headers: {
+							"content-type": "application/json",
+						},
+						body: JSON.stringify(body),
+					},
+				);
+
+				if (!res || res.error) {
+					toast.error(authT.passwordResetFailed.value, {
+						description: res?.error?.message || authT.pleaseTryAgainLater.value,
+					});
+					return false;
+				}
+
+				toast.success(authT.passwordResetSuccess.value, {
+					description: authT.passwordResetSuccessDescription.value,
+				});
+				return true;
+			} catch (_error) {
+				toast.error(authT.passwordResetFailed.value, {
+					description: authT.unexpectedError.value,
+				});
+				return false;
+			}
+		},
+		[authT],
+	);
+
 	const signUpWithEmail = async (
 		body: SignUpWithEmailInput,
 		options?: LoginOptions,
@@ -273,12 +356,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			user,
 			loadSession,
 			refresh,
+			requestPasswordReset,
+			resetPassword,
 			signInWithEmail,
 			signUpWithEmail,
 			sendVerificationEmail,
 			signOut,
 		}),
 		[
+			requestPasswordReset,
+			resetPassword,
 			signOut,
 			signUpWithEmail,
 			sendVerificationEmail,

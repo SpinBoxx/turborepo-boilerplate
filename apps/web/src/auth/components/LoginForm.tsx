@@ -96,7 +96,12 @@ export default function LoginForm({
 				</form.AppField>
 
 				<div className="text-right">
-					<Link to="/">
+					<Link
+						to="/forgot-password"
+						search={{
+							redirectTo: safeRedirectTo,
+						}}
+					>
 						<p className="text-muted-foreground text-sm">
 							{content.forgotPassword.value}
 						</p>

@@ -93,7 +93,8 @@ export const currency = (amount: number, options: CurrencyOptions = {}) => {
 					integerPart,
 					config.groupSeparator,
 				);
-				const resolvedMinimumFractionDigits = minimumFractionDigits ?? fractionDigits;
+				const resolvedMinimumFractionDigits =
+					minimumFractionDigits ?? fractionDigits;
 				const resolvedDecimalPart = decimalPart
 					.padEnd(resolvedMinimumFractionDigits, "0")
 					.slice(0, Math.max(fractionDigits, resolvedMinimumFractionDigits));
@@ -111,4 +112,12 @@ export const currency = (amount: number, options: CurrencyOptions = {}) => {
 export const uppercaseFirstLetter = (str: string) => {
 	if (!str) return "";
 	return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const maskEmailAddress = (email: string) => {
+	const [local, domain] = email.split("@");
+	if (!local || !domain) return email;
+	if (local.length <= 2) return `${local}@${domain}`;
+
+	return `${local[0]}${"•".repeat(Math.min(local.length - 2, 6))}${local[local.length - 1]}@${domain}`;
 };

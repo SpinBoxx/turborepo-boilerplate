@@ -43,3 +43,17 @@ export function buildEmailVerifiedCallbackUrl(
 
 	return callbackUrl.toString();
 }
+
+export function buildPasswordResetCallbackUrl(
+	origin: string,
+	redirectTo?: string | null,
+): string {
+	const callbackUrl = new URL("/reset-password", origin);
+	const safeRedirectTo = sanitizeRedirectTo(redirectTo);
+
+	if (safeRedirectTo) {
+		callbackUrl.searchParams.set("redirectTo", safeRedirectTo);
+	}
+
+	return callbackUrl.toString();
+}

@@ -18,6 +18,12 @@ description: "Enforces the project's frontend architecture conventions for the w
 
 All code related to a domain lives inside its `features/<domain>/` folder. Never scatter feature code across `pages/`, `components/`, and `features/` separately.
 
+## Factorization And Shared Utilities
+
+Factorize repeated logic as much as practical, while keeping ownership clear. Before creating a helper, formatter, parser, normalizer, or any other “generic” function, search the codebase first to check whether an equivalent already exists.
+
+If the function is generic and contains no business/domain logic, implement it in `packages/utils` instead of a web feature folder. Import it from `@zanadeal/utils` where needed. Keep feature-specific business rules in the owning feature's `services/` or `utils/` folder, and only promote them to `packages/utils` when they are genuinely reusable outside that feature.
+
 ### Canonical structure for a feature
 
 ```

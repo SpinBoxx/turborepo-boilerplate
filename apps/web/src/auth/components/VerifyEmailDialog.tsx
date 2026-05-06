@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { maskEmailAddress } from "@zanadeal/utils";
 import { ArrowLeftIcon, MailIcon } from "lucide-react";
 import { useState } from "react";
 import { useIntlayer } from "react-intlayer";
@@ -20,13 +21,6 @@ import { useAuth } from "../providers/AuthProvider";
 
 const RESEND_COOLDOWN = 60;
 const RESEND_COOLDOWN_STORAGE_PREFIX = "zanadeal:verify-email:resend-cooldown";
-
-function maskEmail(email: string): string {
-	const [local, domain] = email.split("@");
-	if (!local || !domain) return email;
-	if (local.length <= 2) return `${local}@${domain}`;
-	return `${local[0]}${"•".repeat(Math.min(local.length - 2, 6))}${local[local.length - 1]}@${domain}`;
-}
 
 export default function VerifyEmailDialog({
 	email,
@@ -78,7 +72,7 @@ export default function VerifyEmailDialog({
 						<DialogTitle className="mt-2">{content.title.value}</DialogTitle>
 						<DialogDescription>{content.description.value}</DialogDescription>
 						<p className="mt-1 font-medium text-foreground text-sm">
-							{maskEmail(email)}
+							{maskEmailAddress(email)}
 						</p>
 					</DialogHeader>
 

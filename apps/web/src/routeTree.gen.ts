@@ -23,7 +23,11 @@ import { Route as AuthLoginRouteRouteImport } from './routes/_auth/login/route'
 import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as CheckoutReviewCartCheckoutIndexRouteImport } from './routes/_checkout/review-cart-checkout/index'
 import { Route as AuthVerifyEmailIndexRouteImport } from './routes/_auth/verify-email/index'
+import { Route as AuthResetPasswordIndexRouteImport } from './routes/_auth/reset-password/index'
+import { Route as AuthPasswordResetSuccessIndexRouteImport } from './routes/_auth/password-reset-success/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as AuthForgotPasswordIndexRouteImport } from './routes/_auth/forgot-password/index'
+import { Route as AuthForgotPasswordSentIndexRouteImport } from './routes/_auth/forgot-password-sent/index'
 import { Route as AuthEmailVerifiedIndexRouteImport } from './routes/_auth/email-verified/index'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppHotelsIndexRouteImport } from './routes/_app/hotels/index'
@@ -99,11 +103,33 @@ const AuthVerifyEmailIndexRoute = AuthVerifyEmailIndexRouteImport.update({
   path: '/verify-email/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthResetPasswordIndexRoute = AuthResetPasswordIndexRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthPasswordResetSuccessIndexRoute =
+  AuthPasswordResetSuccessIndexRouteImport.update({
+    id: '/password-reset-success/',
+    path: '/password-reset-success/',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthLoginRouteRoute,
 } as any)
+const AuthForgotPasswordIndexRoute = AuthForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthForgotPasswordSentIndexRoute =
+  AuthForgotPasswordSentIndexRouteImport.update({
+    id: '/forgot-password-sent/',
+    path: '/forgot-password-sent/',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 const AuthEmailVerifiedIndexRoute = AuthEmailVerifiedIndexRouteImport.update({
   id: '/email-verified/',
   path: '/email-verified/',
@@ -150,7 +176,11 @@ export interface FileRoutesByFullPath {
   '/hotels/': typeof AppHotelsIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
   '/email-verified/': typeof AuthEmailVerifiedIndexRoute
+  '/forgot-password-sent/': typeof AuthForgotPasswordSentIndexRoute
+  '/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/login/': typeof AuthLoginIndexRoute
+  '/password-reset-success/': typeof AuthPasswordResetSuccessIndexRoute
+  '/reset-password/': typeof AuthResetPasswordIndexRoute
   '/verify-email/': typeof AuthVerifyEmailIndexRoute
   '/review-cart-checkout/': typeof CheckoutReviewCartCheckoutIndexRoute
   '/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
@@ -167,7 +197,11 @@ export interface FileRoutesByTo {
   '/hotels': typeof AppHotelsIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/email-verified': typeof AuthEmailVerifiedIndexRoute
+  '/forgot-password-sent': typeof AuthForgotPasswordSentIndexRoute
+  '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
+  '/password-reset-success': typeof AuthPasswordResetSuccessIndexRoute
+  '/reset-password': typeof AuthResetPasswordIndexRoute
   '/verify-email': typeof AuthVerifyEmailIndexRoute
   '/review-cart-checkout': typeof CheckoutReviewCartCheckoutIndexRoute
   '/$hotelId/rooms': typeof AppHotelIdRoomsIndexRoute
@@ -191,7 +225,11 @@ export interface FileRoutesById {
   '/_app/hotels/': typeof AppHotelsIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/_auth/email-verified/': typeof AuthEmailVerifiedIndexRoute
+  '/_auth/forgot-password-sent/': typeof AuthForgotPasswordSentIndexRoute
+  '/_auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_auth/password-reset-success/': typeof AuthPasswordResetSuccessIndexRoute
+  '/_auth/reset-password/': typeof AuthResetPasswordIndexRoute
   '/_auth/verify-email/': typeof AuthVerifyEmailIndexRoute
   '/_checkout/review-cart-checkout/': typeof CheckoutReviewCartCheckoutIndexRoute
   '/_app/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
@@ -212,7 +250,11 @@ export interface FileRouteTypes {
     | '/hotels/'
     | '/settings/'
     | '/email-verified/'
+    | '/forgot-password-sent/'
+    | '/forgot-password/'
     | '/login/'
+    | '/password-reset-success/'
+    | '/reset-password/'
     | '/verify-email/'
     | '/review-cart-checkout/'
     | '/$hotelId/rooms/'
@@ -229,7 +271,11 @@ export interface FileRouteTypes {
     | '/hotels'
     | '/settings'
     | '/email-verified'
+    | '/forgot-password-sent'
+    | '/forgot-password'
     | '/login'
+    | '/password-reset-success'
+    | '/reset-password'
     | '/verify-email'
     | '/review-cart-checkout'
     | '/$hotelId/rooms'
@@ -252,7 +298,11 @@ export interface FileRouteTypes {
     | '/_app/hotels/'
     | '/_app/settings/'
     | '/_auth/email-verified/'
+    | '/_auth/forgot-password-sent/'
+    | '/_auth/forgot-password/'
     | '/_auth/login/'
+    | '/_auth/password-reset-success/'
+    | '/_auth/reset-password/'
     | '/_auth/verify-email/'
     | '/_checkout/review-cart-checkout/'
     | '/_app/$hotelId/rooms/'
@@ -367,12 +417,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthVerifyEmailIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/reset-password/': {
+      id: '/_auth/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password/'
+      preLoaderRoute: typeof AuthResetPasswordIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/password-reset-success/': {
+      id: '/_auth/password-reset-success/'
+      path: '/password-reset-success'
+      fullPath: '/password-reset-success/'
+      preLoaderRoute: typeof AuthPasswordResetSuccessIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/login/': {
       id: '/_auth/login/'
       path: '/'
       fullPath: '/login/'
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthLoginRouteRoute
+    }
+    '/_auth/forgot-password/': {
+      id: '/_auth/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password/'
+      preLoaderRoute: typeof AuthForgotPasswordIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/forgot-password-sent/': {
+      id: '/_auth/forgot-password-sent/'
+      path: '/forgot-password-sent'
+      fullPath: '/forgot-password-sent/'
+      preLoaderRoute: typeof AuthForgotPasswordSentIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/email-verified/': {
       id: '/_auth/email-verified/'
@@ -467,12 +545,20 @@ const AuthLoginRouteRouteWithChildren = AuthLoginRouteRoute._addFileChildren(
 interface AuthRouteRouteChildren {
   AuthLoginRouteRoute: typeof AuthLoginRouteRouteWithChildren
   AuthEmailVerifiedIndexRoute: typeof AuthEmailVerifiedIndexRoute
+  AuthForgotPasswordSentIndexRoute: typeof AuthForgotPasswordSentIndexRoute
+  AuthForgotPasswordIndexRoute: typeof AuthForgotPasswordIndexRoute
+  AuthPasswordResetSuccessIndexRoute: typeof AuthPasswordResetSuccessIndexRoute
+  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
   AuthVerifyEmailIndexRoute: typeof AuthVerifyEmailIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRouteRoute: AuthLoginRouteRouteWithChildren,
   AuthEmailVerifiedIndexRoute: AuthEmailVerifiedIndexRoute,
+  AuthForgotPasswordSentIndexRoute: AuthForgotPasswordSentIndexRoute,
+  AuthForgotPasswordIndexRoute: AuthForgotPasswordIndexRoute,
+  AuthPasswordResetSuccessIndexRoute: AuthPasswordResetSuccessIndexRoute,
+  AuthResetPasswordIndexRoute: AuthResetPasswordIndexRoute,
   AuthVerifyEmailIndexRoute: AuthVerifyEmailIndexRoute,
 }
 

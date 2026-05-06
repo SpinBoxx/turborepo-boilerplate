@@ -115,7 +115,7 @@ function NavbarPreferencesMenuGroup() {
 							</span>
 						</span>
 					</MenuSubTrigger>
-					<MenuSubPopup className="w-48">
+					<MenuSubPopup className="w-fit">
 						{locales.map((language) => (
 							<MenuItem
 								key={language.code}

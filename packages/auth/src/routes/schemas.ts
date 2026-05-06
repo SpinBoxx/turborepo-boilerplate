@@ -28,6 +28,20 @@ export const sendVerificationEmailSchema = z
 	})
 	.strict();
 
+export const requestPasswordResetSchema = z
+	.object({
+		email: z.email(),
+		redirectTo: z.string().optional(),
+	})
+	.strict();
+
+export const resetPasswordSchema = z
+	.object({
+		token: z.string().min(1),
+		newPassword: z.string().min(8),
+	})
+	.strict();
+
 export const verifyEmailQuerySchema = z
 	.object({
 		token: z.string().min(1),
@@ -35,6 +49,18 @@ export const verifyEmailQuerySchema = z
 	})
 	.strict();
 
+export const resetPasswordCallbackQuerySchema = z
+	.object({
+		callbackURL: z.string().min(1),
+	})
+	.strict();
+
 export type sendVerificationEmailType = z.infer<
 	typeof sendVerificationEmailSchema
 >;
+
+export type RequestPasswordResetInput = z.infer<
+	typeof requestPasswordResetSchema
+>;
+
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
