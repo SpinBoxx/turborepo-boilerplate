@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { stringToDate } from "@zanadeal/utils";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Role } from "../../../../db/prisma/generated/enums";
-import { computeHotel } from "./computes/hotel-compute";
 import { getReservedRoomQuantitiesByIds } from "../room/room.store";
+import { computeHotel } from "./computes/hotel-compute";
 import { countHotelsFromDb, listHotelsFromDb } from "./hotel.store";
 import { listHotels } from "./hotel-list.service";
 import { ListHotelsInputSchema } from "./schemas/hotel.schema";
@@ -87,7 +87,9 @@ describe("hotel list service", () => {
 	});
 
 	it("adds the zero-price visibility clause for user queries", async () => {
-		vi.mocked(listHotelsFromDb).mockResolvedValue([{ id: "1", name: "Alpha" }] as never);
+		vi.mocked(listHotelsFromDb).mockResolvedValue([
+			{ id: "1", name: "Alpha" },
+		] as never);
 		vi.mocked(countHotelsFromDb).mockResolvedValue(1);
 		vi.mocked(computeHotel).mockResolvedValue({
 			id: "1",
@@ -168,6 +170,62 @@ describe("hotel list service", () => {
 				}),
 			}),
 		);
+	});
+
+	it("filters popular hotels in database", async () => {
+		vi.mocked(listHotelsFromDb).mockResolvedValue([
+			{ id: "1", name: "Popular Hotel" },
+		] as never);
+		vi.mocked(countHotelsFromDb).mockResolvedValue(1);
+		vi.mocked(computeHotel).mockResolvedValue({
+			id: "1",
+			name: "Popular Hotel",
+			isPopular: true,
+			startingPrice: 100,
+			rating: 4,
+		} as never);
+
+		const input = ListHotelsInputSchema.parse({
+			sort: {
+				field: "isPopular",
+				direction: "desc",
+			},
+			filters: {
+				isPopular: {
+					equal: true,
+				},
+			},
+			page: 1,
+			limit: 6,
+		});
+
+		const result = await listHotels(input, undefined);
+
+		expect(listHotelsFromDb).toHaveBeenCalledWith(
+			expect.objectContaining({
+				take: 6,
+				skip: 0,
+				orderBy: [{ isPopular: "desc" }, { updatedAt: "desc" }, { id: "desc" }],
+				where: expect.objectContaining({
+					isArchived: false,
+					isPopular: true,
+				}),
+			}),
+		);
+		expect(countHotelsFromDb).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({ isPopular: true }),
+			}),
+		);
+		expect(result.items).toEqual([
+			{
+				id: "1",
+				name: "Popular Hotel",
+				isPopular: true,
+				startingPrice: 100,
+				rating: 4,
+			},
+		]);
 	});
 
 	it("applies computed filters and sort after compute", async () => {

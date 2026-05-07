@@ -22,6 +22,7 @@ const HotelComputedSchemaBase = z.object({
 	address: z.string().min(1),
 	mapLink: z.string().min(1),
 	isArchived: z.boolean(),
+	isPopular: z.boolean(),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional().nullable(),
@@ -61,6 +62,7 @@ export const UpsertHotelInputSchema = z.object({
 	address: z.string().min(1),
 	mapLink: z.string().min(1),
 	isArchived: z.boolean().default(false),
+	isPopular: z.boolean().default(false),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional(),
@@ -76,6 +78,7 @@ export const UpsertHotelComputedInputSchema = z.object({
 	address: z.string().min(1),
 	mapLink: z.string().min(1),
 	isArchived: z.boolean().optional(),
+	isPopular: z.boolean().optional(),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional(),
@@ -100,6 +103,7 @@ export const hotelListConfig = {
 		fields: {
 			name: { stage: "db" },
 			updatedAt: { stage: "db" },
+			isPopular: { stage: "db" },
 			startingPrice: { stage: "computed" },
 			rating: { stage: "computed" },
 		},
@@ -114,6 +118,11 @@ export const hotelListConfig = {
 			stage: "db",
 			schema: z.coerce.date(),
 			operators: ["gte", "lte"],
+		},
+		isPopular: {
+			stage: "db",
+			schema: z.boolean(),
+			operators: ["equal"],
 		},
 		startingPrice: {
 			stage: "computed",

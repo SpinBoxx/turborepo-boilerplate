@@ -15,6 +15,7 @@ vi.mock("@zanadeal/db", () => {
 		mapLink: string;
 		email: string | null;
 		isArchived: boolean;
+		isPopular: boolean;
 		bankAccount: unknown | null;
 		favorites: unknown[];
 		latitude: string;
@@ -50,6 +51,7 @@ vi.mock("@zanadeal/db", () => {
 						| "rooms"
 					> & {
 						isArchived?: boolean;
+						isPopular?: boolean;
 					};
 				}) => {
 					const id = String(nextId++);
@@ -71,6 +73,7 @@ vi.mock("@zanadeal/db", () => {
 						phoneNumber: null,
 						platformFeePercentageBasisPoints: 0,
 						isArchived: data.isArchived ?? false,
+						isPopular: data.isPopular ?? false,
 						createdAt: now,
 						updatedAt: now,
 					};
@@ -97,6 +100,7 @@ vi.mock("@zanadeal/db", () => {
 						name?: { contains?: string; equals?: string; mode?: string };
 						updatedAt?: { gte?: Date; lte?: Date };
 						isArchived?: boolean;
+						isPopular?: boolean;
 					};
 					orderBy?:
 						| Array<Record<string, "asc" | "desc">>
@@ -110,6 +114,10 @@ vi.mock("@zanadeal/db", () => {
 						rows = rows.filter(
 							(hotel) => hotel.isArchived === where.isArchived,
 						);
+					}
+
+					if (where?.isPopular !== undefined) {
+						rows = rows.filter((hotel) => hotel.isPopular === where.isPopular);
 					}
 
 					if (where?.name?.contains) {
@@ -173,6 +181,7 @@ vi.mock("@zanadeal/db", () => {
 				}: {
 					where?: {
 						isArchived?: boolean;
+						isPopular?: boolean;
 						name?: { contains?: string; equals?: string; mode?: string };
 						updatedAt?: { gte?: Date; lte?: Date };
 					};
@@ -183,6 +192,10 @@ vi.mock("@zanadeal/db", () => {
 						rows = rows.filter(
 							(hotel) => hotel.isArchived === where.isArchived,
 						);
+					}
+
+					if (where?.isPopular !== undefined) {
+						rows = rows.filter((hotel) => hotel.isPopular === where.isPopular);
 					}
 
 					if (where?.name?.contains) {
@@ -241,6 +254,7 @@ type HotelJson = {
 	latitude: string;
 	longitude: string;
 	isArchived: boolean;
+	isPopular: boolean;
 	createdAt: string;
 	updatedAt: string;
 };

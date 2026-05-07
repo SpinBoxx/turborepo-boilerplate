@@ -5,6 +5,7 @@ model Hotel {
   address     String
   mapLink     String
   isArchived  Boolean      @default(false)
+  isPopular   Boolean      @default(false)
   latitude    String
   longitude   String
   email       String?

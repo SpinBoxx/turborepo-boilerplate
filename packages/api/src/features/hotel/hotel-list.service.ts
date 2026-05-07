@@ -1,6 +1,6 @@
+import { stringToDate } from "@zanadeal/utils";
 import type { Prisma } from "../../../../db/prisma/generated/client";
 import { Role } from "../../../../db/prisma/generated/enums";
-import { stringToDate } from "@zanadeal/utils";
 import {
 	applyComputedFilters,
 	applyComputedSort,
@@ -32,8 +32,12 @@ const HOTEL_FALLBACK_DB_ORDER: Prisma.HotelOrderByWithRelationInput[] = [
 ];
 
 interface HotelCollectionContext {
-	computedFilters: ReturnType<typeof buildHybridListExecutionPlan>["computed"]["filters"];
-	computedSort: ReturnType<typeof buildHybridListExecutionPlan>["computed"]["sort"];
+	computedFilters: ReturnType<
+		typeof buildHybridListExecutionPlan
+	>["computed"]["filters"];
+	computedSort: ReturnType<
+		typeof buildHybridListExecutionPlan
+	>["computed"]["sort"];
 	hasDateRange: boolean;
 	mode: "db" | "post-compute";
 	user: UserComputed | null | undefined;
@@ -58,6 +62,7 @@ function buildHotelWhere(
 			: filters.name?.equal
 				? { equals: filters.name.equal, mode: "insensitive" }
 				: undefined,
+		isPopular: filters.isPopular?.equal,
 		updatedAt: {
 			gte: filters.updatedAt?.gte,
 			lte: filters.updatedAt?.lte,
@@ -72,6 +77,14 @@ function buildHotelDbOrder(
 	| Prisma.HotelOrderByWithRelationInput[] {
 	if (!plan.db.sort) {
 		return HOTEL_FALLBACK_DB_ORDER;
+	}
+
+	if (plan.db.sort.field === "isPopular") {
+		return [
+			{ isPopular: plan.db.sort.direction },
+			{ updatedAt: "desc" },
+			{ id: "desc" },
+		];
 	}
 
 	return [
@@ -99,7 +112,9 @@ function buildHotelCollectionContext(
 	return {
 		computedFilters: plan.computed.filters,
 		computedSort: plan.computed.sort,
-		hasDateRange: !!(computeOptions?.checkInDate && computeOptions.checkOutDate),
+		hasDateRange: !!(
+			computeOptions?.checkInDate && computeOptions.checkOutDate
+		),
 		mode,
 		user,
 	};
@@ -156,7 +171,9 @@ function applyHotelCollectionRules(
 	);
 }
 
-function collectRoomIds(rows: Awaited<ReturnType<typeof listHotelsFromDb>>): string[] {
+function collectRoomIds(
+	rows: Awaited<ReturnType<typeof listHotelsFromDb>>,
+): string[] {
 	return [...new Set(rows.flatMap((row) => row.rooms.map((room) => room.id)))];
 }
 
@@ -203,8 +220,7 @@ export async function listHotels(
 
 	// When dates are provided, room filtering happens post-compute so we must
 	// go through the post-compute branch to get accurate pagination.
-	const needsPostCompute =
-		plan.execution.needsPostCompute || !!computeOptions;
+	const needsPostCompute = plan.execution.needsPostCompute || !!computeOptions;
 
 	if (!needsPostCompute) {
 		const [rows, total] = await Promise.all([

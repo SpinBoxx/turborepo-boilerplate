@@ -8,6 +8,11 @@ const hotelsContent = {
 			en: "Starting from",
 			mg: "Manomboka amin'ny",
 		}),
+		popular: t({
+			fr: "Populaire",
+			en: "Popular",
+			mg: "Malaza",
+		}),
 		noRoomsAvailableForDates: t({
 			fr: "Aucune chambre disponible pour ces dates",
 			en: "No rooms available for these dates",

@@ -13,6 +13,7 @@ export const HOTEL_UPSERT_DEFAULT_VALUES: UpsertHotelInput = {
 	longitude: "",
 	mapLink: "",
 	isArchived: false,
+	isPopular: false,
 };
 
 const mapHotelToUpsertHotelInput = (

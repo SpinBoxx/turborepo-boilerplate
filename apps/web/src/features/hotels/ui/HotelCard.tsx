@@ -1,10 +1,11 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Card, CardPanel } from "@/components/ui/card";
-import HotelAvailabilityPrice from "../components/HotelAvailabilityPrice";
 import HotelAddress from "../components/HotelAddress";
+import HotelAvailabilityPrice from "../components/HotelAvailabilityPrice";
 import HotelDescription from "../components/HotelDescription";
 import HotelImage from "../components/HotelImage";
 import HotelName from "../components/HotelName";
+import HotelPopularBadge from "../components/HotelPopularBadge";
 import { useHotelContext } from "../components/HotelProvider";
 
 export default function HotelCard() {
@@ -34,6 +35,7 @@ export default function HotelCard() {
 						unavailableOnly
 						className="absolute top-3 left-3 max-w-[calc(100%-1.5rem)]"
 					/>
+					<HotelPopularBadge className="absolute top-3 right-3 bg-background/90 text-foreground shadow-sm backdrop-blur" />
 				</div>
 
 				<div className="flex flex-1 flex-col gap-2.5 p-4">
