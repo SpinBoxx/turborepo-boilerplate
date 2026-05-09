@@ -34,9 +34,7 @@ function RouteComponent() {
 			<div
 				className={cn(
 					"flex min-h-dvh flex-col",
-					!hotelDetailMatch &&
-						!isSettingsRoute &&
-						"pb-18.25 md:pb-0",
+					!hotelDetailMatch && !isSettingsRoute && "pb-16.25 md:pb-0",
 				)}
 			>
 				{isSettingsRoute ? null : <Navbar />}

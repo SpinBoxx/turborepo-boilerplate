@@ -61,7 +61,10 @@ const ContactInfo = ({ icon: Icon, label, value }: ContactInfoProps) => {
 				<p className="text-primary text-sm">{label}</p>
 				<div className="flex items-center gap-1">{value}</div>
 			</div>
-			<CopyButton variant={"ghost"} className="-translate-y-1 self-end" />
+			<CopyButton
+				variant={"ghost"}
+				className="ml-auto -translate-y-1 self-end md:ml-0"
+			/>
 		</div>
 	);
 };
