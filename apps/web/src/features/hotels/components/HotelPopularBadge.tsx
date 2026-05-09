@@ -1,3 +1,4 @@
+import { cn } from "@zanadeal/ui";
 import { Star } from "lucide-react";
 import { useIntlayer } from "react-intlayer";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
@@ -10,7 +11,11 @@ export default function HotelPopularBadge({ className, ...props }: BadgeProps) {
 	if (!hotel.isPopular) return null;
 
 	return (
-		<Badge variant="warning" className={className} {...props}>
+		<Badge
+			variant="warning"
+			className={cn("dark:bg-white dark:text-black", className)}
+			{...props}
+		>
 			<Star className="fill-current" />
 			{t.popular.value}
 		</Badge>

@@ -3,6 +3,7 @@ import { cn } from "@zanadeal/ui";
 import { fileToBase64, urlToFile } from "@zanadeal/utils";
 import { CreditCard, ForkKnife, Image, Info, Save } from "lucide-react";
 import { type ComponentProps, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { FormStepperFooter } from "@/components/stepper/FormStepper/FormStepperFooter";
 import FormStepperNav from "@/components/stepper/FormStepper/FormStepperNav";
 import {
@@ -39,6 +40,16 @@ export default function HotelUpsertForm({ hotel, className }: Props) {
 				.mutateAsync({
 					...value,
 					images: imagesBase64.map((base64) => ({ base64 })),
+				})
+				.then((hotel) => {
+					toast.success(
+						`Hôtel ${hotel.name} ${hotel ? "modifié" : "créé"} avec succès`,
+					);
+				})
+				.catch(() => {
+					toast.error(
+						`Une erreur est survenue lors de la ${hotel ? "modification" : "création"} de l'hôtel`,
+					);
 				})
 				.finally(() => setIsSubmitting(false));
 		},

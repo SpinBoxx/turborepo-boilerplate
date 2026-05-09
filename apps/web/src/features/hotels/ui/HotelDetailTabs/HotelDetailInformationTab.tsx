@@ -18,6 +18,9 @@ const HotelDetailInformationTab = () => {
 			</div>
 			<div className="flex flex-col gap-3">
 				<HotelDetailSectionTitle>{t.contact.value}</HotelDetailSectionTitle>
+				<p className="max-w-2xl text-muted-foreground text-sm leading-relaxed">
+					{t.contactDescription.value}
+				</p>
 				{hotel.email && (
 					<ContactInfo
 						icon={MailIcon}

@@ -28,6 +28,11 @@ const hotelDetailContent = {
 			en: "Contact",
 			mg: "Fifandraisana",
 		}),
+		contactDescription: t({
+			fr: "Retrouvez les coordonnées de l'établissement pour poser vos questions ou confirmer les détails de votre séjour.",
+			en: "Find the property's contact details to ask questions or confirm the details of your stay.",
+			mg: "Jereo eto ny fifandraisana amin'ny hotely raha manana fanontaniana na te hanamarina ny antsipirian'ny fivahinianao.",
+		}),
 		emailAddress: t({
 			fr: "Adresse email",
 			en: "Email address",

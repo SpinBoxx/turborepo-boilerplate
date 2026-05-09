@@ -28,13 +28,32 @@ export default function HomepageHotels({ className }: Props) {
 		<section className={cn("", className)}>
 			<div className="flex items-end justify-between gap-4">
 				<div>
-					<h3 className="font-semibold text-xl md:text-2xl">{t.title.value}</h3>
-					<p className="mt-1 text-balance text-muted-foreground">
-						{t.description.value}
-					</p>
+					<div className="flex items-center justify-between">
+						<h3 className="font-semibold text-xl md:text-2xl">
+							{t.title.value}
+						</h3>
+						<Link
+							to="/hotels"
+							search={DEFAULT_HOTELS_PAGE_SEARCH}
+							className="sm:hidden"
+						>
+							<Button
+								className="h-fit text-blue-500 text-sm md:text-base"
+								variant="link"
+							>
+								{t.seeAll.value}
+								<ChevronRight />
+							</Button>
+						</Link>
+					</div>
+					<p className="mt-1 text-muted-foreground">{t.description.value}</p>
 				</div>
 
-				<Link to="/hotels" search={DEFAULT_HOTELS_PAGE_SEARCH}>
+				<Link
+					to="/hotels"
+					search={DEFAULT_HOTELS_PAGE_SEARCH}
+					className="hidden sm:block"
+				>
 					<Button
 						className="h-fit text-blue-500 text-sm md:text-base"
 						variant="link"
