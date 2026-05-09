@@ -20,7 +20,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
+import { useHotelContext } from "@/features/hotels/components/HotelProvider";
 import { useRoomContext } from "./RoomProvider";
 
 interface Props {
@@ -31,18 +31,18 @@ export default function RoomPriceBreakdownDialog({ children }: Props) {
 	const {
 		room: { prices },
 	} = useRoomContext();
-	const { checkInDate, checkOutDate } = useBookingStore();
+	const { appliedBookingDates } = useHotelContext();
 	const { locale } = useIntlayerContext();
 	const t = useIntlayer("room-total-price");
 
-	if (!checkInDate || !checkOutDate) {
+	if (!appliedBookingDates) {
 		return null;
 	}
 
 	const breakdown = getNightlyBreakdown(
 		prices,
-		stringToDate(checkInDate),
-		stringToDate(checkOutDate),
+		stringToDate(appliedBookingDates.checkInDate),
+		stringToDate(appliedBookingDates.checkOutDate),
 	);
 
 	const totalPrice = breakdown.reduce((sum, item) => sum + item.price, 0);

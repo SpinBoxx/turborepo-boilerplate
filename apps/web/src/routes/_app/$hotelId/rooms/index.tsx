@@ -24,7 +24,13 @@ export const Route = createFileRoute("/_app/$hotelId/rooms/")({
 					to: "/",
 				});
 			}
-			return { hotel };
+			return {
+				appliedBookingDates: {
+					checkInDate,
+					checkOutDate,
+				},
+				hotel,
+			};
 		} catch (_error) {
 			throw redirect({
 				to: "/",
@@ -34,6 +40,8 @@ export const Route = createFileRoute("/_app/$hotelId/rooms/")({
 });
 
 function RouteComponent() {
-	const { hotel } = Route.useRouteContext();
-	return <HotelRoomsPage hotel={hotel} />;
+	const { appliedBookingDates, hotel } = Route.useRouteContext();
+	return (
+		<HotelRoomsPage appliedBookingDates={appliedBookingDates} hotel={hotel} />
+	);
 }

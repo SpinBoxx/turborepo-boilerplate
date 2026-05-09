@@ -1,14 +1,11 @@
-import {
-	currency,
-	getTotalPriceByRange,
-	stringToDate,
-} from "@zanadeal/utils";
+import { currency, getTotalPriceByRange, stringToDate } from "@zanadeal/utils";
 import { Info } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useIntlayer } from "react-intlayer";
-import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
+import { useHotelContext } from "@/features/hotels/components/HotelProvider";
 import { cn } from "@/lib/utils";
 import RoomPriceBreakdownDialog from "./RoomPriceBreakdownDialog";
+import RoomPriceInfoTooltip from "./RoomPriceInfoTooltip";
 import { useRoomContext } from "./RoomProvider";
 
 interface Props extends ComponentProps<"div"> {
@@ -29,17 +26,17 @@ export default function RoomTotalPrice({
 	const {
 		room: { prices },
 	} = useRoomContext();
-	const { checkInDate, checkOutDate } = useBookingStore();
+	const { appliedBookingDates } = useHotelContext();
 	const t = useIntlayer("room-total-price");
 
-	if (!checkInDate || !checkOutDate) {
+	if (!appliedBookingDates) {
 		return null;
 	}
 
 	const totalPrice = getTotalPriceByRange(
 		prices,
-		stringToDate(checkInDate),
-		stringToDate(checkOutDate),
+		stringToDate(appliedBookingDates.checkInDate),
+		stringToDate(appliedBookingDates.checkOutDate),
 	);
 
 	return (
@@ -60,7 +57,9 @@ export default function RoomTotalPrice({
 						>
 							{currency(totalPrice)}
 						</span>
-						<Info className="size-4.5" />
+						<RoomPriceInfoTooltip>
+							<Info className="size-4.5" />
+						</RoomPriceInfoTooltip>
 					</div>
 				</div>
 			</RoomPriceBreakdownDialog>
