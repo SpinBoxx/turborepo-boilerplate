@@ -15,6 +15,7 @@ import {
 	BedDouble,
 	Home,
 	HotelIcon,
+	MessageSquare,
 	ScrollText,
 	Users,
 	Utensils,
@@ -54,6 +55,12 @@ const dashboardRoutes: Route[] = [
 		title: "Terms",
 		icon: <ScrollText className="size-4" />,
 		link: "/dashboard/terms",
+	},
+	{
+		id: "contact-messages",
+		title: "Messages",
+		icon: <MessageSquare className="size-4" />,
+		link: "/dashboard/contact-messages",
 	},
 	{
 		id: "users",

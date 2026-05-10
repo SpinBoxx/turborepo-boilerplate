@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LegalRouteRouteImport } from './routes/_legal/route'
+import { Route as CompanyRouteRouteImport } from './routes/_company/route'
 import { Route as CheckoutRouteRouteImport } from './routes/_checkout/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
@@ -37,6 +38,10 @@ import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId
 
 const LegalRouteRoute = LegalRouteRouteImport.update({
   id: '/_legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyRouteRoute = CompanyRouteRouteImport.update({
+  id: '/_company',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRouteRoute = CheckoutRouteRouteImport.update({
@@ -68,14 +73,14 @@ const LegalTermsAndConditionsOfSaleRoute =
     getParentRoute: () => LegalRouteRoute,
   } as any)
 const CompanyContactRoute = CompanyContactRouteImport.update({
-  id: '/_company/contact',
+  id: '/contact',
   path: '/contact',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => CompanyRouteRoute,
 } as any)
 const CompanyAboutRoute = CompanyAboutRouteImport.update({
-  id: '/_company/about',
+  id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => CompanyRouteRoute,
 } as any)
 const CheckoutCheckoutRouteRoute = CheckoutCheckoutRouteRouteImport.update({
   id: '/checkout',
@@ -211,6 +216,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_checkout': typeof CheckoutRouteRouteWithChildren
+  '/_company': typeof CompanyRouteRouteWithChildren
   '/_legal': typeof LegalRouteRouteWithChildren
   '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRouteRouteWithChildren
@@ -284,6 +290,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/_auth'
     | '/_checkout'
+    | '/_company'
     | '/_legal'
     | '/_app/settings'
     | '/_auth/login'
@@ -312,9 +319,8 @@ export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   CheckoutRouteRoute: typeof CheckoutRouteRouteWithChildren
+  CompanyRouteRoute: typeof CompanyRouteRouteWithChildren
   LegalRouteRoute: typeof LegalRouteRouteWithChildren
-  CompanyAboutRoute: typeof CompanyAboutRoute
-  CompanyContactRoute: typeof CompanyContactRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -324,6 +330,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof LegalRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_company': {
+      id: '/_company'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof CompanyRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_checkout': {
@@ -373,14 +386,14 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof CompanyContactRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CompanyRouteRoute
     }
     '/_company/about': {
       id: '/_company/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof CompanyAboutRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CompanyRouteRoute
     }
     '/_checkout/checkout': {
       id: '/_checkout/checkout'
@@ -580,6 +593,20 @@ const CheckoutRouteRouteWithChildren = CheckoutRouteRoute._addFileChildren(
   CheckoutRouteRouteChildren,
 )
 
+interface CompanyRouteRouteChildren {
+  CompanyAboutRoute: typeof CompanyAboutRoute
+  CompanyContactRoute: typeof CompanyContactRoute
+}
+
+const CompanyRouteRouteChildren: CompanyRouteRouteChildren = {
+  CompanyAboutRoute: CompanyAboutRoute,
+  CompanyContactRoute: CompanyContactRoute,
+}
+
+const CompanyRouteRouteWithChildren = CompanyRouteRoute._addFileChildren(
+  CompanyRouteRouteChildren,
+)
+
 interface LegalRouteRouteChildren {
   LegalTermsAndConditionsOfSaleRoute: typeof LegalTermsAndConditionsOfSaleRoute
   LegalTermsOfServiceRoute: typeof LegalTermsOfServiceRoute
@@ -598,9 +625,8 @@ const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   CheckoutRouteRoute: CheckoutRouteRouteWithChildren,
+  CompanyRouteRoute: CompanyRouteRouteWithChildren,
   LegalRouteRoute: LegalRouteRouteWithChildren,
-  CompanyAboutRoute: CompanyAboutRoute,
-  CompanyContactRoute: CompanyContactRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

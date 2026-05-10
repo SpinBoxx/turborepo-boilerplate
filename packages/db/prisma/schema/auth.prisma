@@ -20,6 +20,7 @@ model User {
   validatedBookings Booking[] @relation("BookingValidatedBy")
   bookingEvents BookingEvent[] @relation("BookingEventActor")
   reviews       Review[]
+  contactMessages ContactMessage[]
 
   @@unique([email])
   @@map("user")
