@@ -14,6 +14,7 @@ export const HOTEL_UPSERT_DEFAULT_VALUES: UpsertHotelInput = {
 	mapLink: "",
 	isArchived: false,
 	isPopular: false,
+	platformFeePercentageBasisPoints: 1000,
 };
 
 const mapHotelToUpsertHotelInput = (

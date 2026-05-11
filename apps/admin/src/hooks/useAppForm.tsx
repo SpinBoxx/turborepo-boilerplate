@@ -1,6 +1,7 @@
 import { createFormHook } from "@tanstack/react-form";
 import { FormSubmitButton } from "@/components/formComponents/FormSubmitButton";
 import {
+	NumberField,
 	PasswordField,
 	Select,
 	Switch,
@@ -18,6 +19,7 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 		Switch,
 		SwitchContainer,
 		PasswordField,
+		NumberField,
 	},
 	formComponents: {
 		SubmitButton: FormSubmitButton,

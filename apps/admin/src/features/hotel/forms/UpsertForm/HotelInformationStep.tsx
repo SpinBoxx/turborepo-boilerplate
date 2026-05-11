@@ -72,6 +72,24 @@ const HotelInformationsStep = withForm({
 						/>
 					)}
 				</form.AppField>
+				<form.AppField name="platformFeePercentageBasisPoints">
+					{(field) => (
+						<div className="flex flex-col gap-1">
+							<field.NumberField
+								label="Frais plateforme"
+								inputProps={{
+									min: 0,
+									max: 10000,
+									step: 25,
+									placeholder: "1000",
+								}}
+							/>
+							<small className="text-muted-foreground">
+								Montant en points de base. 1000 = 10 %.
+							</small>
+						</div>
+					)}
+				</form.AppField>
 				<form.AppField name="email">
 					{(field) => (
 						<field.TextField

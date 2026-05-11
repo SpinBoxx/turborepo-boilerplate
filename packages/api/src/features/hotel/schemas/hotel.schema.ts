@@ -40,6 +40,12 @@ const HotelComputedSchemaBase = z.object({
 	updatedAt: z.date(),
 });
 
+const PlatformFeePercentageBasisPointsSchema = z
+	.number()
+	.int()
+	.min(0)
+	.max(10000);
+
 // ─── Per-role schemas ───────────────────────────────────────────────
 
 export const HotelAdminComputedSchema = HotelComputedSchemaBase;
@@ -66,6 +72,8 @@ export const UpsertHotelInputSchema = z.object({
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional(),
+	platformFeePercentageBasisPoints:
+		PlatformFeePercentageBasisPointsSchema.default(1000),
 	phoneNumber: z.string().optional(),
 	amenityIds: z.array(z.string().min(1)),
 	bankAccount: UpsertBankAccountInputSchema.optional(),
@@ -82,6 +90,8 @@ export const UpsertHotelComputedInputSchema = z.object({
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional(),
+	platformFeePercentageBasisPoints:
+		PlatformFeePercentageBasisPointsSchema.optional(),
 	phoneNumber: z.string().optional(),
 	amenityIds: z.array(z.string().min(1)).optional(),
 	bankAccount: UpsertBankAccountInputSchema.optional(),

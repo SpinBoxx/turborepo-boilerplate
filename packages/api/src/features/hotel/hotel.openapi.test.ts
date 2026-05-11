@@ -52,6 +52,7 @@ vi.mock("@zanadeal/db", () => {
 					> & {
 						isArchived?: boolean;
 						isPopular?: boolean;
+						platformFeePercentageBasisPoints?: number;
 					};
 				}) => {
 					const id = String(nextId++);
@@ -71,7 +72,8 @@ vi.mock("@zanadeal/db", () => {
 						latitude: data.latitude,
 						longitude: data.longitude,
 						phoneNumber: null,
-						platformFeePercentageBasisPoints: 0,
+						platformFeePercentageBasisPoints:
+							data.platformFeePercentageBasisPoints ?? 1000,
 						isArchived: data.isArchived ?? false,
 						isPopular: data.isPopular ?? false,
 						createdAt: now,
@@ -257,6 +259,7 @@ type HotelJson = {
 	isPopular: boolean;
 	createdAt: string;
 	updatedAt: string;
+	platformFeePercentageBasisPoints: number;
 };
 
 async function startOpenApiServer(roles: Role[] = [Role.ADMIN]) {
@@ -327,6 +330,7 @@ describe("hotel OpenAPI routes", () => {
 				mapLink: "https://maps.example/hotel-bidon",
 				latitude: "48.8566",
 				longitude: "2.3522",
+				platformFeePercentageBasisPoints: 1250,
 				amenityIds: [],
 				images: [],
 			}),
@@ -343,6 +347,7 @@ describe("hotel OpenAPI routes", () => {
 			mapLink: "https://maps.example/hotel-bidon",
 			latitude: "48.8566",
 			longitude: "2.3522",
+			platformFeePercentageBasisPoints: 1250,
 		});
 		expect(typeof created.createdAt).toBe("string");
 		expect(typeof created.updatedAt).toBe("string");
