@@ -5,8 +5,8 @@ import { hashPassword } from "better-auth/crypto";
 import type { Prisma } from "../../../../db/prisma/generated/client";
 import { Role } from "../../../../db/prisma/generated/enums";
 import type {
-	CurrentUserProfile,
 	CreateManagedUserInput,
+	CurrentUserProfile,
 	ManagedUserBusinessRole,
 	UpdateCurrentUserProfileInput,
 	UpdateManagedUserInput,
@@ -71,7 +71,9 @@ export async function getCurrentUserProfile(
 	});
 }
 
-export async function getUserByEmail(email: string): Promise<{ id: string } | null> {
+export async function getUserByEmail(
+	email: string,
+): Promise<{ id: string } | null> {
 	return await prisma.user.findUnique({
 		where: { email },
 		select: { id: true },
@@ -171,4 +173,11 @@ export async function deactivateManagedUser(
 	await destroyUserSessions(id);
 
 	return user;
+}
+
+export async function deleteManagedUser(id: string): Promise<ManagedUserDB> {
+	return await prisma.user.delete({
+		where: { id },
+		select: managedUserSelect,
+	});
 }

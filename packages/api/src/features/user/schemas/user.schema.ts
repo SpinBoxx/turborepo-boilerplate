@@ -77,6 +77,10 @@ export const DeactivateManagedUserInputSchema = z.object({
 	id: z.string().min(1),
 });
 
+export const DeleteManagedUserInputSchema = z.object({
+	id: z.string().min(1),
+});
+
 export type LoginInput = z.infer<typeof LoginInputSchema>;
 export type UpsertUserInput = z.infer<typeof UpsertUserInputSchema>;
 export type UserComputed = z.infer<typeof UserComputedSchema>;
@@ -96,4 +100,7 @@ export type UpdateCurrentUserProfileInput = z.infer<
 >;
 export type DeactivateManagedUserInput = z.infer<
 	typeof DeactivateManagedUserInputSchema
+>;
+export type DeleteManagedUserInput = z.infer<
+	typeof DeleteManagedUserInputSchema
 >;

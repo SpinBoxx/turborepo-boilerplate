@@ -3,16 +3,20 @@ import { Button, Spinner } from "@zanadeal/ui";
 import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "@/auth/providers/AuthProvider";
 import H1 from "@/components/H1";
 import UserUpsertDialog from "./forms/UserUpsertDialog";
 import UserDeactivateAlertDialog from "./ui/UserDeactivateAlertDialog";
+import UserDeleteAlertDialog from "./ui/UserDeleteAlertDialog";
 import UserTable from "./ui/UserTable";
 import { getErrorMessage, useManagedUsers } from "./users.queries";
 
 export default function UsersPage() {
+	const { user: currentUser } = useAuth();
 	const { data, isPending, isError, error } = useManagedUsers();
 	const [upsertOpen, setUpsertOpen] = useState(false);
 	const [deactivateOpen, setDeactivateOpen] = useState(false);
+	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [selected, setSelected] = useState<ManagedUser | null>(null);
 
 	const users = useMemo(() => data ?? [], [data]);
@@ -58,6 +62,7 @@ export default function UsersPage() {
 				</div>
 			) : (
 				<UserTable
+					currentUserId={currentUser?.id}
 					users={users}
 					onEdit={(user) => {
 						setSelected(user);
@@ -66,6 +71,10 @@ export default function UsersPage() {
 					onDeactivate={(user) => {
 						setSelected(user);
 						setDeactivateOpen(true);
+					}}
+					onDelete={(user) => {
+						setSelected(user);
+						setDeleteOpen(true);
 					}}
 				/>
 			)}
@@ -79,6 +88,12 @@ export default function UsersPage() {
 			<UserDeactivateAlertDialog
 				open={deactivateOpen}
 				onOpenChange={setDeactivateOpen}
+				user={selected}
+			/>
+
+			<UserDeleteAlertDialog
+				open={deleteOpen}
+				onOpenChange={setDeleteOpen}
 				user={selected}
 			/>
 		</div>

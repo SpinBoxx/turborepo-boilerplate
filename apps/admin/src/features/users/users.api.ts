@@ -1,6 +1,7 @@
 import type {
 	CreateManagedUserInput,
 	DeactivateManagedUserInput,
+	DeleteManagedUserInput,
 	UpdateManagedUserInput,
 } from "@zanadeal/api/features/user";
 import { orpc } from "@/lib/orpc";
@@ -19,4 +20,8 @@ export async function updateManagedUser(input: UpdateManagedUserInput) {
 
 export async function deactivateManagedUser(input: DeactivateManagedUserInput) {
 	return orpc.user.deactivateManaged(input);
+}
+
+export async function deleteManagedUser(input: DeleteManagedUserInput) {
+	return orpc.user.deleteManaged(input);
 }

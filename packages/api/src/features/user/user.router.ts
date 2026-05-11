@@ -1,9 +1,11 @@
 import { ORPCError } from "@orpc/server";
+import { protectedProcedure } from "../..";
 import { adminProcedure } from "../../index";
 import {
-	CurrentUserProfileSchema,
 	CreateManagedUserInputSchema,
+	CurrentUserProfileSchema,
 	DeactivateManagedUserInputSchema,
+	DeleteManagedUserInputSchema,
 	ManagedUserSchema,
 	UpdateCurrentUserProfileInputSchema,
 	UpdateManagedUserInputSchema,
@@ -11,6 +13,7 @@ import {
 import {
 	createManagedUser,
 	deactivateManagedUser,
+	deleteManagedUser,
 	getCurrentUserProfile,
 	getManagedUserByEmail,
 	getManagedUserById,
@@ -19,7 +22,6 @@ import {
 	updateCurrentUserProfile,
 	updateManagedUser,
 } from "./user.store";
-import { protectedProcedure } from "../..";
 
 export const userRouter = {
 	me: protectedProcedure
@@ -115,8 +117,8 @@ export const userRouter = {
 		}),
 	deactivateManaged: adminProcedure
 		.route({
-			method: "DELETE",
-			path: "/users/managed/{id}",
+			method: "PATCH",
+			path: "/users/managed/{id}/deactivate",
 			summary: "Deactivate an admin or hotel reviewer user",
 			tags: ["User"],
 		})
@@ -140,5 +142,33 @@ export const userRouter = {
 			}
 
 			return await deactivateManagedUser(input.id);
+		}),
+	deleteManaged: adminProcedure
+		.route({
+			method: "DELETE",
+			path: "/users/managed/{id}",
+			summary: "Delete an admin or hotel reviewer user",
+			tags: ["User"],
+		})
+		.input(DeleteManagedUserInputSchema)
+		.output(ManagedUserSchema)
+		.handler(async ({ input, context }) => {
+			const currentUser = context.session?.user;
+			if (!currentUser) {
+				throw new ORPCError("UNAUTHORIZED");
+			}
+
+			if (input.id === currentUser.id) {
+				throw new ORPCError("BAD_REQUEST", {
+					message: "You cannot delete your own account.",
+				});
+			}
+
+			const existingUser = await getManagedUserById(input.id);
+			if (!existingUser) {
+				throw new ORPCError("NOT_FOUND");
+			}
+
+			return await deleteManagedUser(input.id);
 		}),
 };

@@ -1,7 +1,5 @@
 import type { ManagedUser } from "@zanadeal/api/features/user";
 import {
-	Badge,
-	Button,
 	Table,
 	TableBody,
 	TableCell,
@@ -9,7 +7,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "@zanadeal/ui";
-import { Pencil, UserX } from "lucide-react";
+import { UserActionButtons } from "../components/UserActionButtons";
+import { UserRoleBadge } from "../components/UserRoleBadge";
+import { UserStatusBadge } from "../components/UserStatusBadge";
 
 function formatDate(value: Date | string) {
 	return new Intl.DateTimeFormat("fr-FR", {
@@ -17,16 +17,16 @@ function formatDate(value: Date | string) {
 	}).format(new Date(value));
 }
 
-function getBusinessRole(user: ManagedUser) {
-	return user.roles.includes("ADMIN") ? "ADMIN" : "HOTEL_REVIEWER";
-}
-
 export default function UserTable({
+	currentUserId,
 	users,
+	onDelete,
 	onEdit,
 	onDeactivate,
 }: {
+	currentUserId?: string;
 	users: ManagedUser[];
+	onDelete: (user: ManagedUser) => void;
 	onEdit: (user: ManagedUser) => void;
 	onDeactivate: (user: ManagedUser) => void;
 }) {
@@ -50,36 +50,20 @@ export default function UserTable({
 						</TableCell>
 						<TableCell>{user.email}</TableCell>
 						<TableCell>
-							<Badge variant="secondary">{getBusinessRole(user)}</Badge>
+							<UserRoleBadge user={user} />
 						</TableCell>
 						<TableCell>
-							{user.disabledAt ? (
-								<Badge variant="destructive">Désactivé</Badge>
-							) : (
-								<Badge>Actif</Badge>
-							)}
+							<UserStatusBadge user={user} />
 						</TableCell>
 						<TableCell>{formatDate(user.createdAt)}</TableCell>
 						<TableCell>
-							<div className="flex justify-end gap-2">
-								<Button
-									variant="ghost"
-									size="icon-sm"
-									aria-label="Modifier l'utilisateur"
-									onClick={() => onEdit(user)}
-								>
-									<Pencil className="size-4" />
-								</Button>
-								<Button
-									variant="ghost"
-									size="icon-sm"
-									aria-label="Désactiver l'utilisateur"
-									disabled={!!user.disabledAt}
-									onClick={() => onDeactivate(user)}
-								>
-									<UserX className="size-4" />
-								</Button>
-							</div>
+							<UserActionButtons
+								currentUserId={currentUserId}
+								onDeactivate={onDeactivate}
+								onDelete={onDelete}
+								onEdit={onEdit}
+								user={user}
+							/>
 						</TableCell>
 					</TableRow>
 				))}

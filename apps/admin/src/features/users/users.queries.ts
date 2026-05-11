@@ -2,12 +2,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
 	CreateManagedUserInput,
 	DeactivateManagedUserInput,
+	DeleteManagedUserInput,
 	UpdateManagedUserInput,
 } from "@zanadeal/api/features/user";
 import { toast } from "sonner";
 import {
 	createManagedUser,
 	deactivateManagedUser,
+	deleteManagedUser,
 	listManagedUsers,
 	updateManagedUser,
 } from "./users.api";
@@ -77,6 +79,22 @@ export function useDeactivateManagedUser() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: userKeys().all });
 			toast.success("Utilisateur désactivé");
+		},
+	});
+}
+
+export function useDeleteManagedUser() {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (input: DeleteManagedUserInput) => deleteManagedUser(input),
+		onError: (error) => {
+			toast.error("Suppression impossible", {
+				description: getErrorMessage(error),
+			});
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: userKeys().all });
+			toast.success("Utilisateur supprimé");
 		},
 	});
 }
