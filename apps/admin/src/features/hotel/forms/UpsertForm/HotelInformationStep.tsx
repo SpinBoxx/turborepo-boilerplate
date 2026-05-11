@@ -36,6 +36,10 @@ const HotelInformationsStep = withForm({
 						}
 					}}
 				/>
+				<p className="text-muted-foreground">
+					Utilise les flèches du clavier ↑ et ↓ pour naviguer dans les
+					suggestions de la carte maps.
+				</p>
 				<form.AppField name="address">
 					{(field) => (
 						<field.TextField
