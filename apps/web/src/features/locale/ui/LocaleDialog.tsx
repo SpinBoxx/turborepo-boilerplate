@@ -1,5 +1,5 @@
 import { cn } from "@zanadeal/ui";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useIntlayer, useIntlayerContext } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,28 +14,55 @@ import {
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Radio, RadioGroup } from "@/components/ui/radio-group";
-import { getLanguages } from "../services/locale";
+import {
+	getLanguages,
+	getStoredLocale,
+	isLocaleValid,
+	storeLocale,
+} from "../services/locale";
 
 export default function LocaleDialog() {
 	const t = useIntlayer("locale-dialog");
 	const { locale, setLocale } = useIntlayerContext();
-	console.log(locale);
+	const [selectedLocale, setSelectedLocale] = useState(locale);
+	const [isOpen, setIsOpen] = useState(() => !getStoredLocale());
 
-	const [isOpen, setIsOpen] = useState(!locale);
+	useEffect(() => {
+		if (!isOpen) setSelectedLocale(locale);
+	}, [isOpen, locale]);
 
 	const locales = useMemo(() => {
 		return getLanguages(locale);
 	}, [locale]);
 
-	const canClose = locales.some((l) => l.code === locale);
+	const canSave = isLocaleValid(selectedLocale);
 
-	const onClose = () => {
-		if (!canClose) return;
+	const onLocaleChange = (value: string) => {
+		if (!isLocaleValid(value)) return;
+
+		setSelectedLocale(value);
+	};
+
+	const onSave = () => {
+		if (!canSave) return;
+
+		storeLocale(selectedLocale);
+		setLocale(selectedLocale);
 		setIsOpen(false);
 	};
 
 	return (
-		<Dialog open={isOpen}>
+		<Dialog
+			onOpenChange={(open) => {
+				if (open) {
+					setIsOpen(true);
+					return;
+				}
+
+				onSave();
+			}}
+			open={isOpen}
+		>
 			<DialogPopup className="sm:max-w-sm">
 				<Form className="contents">
 					<DialogHeader>
@@ -44,10 +71,10 @@ export default function LocaleDialog() {
 					</DialogHeader>
 
 					<DialogPanel className="grid gap-4">
-						<RadioGroup defaultValue={locale}>
+						<RadioGroup onValueChange={onLocaleChange} value={selectedLocale}>
 							{locales.map((locale) => (
 								<Label
-									onClick={() => setLocale(locale.code)}
+									onClick={() => onLocaleChange(locale.code)}
 									key={locale.code}
 									className="flex items-start gap-2 rounded-lg border p-3 hover:bg-accent/50 has-data-checked:border-primary/48 has-data-checked:bg-accent/50"
 								>
@@ -64,7 +91,7 @@ export default function LocaleDialog() {
 					</DialogPanel>
 
 					<DialogFooter>
-						<Button onClick={onClose} type="button" disabled={!canClose}>
+						<Button onClick={onSave} type="button" disabled={!canSave}>
 							{t.save.value}
 						</Button>
 					</DialogFooter>

@@ -92,8 +92,6 @@ export function buildCloudinaryImage(
 
 	const srcSet = widths
 		.map((width) => {
-			console.log({ width });
-
 			const transformation = withWidth(baseTransformation, width);
 			return `${buildDeliveryUrl(image.publicId as string, transformation)} ${width}w`;
 		})

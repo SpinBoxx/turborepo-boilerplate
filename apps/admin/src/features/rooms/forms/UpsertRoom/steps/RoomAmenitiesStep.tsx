@@ -1,5 +1,5 @@
 import { useStore } from "@tanstack/react-form";
-import type { Amenity } from "@zanadeal/api/contracts";
+import type { AmenityComputed } from "@zanadeal/api/features/amenity";
 import { Loader2 } from "lucide-react";
 import { useAmenities } from "@/features/amenity/amenity.queries";
 import AmenityCard from "@/features/amenity/ui/AmenityCard";
@@ -24,7 +24,6 @@ const RoomAmenitiesFormStep = withForm({
 				? current.filter((id: string) => id !== amenityId)
 				: [...current, amenityId];
 			form.setFieldValue("amenityIds", updated);
-			console.log(form.getFieldValue("amenityIds"));
 		};
 
 		if (isPending) {
@@ -57,7 +56,7 @@ const RoomAmenitiesFormStep = withForm({
 					sélectionné{selectedIds.length > 1 ? "s" : ""}
 				</p>
 				<div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-					{amenities.map((amenity: Amenity) => (
+					{amenities.map((amenity: AmenityComputed) => (
 						<AmenityCard
 							size={"sm"}
 							key={amenity.id}

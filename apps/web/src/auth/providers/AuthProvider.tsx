@@ -298,8 +298,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				return;
 			}
 
-			console.log(response.data);
-
 			setUser(response.data.user);
 			setStatus("authenticated");
 			options?.onSuccess?.(response.data.user);

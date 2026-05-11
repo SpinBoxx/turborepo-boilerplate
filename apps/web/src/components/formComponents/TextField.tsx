@@ -31,7 +31,6 @@ export function TextField({
 	const showErrors = field.state.meta.isTouched && errors.length > 0;
 	const inputId = inputProps?.id ?? field.name;
 	const isInvalid = showErrors;
-	console.log(isInvalid);
 
 	return (
 		<div className={cn("w-full", className)}>
