@@ -55,7 +55,7 @@ type AuthContextValue = {
 		input: UpsertUserInput,
 		options?: LoginOptions,
 	) => Promise<User | undefined>;
-	signOut: (options?: SignOutOptions) => Promise<void>;
+	signOut: (options?: SignOutOptions) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -192,7 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		}
 	};
 
-	const signOut = async (options?: SignOutOptions) => {
+	const signOut = async (options?: SignOutOptions): Promise<boolean> => {
 		try {
 			const res = await $fetch(
 				`${import.meta.env.VITE_API_URL}/api/auth/sign-out`,
@@ -201,16 +201,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					credentials: "include",
 				},
 			);
-			setUser(null);
-			setStatus("unauthenticated");
 
 			if (res.error) {
 				toast.error("Sign out failed", {
 					description:
 						res.error.message || "Unable to sign out. Try again later.",
 				});
-				return;
+				return false;
 			}
+
+			setUser(null);
+			setStatus("unauthenticated");
+			await options?.onSuccess?.();
+
+			return true;
 		} catch (error) {
 			toast.error("Sign out failed", {
 				description: "An unexpected error occurred. Please try again later.",
@@ -220,7 +224,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					? error
 					: new Error("An unexpected error occurred."),
 			);
-			return;
+			return false;
 		}
 	};
 
