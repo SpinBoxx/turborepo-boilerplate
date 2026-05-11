@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
+	DeleteContactMessageInput,
 	ListContactMessagesInput,
 	UpdateContactMessageStatusInput,
 } from "@zanadeal/api/features/contact-message";
 import { toast } from "sonner";
 import {
+	deleteContactMessage,
 	listContactMessages,
 	updateContactMessageStatus,
 } from "./contact-messages.api";
@@ -45,6 +47,24 @@ export function useUpdateContactMessageStatus() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: contactMessageKeys().all });
 			toast.success("Message mis à jour");
+		},
+	});
+}
+
+export function useDeleteContactMessage() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (input: DeleteContactMessageInput) =>
+			deleteContactMessage(input),
+		onError: (error) => {
+			toast.error("Suppression impossible", {
+				description: getErrorMessage(error),
+			});
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: contactMessageKeys().all });
+			toast.success("Message supprimé");
 		},
 	});
 }

@@ -8,8 +8,10 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@zanadeal/ui";
-import { Check, CheckCheck, Mail, Send } from "lucide-react";
+import { Check, CheckCheck, Mail, Send, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { useUpdateContactMessageStatus } from "../contact-messages.queries";
+import { ContactMessageDeleteAlertDialog } from "./ContactMessageDeleteAlertDialog";
 import { ContactMessageStatusBadge } from "./ContactMessageStatusBadge";
 
 function formatDate(value: Date | string | null) {
@@ -37,13 +39,14 @@ export function ContactMessageDetailDialog({
 	message: ContactMessageComputed | null;
 }) {
 	const mutation = useUpdateContactMessageStatus();
+	const [deleteOpen, setDeleteOpen] = useState(false);
 
 	const canMarkRead = message?.status === "NEW";
 	const canResolve = message != null && message.status !== "RESOLVED";
 	const replyHref = message ? buildReplyHref(message) : undefined;
 
 	function handleOpenChange(next: boolean) {
-		if (mutation.isPending) return;
+		if (mutation.isPending || deleteOpen) return;
 		if (!next) mutation.reset();
 		onOpenChange(next);
 	}
@@ -130,15 +133,26 @@ export function ContactMessageDetailDialog({
 						</div>
 
 						<DialogFooter className="mt-6 gap-2 sm:flex-row sm:justify-between">
-							<Button asChild type="button" variant="outline">
-								<a
-									href={replyHref}
-									aria-label={`Répondre par email à ${message.email}`}
+							<div className="flex flex-col-reverse gap-2 sm:flex-row">
+								<Button
+									type="button"
+									variant="destructive"
+									disabled={mutation.isPending}
+									onClick={() => setDeleteOpen(true)}
 								>
-									<Send className="size-4" />
-									Répondre
-								</a>
-							</Button>
+									<Trash2 className="size-4" />
+									Supprimer
+								</Button>
+								<Button asChild type="button" variant="outline">
+									<a
+										href={replyHref}
+										aria-label={`Répondre par email à ${message.email}`}
+									>
+										<Send className="size-4" />
+										Répondre
+									</a>
+								</Button>
+							</div>
 
 							<div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
 								<Button
@@ -163,6 +177,12 @@ export function ContactMessageDetailDialog({
 					</>
 				)}
 			</DialogContent>
+			<ContactMessageDeleteAlertDialog
+				open={deleteOpen}
+				onOpenChange={setDeleteOpen}
+				message={message}
+				onDeleted={() => onOpenChange(false)}
+			/>
 		</Dialog>
 	);
 }

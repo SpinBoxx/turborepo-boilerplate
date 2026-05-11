@@ -8,7 +8,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@zanadeal/ui";
-import { Eye } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import { ContactMessageStatusBadge } from "./ContactMessageStatusBadge";
 
 function formatDate(value: Date | string) {
@@ -24,9 +24,11 @@ function getMessagePreview(message: string) {
 
 export function ContactMessagesTable({
 	messages,
+	onDeleteMessage,
 	onOpenMessage,
 }: {
 	messages: ContactMessageComputed[];
+	onDeleteMessage: (message: ContactMessageComputed) => void;
 	onOpenMessage: (message: ContactMessageComputed) => void;
 }) {
 	return (
@@ -63,7 +65,7 @@ export function ContactMessagesTable({
 							{getMessagePreview(message.message)}
 						</TableCell>
 						<TableCell>
-							<div className="flex justify-end">
+							<div className="flex justify-end gap-1">
 								<Button
 									variant="ghost"
 									size="icon-sm"
@@ -71,6 +73,15 @@ export function ContactMessagesTable({
 									onClick={() => onOpenMessage(message)}
 								>
 									<Eye className="size-4" />
+								</Button>
+								<Button
+									variant="ghost"
+									size="icon-sm"
+									className="text-destructive hover:text-destructive"
+									aria-label="Supprimer le message"
+									onClick={() => onDeleteMessage(message)}
+								>
+									<Trash2 className="size-4" />
 								</Button>
 							</div>
 						</TableCell>

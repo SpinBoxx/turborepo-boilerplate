@@ -7,6 +7,7 @@ import {
 	getErrorMessage,
 	useContactMessages,
 } from "./contact-messages.queries";
+import { ContactMessageDeleteAlertDialog } from "./ui/ContactMessageDeleteAlertDialog";
 import { ContactMessageDetailDialog } from "./ui/ContactMessageDetailDialog";
 import { ContactMessagesTable } from "./ui/ContactMessagesTable";
 
@@ -14,7 +15,10 @@ export default function ContactMessagesPage() {
 	const { data, isPending, isError, error } = useContactMessages();
 	const [selectedMessage, setSelectedMessage] =
 		useState<ContactMessageComputed | null>(null);
+	const [messageToDelete, setMessageToDelete] =
+		useState<ContactMessageComputed | null>(null);
 	const [detailOpen, setDetailOpen] = useState(false);
+	const [deleteOpen, setDeleteOpen] = useState(false);
 
 	const messages = useMemo(() => data ?? [], [data]);
 	const errorMessage = useMemo(() => getErrorMessage(error), [error]);
@@ -48,6 +52,10 @@ export default function ContactMessagesPage() {
 			) : (
 				<ContactMessagesTable
 					messages={messages}
+					onDeleteMessage={(message) => {
+						setMessageToDelete(message);
+						setDeleteOpen(true);
+					}}
 					onOpenMessage={(message) => {
 						setSelectedMessage(message);
 						setDetailOpen(true);
@@ -59,6 +67,20 @@ export default function ContactMessagesPage() {
 				open={detailOpen}
 				onOpenChange={setDetailOpen}
 				message={selectedMessage}
+			/>
+			<ContactMessageDeleteAlertDialog
+				open={deleteOpen}
+				onOpenChange={(next) => {
+					setDeleteOpen(next);
+					if (!next) setMessageToDelete(null);
+				}}
+				message={messageToDelete}
+				onDeleted={() => {
+					if (messageToDelete?.id === selectedMessage?.id) {
+						setDetailOpen(false);
+						setSelectedMessage(null);
+					}
+				}}
 			/>
 		</div>
 	);

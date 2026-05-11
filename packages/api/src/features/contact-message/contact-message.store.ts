@@ -46,3 +46,12 @@ export async function updateContactMessageStatus(
 		include: contactMessageInclude,
 	});
 }
+
+export async function deleteContactMessage(
+	id: string,
+): Promise<ContactMessageDB> {
+	return await prisma.contactMessage.delete({
+		where: { id },
+		include: contactMessageInclude,
+	});
+}

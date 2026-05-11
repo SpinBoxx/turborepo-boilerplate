@@ -7,6 +7,7 @@ import {
 } from "./contact-message.service";
 import {
 	createContactMessage,
+	deleteContactMessage,
 	getContactMessageById,
 	listContactMessages,
 	updateContactMessageStatus,
@@ -15,6 +16,8 @@ import {
 	ContactMessageSchema,
 	CreateContactMessageInputSchema,
 	CreateContactMessageOutputSchema,
+	DeleteContactMessageInputSchema,
+	DeleteContactMessageOutputSchema,
 	ListContactMessagesInputSchema,
 	UpdateContactMessageStatusInputSchema,
 } from "./schemas/contact-message.schemas";
@@ -70,5 +73,24 @@ export const contactMessageRouter = {
 				input.id,
 				buildContactMessageStatusUpdate(message, input.status),
 			);
+		}),
+	delete: adminProcedure
+		.route({
+			method: "DELETE",
+			path: "/contact-messages/{id}",
+			summary: "Delete a contact message",
+			tags: ["ContactMessage"],
+		})
+		.input(DeleteContactMessageInputSchema)
+		.output(DeleteContactMessageOutputSchema)
+		.handler(async ({ input }) => {
+			const message = await getContactMessageById(input.id);
+			if (!message) {
+				throw new ORPCError("NOT_FOUND");
+			}
+
+			await deleteContactMessage(input.id);
+
+			return { success: true } as const;
 		}),
 };

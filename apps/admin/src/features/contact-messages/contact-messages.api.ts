@@ -1,4 +1,5 @@
 import type {
+	DeleteContactMessageInput,
 	ListContactMessagesInput,
 	UpdateContactMessageStatusInput,
 } from "@zanadeal/api/features/contact-message";
@@ -14,4 +15,8 @@ export async function updateContactMessageStatus(
 	input: UpdateContactMessageStatusInput,
 ) {
 	return orpc.contactMessage.updateStatus(input);
+}
+
+export async function deleteContactMessage(input: DeleteContactMessageInput) {
+	return orpc.contactMessage.delete(input);
 }

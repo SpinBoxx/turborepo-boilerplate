@@ -53,6 +53,14 @@ export const UpdateContactMessageStatusInputSchema = z.object({
 	status: z.enum(["READ", "RESOLVED"]),
 });
 
+export const DeleteContactMessageInputSchema = z.object({
+	id: z.string().min(1),
+});
+
+export const DeleteContactMessageOutputSchema = z.object({
+	success: z.literal(true),
+});
+
 export type ContactMessageStatusValue = z.infer<
 	typeof ContactMessageStatusSchema
 >;
@@ -71,4 +79,10 @@ export type ListContactMessagesParsedInput = z.infer<
 >;
 export type UpdateContactMessageStatusInput = z.infer<
 	typeof UpdateContactMessageStatusInputSchema
+>;
+export type DeleteContactMessageInput = z.infer<
+	typeof DeleteContactMessageInputSchema
+>;
+export type DeleteContactMessageOutput = z.infer<
+	typeof DeleteContactMessageOutputSchema
 >;
