@@ -1,3 +1,6 @@
+import { handleRequestPasswordResetRoute } from "./request-password-reset";
+import { handleResetPasswordRoute } from "./reset-password";
+import { handleResetPasswordCallbackRoute } from "./reset-password-callback";
 import { handleSendVerificationEmailRoute } from "./send-verification-email";
 import { createAuthRouteConfig } from "./shared";
 import { handleSignInEmailRoute } from "./sign-in-email";
@@ -35,4 +38,28 @@ export function registerAuthRoutes(
 	registrar.get("/api/auth/verify-email", options, async (request, reply) => {
 		await handleVerifyEmailRoute(registrar.log, request, reply);
 	});
+
+	registrar.post(
+		"/api/auth/request-password-reset",
+		options,
+		async (request, reply) => {
+			await handleRequestPasswordResetRoute(registrar.log, request, reply);
+		},
+	);
+
+	registrar.get(
+		"/api/auth/reset-password/:token",
+		options,
+		async (request, reply) => {
+			await handleResetPasswordCallbackRoute(registrar.log, request, reply);
+		},
+	);
+
+	registrar.post(
+		"/api/auth/reset-password",
+		options,
+		async (request, reply) => {
+			await handleResetPasswordRoute(registrar.log, request, reply);
+		},
+	);
 }

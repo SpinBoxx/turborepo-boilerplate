@@ -163,10 +163,36 @@
    Apply Globally
    ====================== */
 @layer base {
+	html,
+	body,
+	#root {
+		min-height: 100%;
+	}
+
+	.dark input:-webkit-autofill,
+	.dark input:-webkit-autofill:hover,
+	.dark input:-webkit-autofill:focus,
+	.dark input:-webkit-autofill:active,
+	.dark textarea:-webkit-autofill,
+	.dark textarea:-webkit-autofill:hover,
+	.dark textarea:-webkit-autofill:focus,
+	.dark textarea:-webkit-autofill:active {
+		-webkit-text-fill-color: rgb(
+			209 213 219
+		); /* ton texte clair (gray-300 ou gray-100) */
+		caret-color: rgb(209 213 219); /* couleur du curseur */
+		transition: background-color 5000s ease-in-out 0s; /* empêche le flash jaune */
+	}
 	body {
+		min-height: 100dvh;
 		font-family: var(--font-lufga);
 		@apply bg-background text-foreground;
 	}
+
+	#root {
+		min-height: 100dvh;
+	}
+
 	* {
 		@apply border-border outline-ring/50;
 	}

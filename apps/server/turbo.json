@@ -25,7 +25,10 @@
 				"RESEND_API_KEY",
 				"CLOUDINARY_CLOUD_NAME",
 				"CLOUDINARY_API_KEY",
-				"CLOUDINARY_API_SECRET"
+				"CLOUDINARY_API_SECRET",
+				"CLIENT_URL",
+				"API_URL",
+				"ADMIN_URL"
 			]
 		},
 		"dev": {
@@ -52,7 +55,10 @@
 				"RESEND_API_KEY",
 				"CLOUDINARY_CLOUD_NAME",
 				"CLOUDINARY_API_KEY",
-				"CLOUDINARY_API_SECRET"
+				"CLOUDINARY_API_SECRET",
+				"CLIENT_URL",
+				"API_URL",
+				"ADMIN_URL"
 			]
 		},
 		"start": {
@@ -79,7 +85,10 @@
 				"RESEND_API_KEY",
 				"CLOUDINARY_CLOUD_NAME",
 				"CLOUDINARY_API_KEY",
-				"CLOUDINARY_API_SECRET"
+				"CLOUDINARY_API_SECRET",
+				"CLIENT_URL",
+				"API_URL",
+				"ADMIN_URL"
 			]
 		}
 	}

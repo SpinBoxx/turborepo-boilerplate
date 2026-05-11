@@ -22,9 +22,11 @@ const HotelComputedSchemaBase = z.object({
 	address: z.string().min(1),
 	mapLink: z.string().min(1),
 	isArchived: z.boolean(),
+	isPopular: z.boolean(),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional().nullable(),
+	platformFeePercentageBasisPoints: z.number().int(),
 	phoneNumber: z.string().optional().nullable(),
 	bankAccount: BankAccountSchema.optional().nullable(),
 	amenities: z.array(AmenityComputedSchema),
@@ -32,6 +34,7 @@ const HotelComputedSchemaBase = z.object({
 	reviews: z.array(ReviewSchema),
 	rating: z.number(),
 	startingPrice: z.number(),
+	isAvailableForDates: z.boolean().optional(),
 	rooms: z.array(RoomComputedSchema),
 	createdAt: z.date(),
 	updatedAt: z.date(),
@@ -59,6 +62,7 @@ export const UpsertHotelInputSchema = z.object({
 	address: z.string().min(1),
 	mapLink: z.string().min(1),
 	isArchived: z.boolean().default(false),
+	isPopular: z.boolean().default(false),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional(),
@@ -74,6 +78,7 @@ export const UpsertHotelComputedInputSchema = z.object({
 	address: z.string().min(1),
 	mapLink: z.string().min(1),
 	isArchived: z.boolean().optional(),
+	isPopular: z.boolean().optional(),
 	latitude: z.string().min(1),
 	longitude: z.string().min(1),
 	email: z.email().optional(),
@@ -85,6 +90,8 @@ export const UpsertHotelComputedInputSchema = z.object({
 
 export const GetHotelInputSchema = z.object({
 	id: z.string(),
+	checkInDate: z.string().optional(),
+	checkOutDate: z.string().optional(),
 });
 
 export const hotelListConfig = {
@@ -96,6 +103,7 @@ export const hotelListConfig = {
 		fields: {
 			name: { stage: "db" },
 			updatedAt: { stage: "db" },
+			isPopular: { stage: "db" },
 			startingPrice: { stage: "computed" },
 			rating: { stage: "computed" },
 		},
@@ -111,6 +119,11 @@ export const hotelListConfig = {
 			schema: z.coerce.date(),
 			operators: ["gte", "lte"],
 		},
+		isPopular: {
+			stage: "db",
+			schema: z.boolean(),
+			operators: ["equal"],
+		},
 		startingPrice: {
 			stage: "computed",
 			schema: z.number(),
@@ -124,8 +137,14 @@ export const hotelListConfig = {
 	},
 } as const;
 
-export const ListHotelsInputSchema =
-	createHybridListSchemaFor()(hotelListConfig);
+export const ListHotelsInputSchema = createHybridListSchemaFor()(
+	hotelListConfig,
+).and(
+	z.object({
+		checkInDate: z.string().optional(),
+		checkOutDate: z.string().optional(),
+	}),
+);
 
 export const DeleteHotelInputSchema = z.object({
 	id: z.string().min(1),

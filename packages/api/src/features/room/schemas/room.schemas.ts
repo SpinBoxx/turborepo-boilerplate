@@ -9,6 +9,10 @@ import {
 	RoomImageSchema,
 } from "../../room-image/room-image.schemas";
 import {
+	RoomDescriptionTranslationInputListSchema,
+	RoomDescriptionTranslationSchema,
+} from "./room-description-translation.schemas";
+import {
 	RoomPriceSchema,
 	UpsertRoomPriceInputSchema,
 } from "./room-price.schema";
@@ -23,12 +27,13 @@ const RoomComputedSchemaBase = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
 	title: z.string().min(1),
-	description: z.string().min(1),
+	descriptionTranslations: RoomDescriptionTranslationSchema,
 	beds: z.number().int(),
 	maxGuests: z.number().int(),
 	baths: z.number().int(),
 	areaM2: z.number(),
 	quantity: z.number().int(),
+	availableCapacity: z.number().int(),
 	images: z.array(RoomImageSchema),
 	amenities: z.array(AmenityComputedSchema),
 	price: z.number(),
@@ -54,7 +59,7 @@ export const UpsertRoomInputSchema = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
 	title: z.string().min(1),
-	description: z.string().min(1),
+	descriptionTranslations: RoomDescriptionTranslationInputListSchema,
 	beds: z.string().or(z.number().int()),
 	maxGuests: z.string().or(z.number().int()),
 	baths: z.string().or(z.number().int()),
@@ -69,7 +74,7 @@ export const UpsertRoomComputedInputSchema = z.object({
 	hotelId: z.string().min(1),
 	type: RoomTypeSchema,
 	title: z.string().min(1),
-	description: z.string().min(1),
+	descriptionTranslations: RoomDescriptionTranslationSchema,
 	beds: z.number().int(),
 	maxGuests: z.number().int(),
 	baths: z.number().int(),

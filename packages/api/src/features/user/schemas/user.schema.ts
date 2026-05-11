@@ -1,6 +1,11 @@
 import z from "zod";
 import { Role } from "../../../../../db/prisma/generated/enums";
 
+export const ManagedUserBusinessRoleSchema = z.enum([
+	Role.ADMIN,
+	Role.HOTEL_REVIEWER,
+]);
+
 export const UpsertUserInputSchema = z.object({
 	email: z.email(),
 	firstName: z.string().min(1),
@@ -20,10 +25,75 @@ export const UserComputedSchema = z.object({
 	lastName: z.string(),
 	emailVerified: z.boolean(),
 	roles: z.enum(Role).array(),
+	disabledAt: z.date().nullable().optional(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
+});
+
+export const ManagedUserSchema = z.object({
+	id: z.string(),
+	email: z.string(),
+	firstName: z.string(),
+	lastName: z.string(),
+	emailVerified: z.boolean(),
+	roles: z.enum(Role).array(),
+	disabledAt: z.date().nullable(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export const CurrentUserProfileSchema = z.object({
+	id: z.string(),
+	email: z.string(),
+	firstName: z.string(),
+	lastName: z.string(),
+	emailVerified: z.boolean(),
+	updatedAt: z.date(),
+});
+
+export const CreateManagedUserInputSchema = z.object({
+	email: z.email(),
+	firstName: z.string().min(1),
+	lastName: z.string().min(1),
+	password: z.string().min(8),
+	role: ManagedUserBusinessRoleSchema,
+});
+
+export const UpdateManagedUserInputSchema = z.object({
+	id: z.string().min(1),
+	email: z.email().optional(),
+	firstName: z.string().min(1).optional(),
+	lastName: z.string().min(1).optional(),
+	role: ManagedUserBusinessRoleSchema.optional(),
+});
+
+export const UpdateCurrentUserProfileInputSchema = z.object({
+	email: z.string().trim().pipe(z.email()),
+	firstName: z.string().trim().min(1),
+	lastName: z.string().trim().min(1),
+});
+
+export const DeactivateManagedUserInputSchema = z.object({
+	id: z.string().min(1),
 });
 
 export type LoginInput = z.infer<typeof LoginInputSchema>;
 export type UpsertUserInput = z.infer<typeof UpsertUserInputSchema>;
 export type UserComputed = z.infer<typeof UserComputedSchema>;
+export type ManagedUserBusinessRole = z.infer<
+	typeof ManagedUserBusinessRoleSchema
+>;
+export type ManagedUser = z.infer<typeof ManagedUserSchema>;
+export type CurrentUserProfile = z.infer<typeof CurrentUserProfileSchema>;
+export type CreateManagedUserInput = z.infer<
+	typeof CreateManagedUserInputSchema
+>;
+export type UpdateManagedUserInput = z.infer<
+	typeof UpdateManagedUserInputSchema
+>;
+export type UpdateCurrentUserProfileInput = z.infer<
+	typeof UpdateCurrentUserProfileInputSchema
+>;
+export type DeactivateManagedUserInput = z.infer<
+	typeof DeactivateManagedUserInputSchema
+>;

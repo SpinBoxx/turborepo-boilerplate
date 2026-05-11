@@ -52,7 +52,7 @@ export function SelectField({
 				</Label>
 			)}
 			<Select
-				aria-label="Select framework with icon"
+				aria-label={label}
 				{...(isInvalid && {
 					"aria-invalid": true,
 				})}

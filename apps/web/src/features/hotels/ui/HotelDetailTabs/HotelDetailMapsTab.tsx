@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIntlayer } from "react-intlayer";
 import { useHotelContext } from "../../components/HotelProvider";
 import HotelDetailMapSkeleton from "./HotelDetailMapSkeleton";
 import HotelDetailSectionTitle from "./HotelDetailSectionTitle";
@@ -6,6 +7,7 @@ import HotelDetailSectionTitle from "./HotelDetailSectionTitle";
 const HotelDetailMapsTab = () => {
 	const { hotel } = useHotelContext();
 	const [isMapLoaded, setIsMapLoaded] = useState(false);
+	const t = useIntlayer("hotel-detail");
 	const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim();
 	const mapSrc = (() => {
 		if (!apiKey) return hotel.mapLink;
@@ -22,7 +24,7 @@ const HotelDetailMapsTab = () => {
 
 	return (
 		<div className="space-y-5">
-			<HotelDetailSectionTitle>Ou se situe l'hotel</HotelDetailSectionTitle>
+			<HotelDetailSectionTitle>{t.hotelLocation.value}</HotelDetailSectionTitle>
 			<p className="text-muted-foreground text-sm">{hotel.address}</p>
 			<div className="relative overflow-hidden rounded-md">
 				{!isMapLoaded && (
@@ -31,7 +33,7 @@ const HotelDetailMapsTab = () => {
 					</div>
 				)}
 				<iframe
-					title="Hotel Location"
+					title={t.hotelLocation.value}
 					src={mapSrc}
 					onLoad={() => setIsMapLoaded(true)}
 					className={`aspect-video w-full rounded-md border-0 transition-opacity duration-300 ${

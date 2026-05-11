@@ -1,0 +1,20 @@
+{
+  "skill_name": "zanadeal-web-best-practices",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Dans apps/admin, ajoute une page de dashboard stats avec filtres, KPI cards, chart et tableau récent. Respecte l'architecture du projet.",
+      "expected_output": "The agent should keep the route thin, create the page under src/pages/booking-stats, extract filters/KPI/chart/table/loading-error states into feature components, put constants/helpers in feature constants/utils, wrap async surfaces with Suspense and react-error-boundary, use anatomy-matching skeletons, and keep server data in TanStack Query."
+    },
+    {
+      "id": 2,
+      "prompt": "Dans apps/web, crée une feature de liste d'hôtels avec recherche, pagination, empty state et mutation de favoris via TanStack Query.",
+      "expected_output": "The agent should create page files under src/pages/hotels, feature-scoped api/query files, a query key factory or query option factory when reused, hooks with proper enabled/invalidation behavior, typed URL search params for shareable filters, atomic components/composite UI, Suspense/ErrorBoundary boundaries with anatomical skeletons, and avoid copying query data into local state."
+    },
+    {
+      "id": 3,
+      "prompt": "Refactor ce gros composant React qui contient route logic, useQuery, filtres, cartes, tableau, formatters et états loading/error dans un seul fichier.",
+      "expected_output": "The agent should first read current files, preserve behavior, move page entry points to src/pages/<feature> when needed, extract constants/utils, split loading/error/filter/card/table sections into components, add Suspense/ErrorBoundary and anatomy-matching skeletons for async surfaces, leave a small page/container, then run targeted diagnostics and report introduced vs existing errors."
+    }
+  ]
+}

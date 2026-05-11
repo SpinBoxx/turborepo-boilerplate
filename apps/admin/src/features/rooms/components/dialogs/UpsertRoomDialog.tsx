@@ -29,7 +29,7 @@ export default function UpsertRoomDialog({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			{children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
-			<DialogContent>
+			<DialogContent className="sm:max-w-3xl">
 				<DialogHeader>
 					<DialogTitle>
 						{room ? `Modifier la chambre ${room.type}` : "Creer une chambre"}

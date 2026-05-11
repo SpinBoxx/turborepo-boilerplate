@@ -1,0 +1,27 @@
+model BookingNotification {
+  id                String                    @id @default(cuid())
+  type              BookingNotificationType
+  status            BookingNotificationStatus @default(PENDING)
+  idempotencyKey    String                    @unique
+  locale            String                    @default("en")
+  recipient         String
+  payload           Json
+  providerMessageId String?
+  failureCode       String?
+  failureMessage    String?
+  processedAt       DateTime?
+  sentAt            DateTime?
+  paymentAttempt    PaymentAttempt?           @relation(fields: [paymentAttemptId], references: [id], onDelete: Cascade)
+  paymentAttemptId  String?
+  bookingQuote      BookingQuote?             @relation(fields: [bookingQuoteId], references: [id], onDelete: Cascade)
+  bookingQuoteId    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([paymentAttemptId])
+  @@index([bookingQuoteId])
+  @@index([type, status])
+}

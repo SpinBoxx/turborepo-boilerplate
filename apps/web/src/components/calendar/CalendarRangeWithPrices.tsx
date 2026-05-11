@@ -3,6 +3,7 @@ import { eachDayOfInterval, format } from "date-fns";
 import { Square } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { DateRange, DayButtonProps } from "react-day-picker";
+import { useIntlayer } from "react-intlayer";
 
 const _GOOD_PRICE_THRESHOLD = 100;
 
@@ -32,6 +33,7 @@ function CalendarRangeWithPrices({
 	defaultRange,
 }: Props) {
 	const today = new Date();
+	const t = useIntlayer("calendar-prices");
 
 	const [pricesMap, setPricesMap] = useState<Record<string, PriceType>>({});
 	const [date, setDate] = useState<DateRange | undefined>(
@@ -91,11 +93,11 @@ function CalendarRangeWithPrices({
 			<div className="mt-2 flex w-full items-center justify-center gap-6 font-light text-sm">
 				<div className="flex items-center justify-center gap-2">
 					<Square className="size-4 fill-emerald-500 stroke-emerald-500" />
-					<span className="">Prix normaux</span>
+					<span className="">{t.normalPrices.value}</span>
 				</div>
 				<div className="flex items-center justify-center gap-2">
 					<Square className="size-4 fill-orange-500 stroke-orange-500" />
-					<span className="">Prix promo</span>
+					<span className="">{t.promoPrices.value}</span>
 				</div>
 			</div>
 		</div>

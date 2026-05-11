@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import {
 	DEFAULT_HOTELS_PAGE_SEARCH,
 	type HotelPriceRange,
@@ -20,11 +21,13 @@ interface HotelToolbarStore {
 	sort: HotelSortValue;
 	priceRange: HotelPriceRange;
 	drawerOpen: boolean;
+	drawerDismissDisabled: boolean;
 	draftSort: HotelSortValue;
 	draftPriceRange: HotelPriceRange;
 	onSearchChange: SearchChangeHandler | null;
 	initialize: (input: InitializeHotelToolbarInput) => void;
 	setDrawerOpen: (open: boolean) => void;
+	setDrawerDismissDisabled: (disabled: boolean) => void;
 	setName: (name: string) => void;
 	setSort: (sort: HotelSortValue) => void;
 	setPriceRange: (priceRange: HotelPriceRange) => void;
@@ -55,6 +58,7 @@ export const useHotelToolbarStore = create<HotelToolbarStore>()((set, get) => ({
 	sort: DEFAULT_HOTELS_PAGE_SEARCH.sort,
 	priceRange: getDefaultPriceRange(),
 	drawerOpen: false,
+	drawerDismissDisabled: false,
 	draftSort: DEFAULT_HOTELS_PAGE_SEARCH.sort,
 	draftPriceRange: getDefaultPriceRange(),
 	onSearchChange: null,
@@ -76,11 +80,22 @@ export const useHotelToolbarStore = create<HotelToolbarStore>()((set, get) => ({
 	},
 
 	setDrawerOpen: (drawerOpen) => {
-		set((state) => ({
-			drawerOpen,
-			draftSort: drawerOpen ? state.sort : state.draftSort,
-			draftPriceRange: drawerOpen ? state.priceRange : state.draftPriceRange,
-		}));
+		set((state) => {
+			if (!drawerOpen && state.drawerDismissDisabled) {
+				return state;
+			}
+
+			return {
+				drawerOpen,
+				drawerDismissDisabled: drawerOpen ? false : state.drawerDismissDisabled,
+				draftSort: drawerOpen ? state.sort : state.draftSort,
+				draftPriceRange: drawerOpen ? state.priceRange : state.draftPriceRange,
+			};
+		});
+	},
+
+	setDrawerDismissDisabled: (drawerDismissDisabled) => {
+		set({ drawerDismissDisabled });
 	},
 
 	setName: (name) => {
@@ -113,6 +128,7 @@ export const useHotelToolbarStore = create<HotelToolbarStore>()((set, get) => ({
 			sort: draftSort,
 			priceRange: draftPriceRange,
 			drawerOpen: false,
+			drawerDismissDisabled: false,
 		});
 
 		onSearchChange?.({
@@ -133,9 +149,17 @@ export const useHotelToolbarStore = create<HotelToolbarStore>()((set, get) => ({
 			draftSort: DEFAULT_HOTELS_PAGE_SEARCH.sort,
 			draftPriceRange: defaultPriceRange,
 			drawerOpen: false,
+			drawerDismissDisabled: false,
 		});
 
-		get().onSearchChange?.(DEFAULT_HOTELS_PAGE_SEARCH);
+		useBookingStore.getState().resetBooking();
+
+		const { checkInDate, checkOutDate } = useBookingStore.getState();
+		get().onSearchChange?.({
+			...DEFAULT_HOTELS_PAGE_SEARCH,
+			checkIn: checkInDate,
+			checkOut: checkOutDate ?? "",
+		});
 	},
 
 	hasActiveFilter: () => {

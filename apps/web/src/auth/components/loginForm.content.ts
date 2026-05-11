@@ -8,6 +8,11 @@ const loginFormContent = {
 			en: "Email is required",
 			mg: "Ilaina ny adiresy mailaka",
 		}),
+		email: t({
+			fr: "Email",
+			en: "Email",
+			mg: "Mailaka",
+		}),
 		passwordIsRequired: t({
 			fr: "Le mot de passe est requis",
 			en: "Password is required",

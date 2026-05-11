@@ -1,5 +1,9 @@
 import type { LoginInput, UpsertUserInput } from "@zanadeal/api/features/user";
-import type { sendVerificationEmailType } from "@zanadeal/auth/routes/schemas";
+import type {
+	RequestPasswordResetInput,
+	ResetPasswordInput,
+	sendVerificationEmailType,
+} from "@zanadeal/auth/routes/schemas";
 import {
 	createContext,
 	useCallback,
@@ -8,6 +12,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
+import { useIntlayer } from "react-intlayer";
 import { toast } from "sonner";
 import { $fetch } from "@/lib/fetch";
 import { orpc } from "@/lib/orpc";
@@ -37,6 +42,15 @@ export type AuthResponseKO = {
 
 export type AuthResponse = AuthResponseOK | AuthResponseKO;
 
+type AuthStatusResponse = {
+	status: boolean;
+	message?: string;
+};
+
+type SignUpWithEmailInput = UpsertUserInput & {
+	callbackURL?: string;
+};
+
 const isAuthResponseOK = (
 	data: AuthResponse | null | undefined,
 ): data is AuthResponseOK => {
@@ -48,13 +62,15 @@ type AuthContextValue = {
 	user: User | null;
 	loadSession: () => Promise<User | null | undefined>;
 	refresh: () => Promise<void>;
+	requestPasswordReset: (body: RequestPasswordResetInput) => Promise<boolean>;
+	resetPassword: (body: ResetPasswordInput) => Promise<boolean>;
 	sendVerificationEmail: (body: sendVerificationEmailType) => Promise<void>;
 	signInWithEmail: (
 		input: LoginInput,
 		options?: LoginOptions,
 	) => Promise<User | undefined>;
 	signUpWithEmail: (
-		input: UpsertUserInput,
+		input: SignUpWithEmailInput,
 		options?: LoginOptions,
 	) => Promise<User | undefined>;
 	signOut: (options?: SignOutOptions) => Promise<void>;
@@ -65,6 +81,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = useState<User | null>(null);
 	const [status, setStatus] = useState<AuthStatus>("loading");
+	const authT = useIntlayer("auth-provider");
 
 	const loadSession = useCallback(async (): Promise<
 		User | null | undefined
@@ -110,15 +127,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			);
 
 			if (response.error) {
-				toast.error("Login failed", {
-					description: response.error.message || "Invalid email or password.",
+				toast.error(authT.loginFailed.value, {
+					description:
+						response.error.message || authT.invalidEmailOrPassword.value,
 				});
 				return;
 			}
 
 			if (!isAuthResponseOK(response.data)) {
-				toast.error("Login failed", {
-					description: "Invalid response format.",
+				toast.error(authT.loginFailed.value, {
+					description: authT.invalidResponseFormat.value,
 				});
 				return;
 			}
@@ -129,8 +147,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 			return response.data.user;
 		} catch (error) {
-			toast.error("Login failed", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.loginFailed.value, {
+				description: authT.unexpectedError.value,
 			});
 
 			options?.onError?.(
@@ -143,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	const sendVerificationEmail = async (body: sendVerificationEmailType) => {
-		const { email } = body;
+		const { callbackURL, email } = body;
 		try {
 			const res = await $fetch(
 				`${import.meta.env.VITE_API_URL}/api/auth/send-verification-email`,
@@ -155,29 +173,101 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					},
 					body: JSON.stringify({
 						email,
-						callbackURL: `${window.location.origin}/email-verified`,
+						callbackURL,
 					}),
 				},
 			);
 
 			if (!res || res.error) {
-				toast.error("Failed to send verification email", {
-					description: res?.error?.message || "Please try again later.",
+				toast.error(authT.failedToSendVerificationEmail.value, {
+					description: res?.error?.message || authT.pleaseTryAgainLater.value,
 				});
 			} else {
-				toast.success("Verification email sent", {
-					description: "Please check your inbox and follow the instructions.",
+				toast.success(authT.verificationEmailSent.value, {
+					description: authT.checkInboxInstructions.value,
 				});
 			}
 		} catch (_e) {
-			toast.error("Failed to send verification email", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.failedToSendVerificationEmail.value, {
+				description: authT.unexpectedError.value,
 			});
 		}
 	};
 
+	const requestPasswordReset = useCallback(
+		async (body: RequestPasswordResetInput) => {
+			try {
+				const res = await $fetch<AuthStatusResponse>(
+					`${import.meta.env.VITE_API_URL}/api/auth/request-password-reset`,
+					{
+						method: "POST",
+						credentials: "include",
+						headers: {
+							"content-type": "application/json",
+						},
+						body: JSON.stringify(body),
+					},
+				);
+
+				if (!res || res.error) {
+					toast.error(authT.failedToSendPasswordResetEmail.value, {
+						description: res?.error?.message || authT.pleaseTryAgainLater.value,
+					});
+					return false;
+				}
+
+				toast.success(authT.passwordResetEmailSent.value, {
+					description: authT.passwordResetEmailInstructions.value,
+				});
+				return true;
+			} catch (_error) {
+				toast.error(authT.failedToSendPasswordResetEmail.value, {
+					description: authT.unexpectedError.value,
+				});
+				return false;
+			}
+		},
+		[authT],
+	);
+
+	const resetPassword = useCallback(
+		async (body: ResetPasswordInput) => {
+			try {
+				const res = await $fetch<AuthStatusResponse>(
+					`${import.meta.env.VITE_API_URL}/api/auth/reset-password`,
+					{
+						method: "POST",
+						credentials: "include",
+						headers: {
+							"content-type": "application/json",
+						},
+						body: JSON.stringify(body),
+					},
+				);
+
+				if (!res || res.error) {
+					toast.error(authT.passwordResetFailed.value, {
+						description: res?.error?.message || authT.pleaseTryAgainLater.value,
+					});
+					return false;
+				}
+
+				toast.success(authT.passwordResetSuccess.value, {
+					description: authT.passwordResetSuccessDescription.value,
+				});
+				return true;
+			} catch (_error) {
+				toast.error(authT.passwordResetFailed.value, {
+					description: authT.unexpectedError.value,
+				});
+				return false;
+			}
+		},
+		[authT],
+	);
+
 	const signUpWithEmail = async (
-		body: UpsertUserInput,
+		body: SignUpWithEmailInput,
 		options?: LoginOptions,
 	): Promise<User | undefined> => {
 		try {
@@ -194,17 +284,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			);
 
 			if (response.error) {
-				toast.error("Account creation failed", {
+				toast.error(authT.accountCreationFailed.value, {
 					description:
-						response.error.message ||
-						"Cannot create your account. Try again later.",
+						response.error.message || authT.cannotCreateAccount.value,
 				});
 				return;
 			}
 
 			if (!isAuthResponseOK(response.data)) {
-				toast.error("Account creation failed", {
-					description: "Invalid response format.",
+				toast.error(authT.accountCreationFailed.value, {
+					description: authT.invalidResponseFormat.value,
 				});
 				return;
 			}
@@ -217,8 +306,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 			return response.data.user;
 		} catch (error) {
-			toast.error("Account creation failed", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.accountCreationFailed.value, {
+				description: authT.unexpectedError.value,
 			});
 
 			options?.onError?.(
@@ -243,15 +332,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setStatus("unauthenticated");
 
 			if (res.error) {
-				toast.error("Sign out failed", {
-					description:
-						res.error.message || "Unable to sign out. Try again later.",
+				toast.error(authT.signOutFailed.value, {
+					description: res.error.message || authT.unableToSignOut.value,
 				});
 				return;
 			}
 		} catch (error) {
-			toast.error("Sign out failed", {
-				description: "An unexpected error occurred. Please try again later.",
+			toast.error(authT.signOutFailed.value, {
+				description: authT.unexpectedError.value,
 			});
 			options?.onError?.(
 				error instanceof Error
@@ -268,12 +356,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			user,
 			loadSession,
 			refresh,
+			requestPasswordReset,
+			resetPassword,
 			signInWithEmail,
 			signUpWithEmail,
 			sendVerificationEmail,
 			signOut,
 		}),
 		[
+			requestPasswordReset,
+			resetPassword,
 			signOut,
 			signUpWithEmail,
 			sendVerificationEmail,

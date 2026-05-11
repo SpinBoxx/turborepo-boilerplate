@@ -16,14 +16,12 @@ import { Label } from "@/components/ui/label";
 import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { getLanguages } from "../services/locale";
 
-interface Props {
-	isDefaultOpen?: boolean;
-}
-
-export default function LocaleDialog({ isDefaultOpen }: Props) {
+export default function LocaleDialog() {
 	const t = useIntlayer("locale-dialog");
-	const [isOpen, setIsOpenn] = useState(isDefaultOpen ?? false);
-	const { setLocale, locale } = useIntlayerContext();
+	const { locale, setLocale } = useIntlayerContext();
+	console.log(locale);
+
+	const [isOpen, setIsOpen] = useState(!locale);
 
 	const locales = useMemo(() => {
 		return getLanguages(locale);
@@ -33,7 +31,7 @@ export default function LocaleDialog({ isDefaultOpen }: Props) {
 
 	const onClose = () => {
 		if (!canClose) return;
-		setIsOpenn(false);
+		setIsOpen(false);
 	};
 
 	return (

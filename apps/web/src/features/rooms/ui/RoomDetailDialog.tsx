@@ -1,6 +1,7 @@
-import { formatPrice } from "@zanadeal/utils";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import type * as React from "react";
+import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -12,13 +13,15 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import { cn } from "@/lib/utils";
 import RoomArea from "../components/RoomArea";
+import RoomAvailableQuantity from "../components/RoomAvailableQuantity";
 import RoomBaths from "../components/RoomBaths";
 import RoomBeds from "../components/RoomBeds";
 import RoomCarousel from "../components/RoomCarousel";
 import { useRoomContext } from "../components/RoomProvider";
-import RoomQuantity from "../components/RoomQuantity";
+import RoomTotalPrice from "../components/RoomTotalPrice";
 import RoomType from "../components/RoomType";
 import RoomDetailTabs from "./RoomDetailTabs/RoomDetailTabs";
 
@@ -28,12 +31,22 @@ interface Props {
 
 export default function RoomDetailDialog({ children }: Props) {
 	const { room } = useRoomContext();
-	const displayPrice = room.promoPrice > 0 ? room.promoPrice : room.price;
-
+	const t = useIntlayer("room-detail");
+	const { setRoomId } = useBookingStore();
+	const navigate = useNavigate();
+	const onConfirm = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setRoomId(room.id);
+		navigate({
+			to: "/review-cart-checkout",
+			replace: true,
+		});
+	};
 	return (
 		<Dialog modal>
 			<DialogTrigger render={children} />
-			<DialogPopup showCloseButton={false}>
+			<DialogPopup showCloseButton={false} className={"md:max-w-xl"}>
 				<div className="flex min-h-0 flex-1 flex-col gap-3.5 space-y-1 p-4 pb-6">
 					<DialogClose
 						className={
@@ -54,15 +67,17 @@ export default function RoomDetailDialog({ children }: Props) {
 										{room.title}
 									</DialogTitle>
 									<DialogDescription className="text-sm leading-relaxed">
-										Explore this room in detail before confirming your
-										selection.
+										{t.exploreRoom.value}
 									</DialogDescription>
 								</div>
 								<RoomType display="badge" className="mt-1" />
 							</div>
 
 							<div className="flex flex-wrap gap-2.5">
-								<RoomQuantity variant="badge" />
+								<RoomAvailableQuantity
+									type="badge"
+									className="[&_svg]:size-5!"
+								/>
 								<RoomArea variant="badge" />
 								<RoomBaths variant="badge" />
 								<RoomBeds variant="badge" />
@@ -73,23 +88,15 @@ export default function RoomDetailDialog({ children }: Props) {
 					</DialogPanel>
 				</div>
 
-				<DialogFooter className={cn("flex items-center justify-between")}>
-					<div className="min-w-0 flex-1">
-						<p className="text-muted-foreground text-xs uppercase tracking-[0.14em]">
-							Total Price
-						</p>
-						<div className="flex items-end gap-1.5">
-							<span className="font-semibold text-2xl leading-none tracking-[-0.05em]">
-								{formatPrice(displayPrice)}
-							</span>
-							<span className="pb-0.5 text-muted-foreground text-sm">
-								/night
-							</span>
-						</div>
+				<DialogFooter>
+					<div className={cn("flex w-full items-center justify-between gap-3")}>
+						<RoomTotalPrice className="justify-self-start" />
+						<Link to="/review-cart-checkout" onClick={onConfirm}>
+							<Button className="min-w-44 rounded-2xl" size="xl">
+								{t.confirm.value}
+							</Button>
+						</Link>
 					</div>
-					<Button className="min-w-44 rounded-2xl" size="xl">
-						Confirm
-					</Button>
 				</DialogFooter>
 			</DialogPopup>
 		</Dialog>

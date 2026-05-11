@@ -1,9 +1,10 @@
 import { LOCALES } from "@zanadeal/api/constants";
-import type { AmenityTranslationInput } from "@zanadeal/api/features/amenity/amenity-translation.schemas";
+import type { AmenityTranslationInput } from "@zanadeal/api/features/amenity";
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupInput,
+	InputGroupTextarea,
 	Tabs,
 	TabsContent,
 	TabsList,
@@ -12,7 +13,7 @@ import {
 import { useCallback } from "react";
 import Editor from "./editor/Editor";
 
-type InputType = "text" | "code";
+type InputType = "text" | "textarea" | "code";
 
 interface Props<T> {
 	fieldKey: keyof Omit<T, "locale">;
@@ -81,6 +82,21 @@ export function TranslationTabsForm<
 											value.find((t) => t.locale === locale)?.[fieldKey] || ""
 										}
 										onChange={(e) => handleChange(locale, e.target.value)}
+									/>
+								</InputGroup>
+							),
+							textarea: (
+								<InputGroup>
+									<InputGroupAddon align="block-start">
+										{locale.toUpperCase()}
+									</InputGroupAddon>
+									<InputGroupTextarea
+										placeholder={`Texte en ${locale.toUpperCase()}`}
+										value={
+											value.find((t) => t.locale === locale)?.[fieldKey] || ""
+										}
+										onChange={(e) => handleChange(locale, e.target.value)}
+										rows={6}
 									/>
 								</InputGroup>
 							),

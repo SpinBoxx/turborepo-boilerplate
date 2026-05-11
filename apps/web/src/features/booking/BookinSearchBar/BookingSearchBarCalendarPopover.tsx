@@ -27,12 +27,18 @@ export function BookingSearchBarCalendarPopover({ buttonsProps }: Props) {
 	const formatDate = useMemo(() => {
 		if (!checkInDate) return t.whenAreYouGoing.value;
 		if (checkInDate && !checkOutDate)
-			return date(checkInDate, { dateStyle: "medium", locale });
+			return `${date(checkInDate, { dateStyle: "medium", locale })} - ${t.checkoutDate.value}`;
 		if (checkInDate && checkOutDate)
 			return `${date(checkInDate, { dateStyle: "medium", locale })} - ${date(checkOutDate, { dateStyle: "medium", locale })}`;
 
 		return "";
-	}, [checkInDate, checkOutDate, locale, t.whenAreYouGoing.value]);
+	}, [
+		checkInDate,
+		checkOutDate,
+		locale,
+		t.whenAreYouGoing.value,
+		t.checkoutDate.value,
+	]);
 
 	return (
 		<Popover>

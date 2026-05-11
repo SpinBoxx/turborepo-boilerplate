@@ -9,8 +9,10 @@ import Fastify from "fastify";
 import { registerAuthRoutes } from "./auth/route";
 import { loadEnv } from "./config/env";
 import { buildCorsConfig } from "./http/cors";
+import { registerBookingStatsEventsRoute } from "./http/booking-stats-events.route";
 import { registerCsrfProtection } from "./http/csrf";
 import { createOrpcHandlers } from "./orpc/handlers";
+import { registerStripeWebhookRoute } from "./payments/stripe-webhook.route";
 
 export async function createApp() {
 	const env = loadEnv();
@@ -44,6 +46,8 @@ export async function createApp() {
 	});
 
 	registerCsrfProtection(fastify, env);
+	await registerBookingStatsEventsRoute(fastify, env);
+	await registerStripeWebhookRoute(fastify);
 
 	fastify.all("/rpc/*", async (request, reply) => {
 		const result = await orpc.rpc.handle(request, reply, {

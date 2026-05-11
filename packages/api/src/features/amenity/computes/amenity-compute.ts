@@ -14,6 +14,7 @@ export const computeAmenity = async (
 	const highestRole = rolesSortedByPriority[0];
 	const compute = {
 		[Role.ADMIN]: async () => await amenityAdminCompute(amenity),
+		[Role.HOTEL_REVIEWER]: async () => await amenityUserCompute(amenity),
 		[Role.USER]: async () => await amenityUserCompute(amenity),
 	};
 

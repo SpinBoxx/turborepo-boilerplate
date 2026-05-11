@@ -1,9 +1,12 @@
 import { ORPCError } from "@orpc/server";
+import { stringToDate } from "@zanadeal/utils";
 import { z } from "zod";
 import { adminProcedure, publicProcedure } from "../../index";
 import { createPaginatedResultSchema } from "../../listing/paginated-result";
+import { getReservedRoomQuantitiesByIds } from "../room/room.store";
 import { computeHotel } from "./computes/hotel-compute";
 import { computeUpsertHotelInput } from "./computes/upsert-compute";
+import { isHotelVisibleToUser } from "./hotel-visibility";
 import { createHotel, deleteHotel, getHotel, updateHotel } from "./hotel.store";
 import { listHotels } from "./hotel-list.service";
 import {
@@ -13,6 +16,35 @@ import {
 	ListHotelsInputSchema,
 	UpsertHotelInputSchema,
 } from "./schemas/hotel.schema";
+import type { HotelComputeOptions } from "./services/hotel.service";
+
+async function buildGetHotelComputeOptions(
+	hotel: NonNullable<Awaited<ReturnType<typeof getHotel>>>,
+	input: { checkInDate?: string; checkOutDate?: string },
+): Promise<HotelComputeOptions | undefined> {
+	if (!input.checkInDate || !input.checkOutDate) {
+		return undefined;
+	}
+
+	const computeOptions: HotelComputeOptions = {
+		checkInDate: stringToDate(input.checkInDate),
+		checkOutDate: stringToDate(input.checkOutDate),
+	};
+	const roomIds = hotel.rooms.map((room) => room.id);
+
+	if (roomIds.length === 0) {
+		return computeOptions;
+	}
+
+	return {
+		...computeOptions,
+		roomAvailabilityById: await getReservedRoomQuantitiesByIds({
+			checkInDate: computeOptions.checkInDate,
+			checkOutDate: computeOptions.checkOutDate,
+			roomIds,
+		}),
+	};
+}
 
 export const listHotelsRoute = publicProcedure
 	.route({
@@ -41,7 +73,20 @@ export const getHotelRoute = publicProcedure
 		if (!hotel) {
 			throw new ORPCError("NOT_FOUND");
 		}
-		return await computeHotel(hotel, context.user);
+
+		const computeOptions = await buildGetHotelComputeOptions(hotel, input);
+
+		const computedHotel = await computeHotel(
+			hotel,
+			context.user,
+			computeOptions,
+		);
+		const hasDateRange = !!(input.checkInDate && input.checkOutDate);
+		if (!hasDateRange && !isHotelVisibleToUser(computedHotel, context.user)) {
+			throw new ORPCError("NOT_FOUND");
+		}
+
+		return computedHotel;
 	});
 
 export const createHotelRoute = adminProcedure

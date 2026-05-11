@@ -15,23 +15,52 @@ export default function PopularHotels({ className }: Props) {
 	const t = useIntlayer("popular-hotels");
 
 	const hotels = useHotels({
-		take: 50,
+		take: 6,
 		skip: 0,
-		filters: {},
+		filters: {
+			isPopular: {
+				equal: true,
+			},
+		},
 		sort: { field: "updatedAt", direction: "desc" },
-		limit: 50,
+		limit: 6,
 		page: 1,
 	});
+
+	if (hotels.data && hotels.data.total === 0) return null;
 
 	return (
 		<div className={cn("", className)}>
 			<div className="flex items-end justify-between">
 				<div>
-					<h3 className="font-semibold text-xl md:text-2xl">{t.title.value}</h3>
-					<p className="mt-1 text-muted-foreground">{t.description.value}</p>
+					<div className="flex items-center justify-between">
+						<h3 className="font-semibold text-xl md:text-2xl">
+							{t.title.value}
+						</h3>
+						<Link
+							to="/hotels"
+							search={DEFAULT_HOTELS_PAGE_SEARCH}
+							className="sm:hidden"
+						>
+							<Button
+								className="h-fit text-blue-500 text-sm md:text-base"
+								variant={"link"}
+							>
+								{t.seeAll.value}
+								<ChevronRight />
+							</Button>
+						</Link>
+					</div>
+					<p className="mt-1 text-balance text-muted-foreground">
+						{t.description.value}
+					</p>
 				</div>
 
-				<Link to="/hotels" search={DEFAULT_HOTELS_PAGE_SEARCH}>
+				<Link
+					to="/hotels"
+					search={DEFAULT_HOTELS_PAGE_SEARCH}
+					className="hidden sm:block"
+				>
 					<Button
 						className="h-fit text-blue-500 text-sm md:text-base"
 						variant={"link"}
@@ -44,7 +73,7 @@ export default function PopularHotels({ className }: Props) {
 
 			{hotels.isLoading && !hotels.data ? (
 				<HotelsCardList.Skeleton className="mt-4" />
-			) : hotels.data ? (
+			) : hotels.data && hotels.data.total > 0 ? (
 				<HotelsCardList hotels={hotels.data.items} className="mt-4" />
 			) : null}
 		</div>

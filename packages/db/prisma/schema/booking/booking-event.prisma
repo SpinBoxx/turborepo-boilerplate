@@ -1,0 +1,25 @@
+model BookingEvent {
+  id               String            @id @default(cuid())
+  type             BookingEventType
+  bookingQuote     BookingQuote?     @relation(fields: [bookingQuoteId], references: [id], onDelete: Cascade)
+  bookingQuoteId   String?
+  paymentAttempt   PaymentAttempt?   @relation(fields: [paymentAttemptId], references: [id], onDelete: Cascade)
+  paymentAttemptId String?
+  booking          Booking?          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId        String?
+  actorUser        User?             @relation("BookingEventActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  actorUserId      String?
+  note             String?
+  metadata         Json?
+  occurredAt       DateTime          @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([bookingQuoteId])
+  @@index([paymentAttemptId])
+  @@index([bookingId])
+  @@index([actorUserId])
+  @@index([occurredAt])
+}

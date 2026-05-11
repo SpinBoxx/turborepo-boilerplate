@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LegalRouteRouteImport } from './routes/_legal/route'
+import { Route as CompanyRouteRouteImport } from './routes/_company/route'
+import { Route as CheckoutRouteRouteImport } from './routes/_checkout/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
@@ -17,16 +19,33 @@ import { Route as LegalTermsOfServiceRouteImport } from './routes/_legal/terms-o
 import { Route as LegalTermsAndConditionsOfSaleRouteImport } from './routes/_legal/terms-and-conditions-of-sale'
 import { Route as CompanyContactRouteImport } from './routes/_company/contact'
 import { Route as CompanyAboutRouteImport } from './routes/_company/about'
+import { Route as CheckoutCheckoutRouteRouteImport } from './routes/_checkout/checkout/route'
 import { Route as AuthLoginRouteRouteImport } from './routes/_auth/login/route'
+import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
+import { Route as CheckoutReviewCartCheckoutIndexRouteImport } from './routes/_checkout/review-cart-checkout/index'
 import { Route as AuthVerifyEmailIndexRouteImport } from './routes/_auth/verify-email/index'
+import { Route as AuthResetPasswordIndexRouteImport } from './routes/_auth/reset-password/index'
+import { Route as AuthPasswordResetSuccessIndexRouteImport } from './routes/_auth/password-reset-success/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as AuthForgotPasswordIndexRouteImport } from './routes/_auth/forgot-password/index'
+import { Route as AuthForgotPasswordSentIndexRouteImport } from './routes/_auth/forgot-password-sent/index'
 import { Route as AuthEmailVerifiedIndexRouteImport } from './routes/_auth/email-verified/index'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppHotelsIndexRouteImport } from './routes/_app/hotels/index'
 import { Route as AppHotelIdIndexRouteImport } from './routes/_app/$hotelId/index'
+import { Route as AppSettingsPersonalInformationRouteImport } from './routes/_app/settings/personal-information'
 import { Route as AppHotelIdRoomsIndexRouteImport } from './routes/_app/$hotelId/rooms/index'
 
 const LegalRouteRoute = LegalRouteRouteImport.update({
   id: '/_legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyRouteRoute = CompanyRouteRouteImport.update({
+  id: '/_company',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRouteRoute = CheckoutRouteRouteImport.update({
+  id: '/_checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -54,34 +73,77 @@ const LegalTermsAndConditionsOfSaleRoute =
     getParentRoute: () => LegalRouteRoute,
   } as any)
 const CompanyContactRoute = CompanyContactRouteImport.update({
-  id: '/_company/contact',
+  id: '/contact',
   path: '/contact',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => CompanyRouteRoute,
 } as any)
 const CompanyAboutRoute = CompanyAboutRouteImport.update({
-  id: '/_company/about',
+  id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => CompanyRouteRoute,
+} as any)
+const CheckoutCheckoutRouteRoute = CheckoutCheckoutRouteRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => CheckoutRouteRoute,
 } as any)
 const AuthLoginRouteRoute = AuthLoginRouteRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const CheckoutReviewCartCheckoutIndexRoute =
+  CheckoutReviewCartCheckoutIndexRouteImport.update({
+    id: '/review-cart-checkout/',
+    path: '/review-cart-checkout/',
+    getParentRoute: () => CheckoutRouteRoute,
+  } as any)
 const AuthVerifyEmailIndexRoute = AuthVerifyEmailIndexRouteImport.update({
   id: '/verify-email/',
   path: '/verify-email/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthResetPasswordIndexRoute = AuthResetPasswordIndexRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthPasswordResetSuccessIndexRoute =
+  AuthPasswordResetSuccessIndexRouteImport.update({
+    id: '/password-reset-success/',
+    path: '/password-reset-success/',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthLoginRouteRoute,
 } as any)
+const AuthForgotPasswordIndexRoute = AuthForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthForgotPasswordSentIndexRoute =
+  AuthForgotPasswordSentIndexRouteImport.update({
+    id: '/forgot-password-sent/',
+    path: '/forgot-password-sent/',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 const AuthEmailVerifiedIndexRoute = AuthEmailVerifiedIndexRouteImport.update({
   id: '/email-verified/',
   path: '/email-verified/',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSettingsRouteRoute,
 } as any)
 const AppHotelsIndexRoute = AppHotelsIndexRouteImport.update({
   id: '/hotels/',
@@ -93,6 +155,12 @@ const AppHotelIdIndexRoute = AppHotelIdIndexRouteImport.update({
   path: '/$hotelId/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppSettingsPersonalInformationRoute =
+  AppSettingsPersonalInformationRouteImport.update({
+    id: '/personal-information',
+    path: '/personal-information',
+    getParentRoute: () => AppSettingsRouteRoute,
+  } as any)
 const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
   id: '/$hotelId/rooms/',
   path: '/$hotelId/rooms/',
@@ -101,102 +169,158 @@ const AppHotelIdRoomsIndexRoute = AppHotelIdRoomsIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/settings': typeof AppSettingsRouteRouteWithChildren
   '/login': typeof AuthLoginRouteRouteWithChildren
+  '/checkout': typeof CheckoutCheckoutRouteRoute
   '/about': typeof CompanyAboutRoute
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/terms-of-service': typeof LegalTermsOfServiceRoute
+  '/settings/personal-information': typeof AppSettingsPersonalInformationRoute
   '/$hotelId/': typeof AppHotelIdIndexRoute
   '/hotels/': typeof AppHotelsIndexRoute
+  '/settings/': typeof AppSettingsIndexRoute
   '/email-verified/': typeof AuthEmailVerifiedIndexRoute
+  '/forgot-password-sent/': typeof AuthForgotPasswordSentIndexRoute
+  '/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/login/': typeof AuthLoginIndexRoute
+  '/password-reset-success/': typeof AuthPasswordResetSuccessIndexRoute
+  '/reset-password/': typeof AuthResetPasswordIndexRoute
   '/verify-email/': typeof AuthVerifyEmailIndexRoute
+  '/review-cart-checkout/': typeof CheckoutReviewCartCheckoutIndexRoute
   '/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
+  '/checkout': typeof CheckoutCheckoutRouteRoute
   '/about': typeof CompanyAboutRoute
   '/contact': typeof CompanyContactRoute
   '/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/terms-of-service': typeof LegalTermsOfServiceRoute
+  '/settings/personal-information': typeof AppSettingsPersonalInformationRoute
   '/$hotelId': typeof AppHotelIdIndexRoute
   '/hotels': typeof AppHotelsIndexRoute
+  '/settings': typeof AppSettingsIndexRoute
   '/email-verified': typeof AuthEmailVerifiedIndexRoute
+  '/forgot-password-sent': typeof AuthForgotPasswordSentIndexRoute
+  '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
+  '/password-reset-success': typeof AuthPasswordResetSuccessIndexRoute
+  '/reset-password': typeof AuthResetPasswordIndexRoute
   '/verify-email': typeof AuthVerifyEmailIndexRoute
+  '/review-cart-checkout': typeof CheckoutReviewCartCheckoutIndexRoute
   '/$hotelId/rooms': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
+  '/_checkout': typeof CheckoutRouteRouteWithChildren
+  '/_company': typeof CompanyRouteRouteWithChildren
   '/_legal': typeof LegalRouteRouteWithChildren
+  '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRouteRouteWithChildren
+  '/_checkout/checkout': typeof CheckoutCheckoutRouteRoute
   '/_company/about': typeof CompanyAboutRoute
   '/_company/contact': typeof CompanyContactRoute
   '/_legal/terms-and-conditions-of-sale': typeof LegalTermsAndConditionsOfSaleRoute
   '/_legal/terms-of-service': typeof LegalTermsOfServiceRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/settings/personal-information': typeof AppSettingsPersonalInformationRoute
   '/_app/$hotelId/': typeof AppHotelIdIndexRoute
   '/_app/hotels/': typeof AppHotelsIndexRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
   '/_auth/email-verified/': typeof AuthEmailVerifiedIndexRoute
+  '/_auth/forgot-password-sent/': typeof AuthForgotPasswordSentIndexRoute
+  '/_auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_auth/password-reset-success/': typeof AuthPasswordResetSuccessIndexRoute
+  '/_auth/reset-password/': typeof AuthResetPasswordIndexRoute
   '/_auth/verify-email/': typeof AuthVerifyEmailIndexRoute
+  '/_checkout/review-cart-checkout/': typeof CheckoutReviewCartCheckoutIndexRoute
   '/_app/$hotelId/rooms/': typeof AppHotelIdRoomsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/settings'
     | '/login'
+    | '/checkout'
     | '/about'
     | '/contact'
     | '/terms-and-conditions-of-sale'
     | '/terms-of-service'
+    | '/settings/personal-information'
     | '/$hotelId/'
     | '/hotels/'
+    | '/settings/'
     | '/email-verified/'
+    | '/forgot-password-sent/'
+    | '/forgot-password/'
     | '/login/'
+    | '/password-reset-success/'
+    | '/reset-password/'
     | '/verify-email/'
+    | '/review-cart-checkout/'
     | '/$hotelId/rooms/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/checkout'
     | '/about'
     | '/contact'
     | '/terms-and-conditions-of-sale'
     | '/terms-of-service'
+    | '/settings/personal-information'
     | '/$hotelId'
     | '/hotels'
+    | '/settings'
     | '/email-verified'
+    | '/forgot-password-sent'
+    | '/forgot-password'
     | '/login'
+    | '/password-reset-success'
+    | '/reset-password'
     | '/verify-email'
+    | '/review-cart-checkout'
     | '/$hotelId/rooms'
   id:
     | '__root__'
     | '/_app'
     | '/_auth'
+    | '/_checkout'
+    | '/_company'
     | '/_legal'
+    | '/_app/settings'
     | '/_auth/login'
+    | '/_checkout/checkout'
     | '/_company/about'
     | '/_company/contact'
     | '/_legal/terms-and-conditions-of-sale'
     | '/_legal/terms-of-service'
     | '/_app/'
+    | '/_app/settings/personal-information'
     | '/_app/$hotelId/'
     | '/_app/hotels/'
+    | '/_app/settings/'
     | '/_auth/email-verified/'
+    | '/_auth/forgot-password-sent/'
+    | '/_auth/forgot-password/'
     | '/_auth/login/'
+    | '/_auth/password-reset-success/'
+    | '/_auth/reset-password/'
     | '/_auth/verify-email/'
+    | '/_checkout/review-cart-checkout/'
     | '/_app/$hotelId/rooms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  CheckoutRouteRoute: typeof CheckoutRouteRouteWithChildren
+  CompanyRouteRoute: typeof CompanyRouteRouteWithChildren
   LegalRouteRoute: typeof LegalRouteRouteWithChildren
-  CompanyAboutRoute: typeof CompanyAboutRoute
-  CompanyContactRoute: typeof CompanyContactRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -206,6 +330,20 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof LegalRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_company': {
+      id: '/_company'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof CompanyRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_checkout': {
+      id: '/_checkout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof CheckoutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -248,14 +386,21 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof CompanyContactRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CompanyRouteRoute
     }
     '/_company/about': {
       id: '/_company/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof CompanyAboutRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CompanyRouteRoute
+    }
+    '/_checkout/checkout': {
+      id: '/_checkout/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutCheckoutRouteRouteImport
+      parentRoute: typeof CheckoutRouteRoute
     }
     '/_auth/login': {
       id: '/_auth/login'
@@ -264,11 +409,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_checkout/review-cart-checkout/': {
+      id: '/_checkout/review-cart-checkout/'
+      path: '/review-cart-checkout'
+      fullPath: '/review-cart-checkout/'
+      preLoaderRoute: typeof CheckoutReviewCartCheckoutIndexRouteImport
+      parentRoute: typeof CheckoutRouteRoute
+    }
     '/_auth/verify-email/': {
       id: '/_auth/verify-email/'
       path: '/verify-email'
       fullPath: '/verify-email/'
       preLoaderRoute: typeof AuthVerifyEmailIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/reset-password/': {
+      id: '/_auth/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password/'
+      preLoaderRoute: typeof AuthResetPasswordIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/password-reset-success/': {
+      id: '/_auth/password-reset-success/'
+      path: '/password-reset-success'
+      fullPath: '/password-reset-success/'
+      preLoaderRoute: typeof AuthPasswordResetSuccessIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_auth/login/': {
@@ -278,12 +451,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthLoginRouteRoute
     }
+    '/_auth/forgot-password/': {
+      id: '/_auth/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password/'
+      preLoaderRoute: typeof AuthForgotPasswordIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/forgot-password-sent/': {
+      id: '/_auth/forgot-password-sent/'
+      path: '/forgot-password-sent'
+      fullPath: '/forgot-password-sent/'
+      preLoaderRoute: typeof AuthForgotPasswordSentIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/email-verified/': {
       id: '/_auth/email-verified/'
       path: '/email-verified'
       fullPath: '/email-verified/'
       preLoaderRoute: typeof AuthEmailVerifiedIndexRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
     }
     '/_app/hotels/': {
       id: '/_app/hotels/'
@@ -299,6 +493,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHotelIdIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/settings/personal-information': {
+      id: '/_app/settings/personal-information'
+      path: '/personal-information'
+      fullPath: '/settings/personal-information'
+      preLoaderRoute: typeof AppSettingsPersonalInformationRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
     '/_app/$hotelId/rooms/': {
       id: '/_app/$hotelId/rooms/'
       path: '/$hotelId/rooms'
@@ -309,7 +510,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppSettingsRouteRouteChildren {
+  AppSettingsPersonalInformationRoute: typeof AppSettingsPersonalInformationRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+}
+
+const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
+  AppSettingsPersonalInformationRoute: AppSettingsPersonalInformationRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+}
+
+const AppSettingsRouteRouteWithChildren =
+  AppSettingsRouteRoute._addFileChildren(AppSettingsRouteRouteChildren)
+
 interface AppRouteRouteChildren {
+  AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
   AppHotelIdIndexRoute: typeof AppHotelIdIndexRoute
   AppHotelsIndexRoute: typeof AppHotelsIndexRoute
@@ -317,6 +532,7 @@ interface AppRouteRouteChildren {
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
   AppHotelIdIndexRoute: AppHotelIdIndexRoute,
   AppHotelsIndexRoute: AppHotelsIndexRoute,
@@ -342,17 +558,53 @@ const AuthLoginRouteRouteWithChildren = AuthLoginRouteRoute._addFileChildren(
 interface AuthRouteRouteChildren {
   AuthLoginRouteRoute: typeof AuthLoginRouteRouteWithChildren
   AuthEmailVerifiedIndexRoute: typeof AuthEmailVerifiedIndexRoute
+  AuthForgotPasswordSentIndexRoute: typeof AuthForgotPasswordSentIndexRoute
+  AuthForgotPasswordIndexRoute: typeof AuthForgotPasswordIndexRoute
+  AuthPasswordResetSuccessIndexRoute: typeof AuthPasswordResetSuccessIndexRoute
+  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
   AuthVerifyEmailIndexRoute: typeof AuthVerifyEmailIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRouteRoute: AuthLoginRouteRouteWithChildren,
   AuthEmailVerifiedIndexRoute: AuthEmailVerifiedIndexRoute,
+  AuthForgotPasswordSentIndexRoute: AuthForgotPasswordSentIndexRoute,
+  AuthForgotPasswordIndexRoute: AuthForgotPasswordIndexRoute,
+  AuthPasswordResetSuccessIndexRoute: AuthPasswordResetSuccessIndexRoute,
+  AuthResetPasswordIndexRoute: AuthResetPasswordIndexRoute,
   AuthVerifyEmailIndexRoute: AuthVerifyEmailIndexRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
+)
+
+interface CheckoutRouteRouteChildren {
+  CheckoutCheckoutRouteRoute: typeof CheckoutCheckoutRouteRoute
+  CheckoutReviewCartCheckoutIndexRoute: typeof CheckoutReviewCartCheckoutIndexRoute
+}
+
+const CheckoutRouteRouteChildren: CheckoutRouteRouteChildren = {
+  CheckoutCheckoutRouteRoute: CheckoutCheckoutRouteRoute,
+  CheckoutReviewCartCheckoutIndexRoute: CheckoutReviewCartCheckoutIndexRoute,
+}
+
+const CheckoutRouteRouteWithChildren = CheckoutRouteRoute._addFileChildren(
+  CheckoutRouteRouteChildren,
+)
+
+interface CompanyRouteRouteChildren {
+  CompanyAboutRoute: typeof CompanyAboutRoute
+  CompanyContactRoute: typeof CompanyContactRoute
+}
+
+const CompanyRouteRouteChildren: CompanyRouteRouteChildren = {
+  CompanyAboutRoute: CompanyAboutRoute,
+  CompanyContactRoute: CompanyContactRoute,
+}
+
+const CompanyRouteRouteWithChildren = CompanyRouteRoute._addFileChildren(
+  CompanyRouteRouteChildren,
 )
 
 interface LegalRouteRouteChildren {
@@ -372,9 +624,9 @@ const LegalRouteRouteWithChildren = LegalRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  CheckoutRouteRoute: CheckoutRouteRouteWithChildren,
+  CompanyRouteRoute: CompanyRouteRouteWithChildren,
   LegalRouteRoute: LegalRouteRouteWithChildren,
-  CompanyAboutRoute: CompanyAboutRoute,
-  CompanyContactRoute: CompanyContactRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -8,7 +8,6 @@ import {
 	BreadcrumbList,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useHotelContext } from "./HotelProvider";
 
 export default function HotelBreadcrumb() {
@@ -17,14 +16,10 @@ export default function HotelBreadcrumb() {
 		hotel: { name },
 	} = useHotelContext();
 	const { pathname } = useLocation();
-	const isMobile = useIsMobile();
 
 	const pages = pathname.split("/").filter(Boolean);
 
-	const pagesMap = [
-		isMobile ? name.slice(0, 16).concat("...") : name,
-		t.selectRooms.value,
-	];
+	const pagesMap = [name, t.selectRooms.value];
 
 	const formatedPages = pages
 		.map((_, index) => pagesMap[index])

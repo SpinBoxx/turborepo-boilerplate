@@ -1,7 +1,14 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Outlet,
+	useMatch,
+	useRouterState,
+} from "@tanstack/react-router";
 import { useEffect } from "react";
-import Footer from "@/components/footer/footer";
 import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
+import { cn } from "@/lib/utils";
+import Footer from "@/widgets/footer/footer";
+import MobileBottomNav from "@/widgets/mobile-bottom-nav/MobileBottomNav";
 import Navbar from "@/widgets/navbar/Navbar";
 
 export const Route = createFileRoute("/_app")({
@@ -10,16 +17,33 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
 	const refreshBooking = useBookingStore((state) => state.refreshBooking);
+	const hotelDetailMatch = useMatch({
+		from: "/_app/$hotelId/",
+		shouldThrow: false,
+	});
+	const isSettingsRoute = useRouterState({
+		select: (state) => state.location.pathname.startsWith("/settings"),
+	});
 
 	useEffect(() => {
 		refreshBooking();
 	}, [refreshBooking]);
 
 	return (
-		<div className="mx-auto max-w-7xl">
-			<Navbar />
-			<Outlet />
-			<Footer className="mt-14" />
-		</div>
+		<>
+			<div
+				className={cn(
+					"flex min-h-dvh flex-col",
+					!hotelDetailMatch && !isSettingsRoute && "pb-16.25 md:pb-0",
+				)}
+			>
+				{isSettingsRoute ? null : <Navbar />}
+				<main className="flex flex-1 flex-col">
+					<Outlet />
+				</main>
+				{isSettingsRoute ? null : <Footer className="mt-14" />}
+			</div>
+			{isSettingsRoute ? null : <MobileBottomNav />}
+		</>
 	);
 }

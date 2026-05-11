@@ -13,9 +13,15 @@ vi.mock("@zanadeal/db", () => {
 		description: string;
 		address: string;
 		mapLink: string;
+		email: string | null;
 		isArchived: boolean;
+		isPopular: boolean;
+		bankAccount: unknown | null;
+		favorites: unknown[];
 		latitude: string;
 		longitude: string;
+		phoneNumber: string | null;
+		platformFeePercentageBasisPoints: number;
 		createdAt: Date;
 		updatedAt: Date;
 		amenities: unknown[];
@@ -45,6 +51,7 @@ vi.mock("@zanadeal/db", () => {
 						| "rooms"
 					> & {
 						isArchived?: boolean;
+						isPopular?: boolean;
 					};
 				}) => {
 					const id = String(nextId++);
@@ -57,10 +64,16 @@ vi.mock("@zanadeal/db", () => {
 						name: data.name,
 						description: data.description,
 						address: data.address,
+						email: null,
 						mapLink: data.mapLink,
+						bankAccount: null,
+						favorites: [],
 						latitude: data.latitude,
 						longitude: data.longitude,
+						phoneNumber: null,
+						platformFeePercentageBasisPoints: 0,
 						isArchived: data.isArchived ?? false,
+						isPopular: data.isPopular ?? false,
 						createdAt: now,
 						updatedAt: now,
 					};
@@ -87,6 +100,7 @@ vi.mock("@zanadeal/db", () => {
 						name?: { contains?: string; equals?: string; mode?: string };
 						updatedAt?: { gte?: Date; lte?: Date };
 						isArchived?: boolean;
+						isPopular?: boolean;
 					};
 					orderBy?:
 						| Array<Record<string, "asc" | "desc">>
@@ -100,6 +114,10 @@ vi.mock("@zanadeal/db", () => {
 						rows = rows.filter(
 							(hotel) => hotel.isArchived === where.isArchived,
 						);
+					}
+
+					if (where?.isPopular !== undefined) {
+						rows = rows.filter((hotel) => hotel.isPopular === where.isPopular);
 					}
 
 					if (where?.name?.contains) {
@@ -163,6 +181,7 @@ vi.mock("@zanadeal/db", () => {
 				}: {
 					where?: {
 						isArchived?: boolean;
+						isPopular?: boolean;
 						name?: { contains?: string; equals?: string; mode?: string };
 						updatedAt?: { gte?: Date; lte?: Date };
 					};
@@ -173,6 +192,10 @@ vi.mock("@zanadeal/db", () => {
 						rows = rows.filter(
 							(hotel) => hotel.isArchived === where.isArchived,
 						);
+					}
+
+					if (where?.isPopular !== undefined) {
+						rows = rows.filter((hotel) => hotel.isPopular === where.isPopular);
 					}
 
 					if (where?.name?.contains) {
@@ -207,14 +230,17 @@ vi.mock("@zanadeal/db", () => {
 	};
 });
 
-function createTestContext(): Context {
+function createTestContext(roles: Role[] = [Role.ADMIN]): Context {
+	const user = {
+		id: "test-user",
+		roles,
+	};
+
 	return {
 		session: {
-			user: {
-				id: "test-user",
-				roles: [Role.ADMIN],
-			},
+			user,
 		},
+		user,
 		logger: undefined,
 	} as unknown as Context;
 }
@@ -228,16 +254,17 @@ type HotelJson = {
 	latitude: string;
 	longitude: string;
 	isArchived: boolean;
+	isPopular: boolean;
 	createdAt: string;
 	updatedAt: string;
 };
 
-async function startOpenApiServer() {
+async function startOpenApiServer(roles: Role[] = [Role.ADMIN]) {
 	const handler = new OpenAPIHandler(appRouter);
 
 	const server = createServer(async (req, res) => {
 		const { matched } = await handler.handle(req, res, {
-			context: createTestContext(),
+			context: createTestContext(roles),
 		});
 
 		if (matched) {
@@ -388,5 +415,79 @@ describe("hotel OpenAPI routes", () => {
 		expect(payload.items.map((item) => item.name)).toEqual(
 			expect.arrayContaining(["Budget Hotel", "Premium Hotel"]),
 		);
+	});
+
+	it("GET /hotels/{id} hides zero-price hotels for user role", async () => {
+		const createRes = await fetch(`${baseUrl}/hotels`, {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify({
+				name: "Hidden For User Hotel",
+				description: "No priced rooms yet",
+				address: "3 Test Street",
+				mapLink: "https://maps.example/hidden",
+				latitude: "0",
+				longitude: "0",
+				amenityIds: [],
+				images: [],
+			}),
+		});
+
+		expect(createRes.status).toBe(200);
+		const created = (await createRes.json()) as HotelJson;
+		const userServer = await startOpenApiServer([Role.USER]);
+
+		try {
+			const getRes = await fetch(`${userServer.baseUrl}/hotels/${created.id}`, {
+				method: "GET",
+			});
+
+			expect(getRes.status).toBe(404);
+		} finally {
+			await userServer.close();
+		}
+	});
+
+	it("GET /hotels/{id} keeps zero-price hotels visible for date-scoped user requests", async () => {
+		const createRes = await fetch(`${baseUrl}/hotels`, {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify({
+				name: "Unavailable For Dates Hotel",
+				description: "No available rooms for selected dates",
+				address: "4 Test Street",
+				mapLink: "https://maps.example/unavailable-for-dates",
+				latitude: "0",
+				longitude: "0",
+				amenityIds: [],
+				images: [],
+			}),
+		});
+
+		expect(createRes.status).toBe(200);
+		const created = (await createRes.json()) as HotelJson;
+		const userServer = await startOpenApiServer([Role.USER]);
+
+		try {
+			const getRes = await fetch(
+				`${userServer.baseUrl}/hotels/${created.id}?checkInDate=2026-06-10&checkOutDate=2026-06-12`,
+				{
+					method: "GET",
+				},
+			);
+
+			expect(getRes.status).toBe(200);
+			const payload = (await getRes.json()) as HotelJson & {
+				isAvailableForDates?: boolean;
+			};
+			expect(payload.id).toBe(created.id);
+			expect(payload.isAvailableForDates).toBe(false);
+		} finally {
+			await userServer.close();
+		}
 	});
 });

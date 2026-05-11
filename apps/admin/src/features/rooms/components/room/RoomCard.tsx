@@ -1,6 +1,6 @@
-import type { RoomAdminComputed } from "@zanadeal/api/features/room";
-import { Button, Card, cn } from "@zanadeal/ui";
-import { Calendar, Pen, Trash2 } from "lucide-react";
+import type { RoomComputed } from "@zanadeal/api/features/room";
+import { Card, cn } from "@zanadeal/ui";
+import { Calendar, Pen } from "lucide-react";
 import type { ComponentProps } from "react";
 import DeleteRoomAlertDialog from "../../ui/alert-dialogs/DeleteRoomAlertDialog";
 import RoomAmenities from "./RoomAmenities";

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="mg">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Tsy afaka nohamarinina ny famandrihanao</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background-color: #faf2ee;
+				font-family: Lufga, Inter, Arial, sans-serif;
+				color: #3a2a21;
+			}
+
+			table {
+				border-collapse: collapse;
+			}
+
+			a {
+				color: inherit;
+			}
+
+			@media only screen and (max-width: 640px) {
+				.email-shell {
+					padding: 16px !important;
+				}
+
+				.email-card {
+					border-radius: 20px !important;
+				}
+
+				.email-header,
+				.email-section,
+				.email-footer {
+					padding-left: 20px !important;
+					padding-right: 20px !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">
+			Tsy voamarina ny famandrihanao tao amin'i {{{hotelName}}}
+		</div>
+		<table role="presentation" width="100%" style="width: 100%; background-color: #faf2ee;">
+			<tr>
+				<td class="email-shell" style="padding: 28px 16px;">
+					<table role="presentation" width="100%" style="max-width: 640px; margin: 0 auto;">
+						<tr>
+							<td class="email-card" style="background-color: #ffffff; border: 1px solid #e6dce4; border-radius: 24px; box-shadow: 0 12px 30px rgba(55, 38, 58, 0.08); overflow: hidden;">
+								<div class="email-header" style="background: linear-gradient(135deg, #fffafb 0%, #f7eef5 56%, #f2e5ef 100%); padding: 32px 32px 24px;">
+									<div style="margin-bottom: 18px;">
+										<span style="display: inline-block; padding: 10px 14px; border-radius: 999px; background-color: #ffffff; border: 1px solid #e6d3df; box-shadow: 0 8px 18px rgba(139, 61, 116, 0.08); color: #8b3d74; font-size: 17px; font-weight: 800; letter-spacing: -0.03em; line-height: 1;">Zanadeal</span>
+									</div>
+									<span style="display: inline-block; padding: 7px 12px; border-radius: 999px; background-color: #f6e3d8; color: #a55a38; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;">Tsy voamarina ny famandrihana</span>
+									<h1 style="margin: 18px 0 10px; font-size: 30px; line-height: 1.15; color: #3a2a21; letter-spacing: -0.02em;">Tsy afaka nohamarinina ny fijanonanao</h1>
+									<p style="margin: 0; color: #6d5a50; font-size: 15px; line-height: 1.7;">Salama {{{guestName}}}, nolavin'ny hotely ny fangatahanao famandrihana.</p>
+								</div>
+
+								<div class="email-section" style="padding: 0 32px 28px;">
+									<div style="margin-top: 24px; padding: 18px; border-radius: 18px; background-color: #fdf7f3; border: 1px solid #f0ddd3;">
+										<p style="margin: 0; color: #a55a38; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Antony nanafoanana azy</p>
+										<p style="margin: 6px 0 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.6;">{{{cancelReason}}}</p>
+									</div>
+
+									<div style="margin-top: 16px; padding: 18px; border-radius: 18px; background-color: #fff4ee; border: 1px solid #f1d8c9;">
+										<p style="margin: 0; color: #a55a38; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Vaovao momba ny fandoavana</p>
+										<p style="margin: 6px 0 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.6;">Ny vola voatazona ho an'ity fandoavana ity dia tsy ho debitena.</p>
+									</div>
+
+									<p style="margin: 24px 0 0; color: #6d5a50; font-size: 15px; line-height: 1.7;">Ity ny famintinana ny famandrihana izay tsy afaka nohamarinina.</p>
+
+									<div style="margin-top: 20px; padding: 22px; border-radius: 20px; background-color: #ffffff; border: 1px solid #ecd9cf;">
+										<h2 style="margin: 0 0 18px; font-size: 18px; line-height: 1.3; color: #3a2a21;">Antsipirian'ny famandrihana</h2>
+										<table role="presentation" width="100%" style="width: 100%; border-collapse: separate; border-spacing: 0 12px;">
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top; width: 42%;"><p style="margin: 0; color: #87756d; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Laharana famandrihana</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{bookingReference}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #87756d; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Hotely</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{hotelName}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #87756d; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Efitra</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{roomTitle}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #87756d; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Daty hidirana</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{checkInDate}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #87756d; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Daty hivoahana</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{checkOutDate}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #87756d; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Isan'ny vahiny</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{guestCount}}}</p></td>
+											</tr>
+											<tr>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #87756d; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">Vola rehetra</p></td>
+												<td style="padding: 0 0 10px; vertical-align: top;"><p style="margin: 0; color: #3a2a21; font-size: 15px; font-weight: 600; line-height: 1.5;">{{{priceLabel}}}</p></td>
+											</tr>
+										</table>
+									</div>
+
+									{{#if supportEmail}}
+									<p style="margin: 24px 0 0; color: #6d5a50; font-size: 13px; line-height: 1.7;">Raha mila fanampiana hitadiavana fijanonana hafa ianao dia manorata amin'ny <a href="mailto:{{{supportEmail}}}" style="color: #8b3d74; text-decoration: underline;">{{{supportEmail}}}</a>.</p>
+									{{/if}}
+								</div>
+
+								<div class="email-footer" style="padding: 20px 32px 32px; border-top: 1px solid #e4cada; background-color: #fcf8fb;">
+									<p style="margin: 0; color: #826f66; font-size: 12px; line-height: 1.8;">Nalefan'i Zanadeal ity fanavaozana ity satria tsy afaka nanamarina ny famandrihanao ny hotely.</p>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

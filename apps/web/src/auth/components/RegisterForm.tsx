@@ -3,6 +3,10 @@ import type { UpsertUserInput } from "@zanadeal/api/features/user";
 import { cn } from "@zanadeal/ui";
 import type { ComponentProps } from "react";
 import { useIntlayer } from "react-intlayer";
+import {
+	buildEmailVerifiedCallbackUrl,
+	sanitizeRedirectTo,
+} from "@/auth/services/auth-dialog.service";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useAuth } from "../providers/AuthProvider";
@@ -21,6 +25,7 @@ export default function RegisterForm({
 	const content = useIntlayer("register-form");
 	const { signUpWithEmail } = useAuth();
 	const navigate = useNavigate();
+	const safeRedirectTo = sanitizeRedirectTo(redirectTo);
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
@@ -29,12 +34,24 @@ export default function RegisterForm({
 			lastName: "",
 		} satisfies UpsertUserInput,
 		onSubmit: async ({ value }) => {
-			const user = await signUpWithEmail(value, {});
+			const user = await signUpWithEmail(
+				{
+					...value,
+					callbackURL: buildEmailVerifiedCallbackUrl(
+						window.location.origin,
+						safeRedirectTo,
+					),
+				},
+				{},
+			);
 
 			if (user) {
 				navigate({
 					to: "/verify-email",
-					search: { email: value.email },
+					search: {
+						email: value.email,
+						redirectTo: safeRedirectTo,
+					},
 				});
 			}
 		},
@@ -69,7 +86,7 @@ export default function RegisterForm({
 				>
 					{(field) => (
 						<field.TextField
-							label="Email"
+							label={content.email.value}
 							inputProps={{ type: "email", placeholder: "john@example.com" }}
 						/>
 					)}
@@ -89,7 +106,7 @@ export default function RegisterForm({
 				>
 					{(field) => (
 						<field.PasswordField
-							label="Password"
+							label={content.password.value}
 							inputProps={{ placeholder: "••••••••" }}
 						/>
 					)}
@@ -109,7 +126,7 @@ export default function RegisterForm({
 					{(field) => (
 						<field.TextField
 							label={content.firstName.value}
-							inputProps={{ type: "text", placeholder: "John" }}
+							inputProps={{ type: "text" }}
 						/>
 					)}
 				</form.AppField>
@@ -127,13 +144,13 @@ export default function RegisterForm({
 					{(field) => (
 						<field.TextField
 							label={content.lastName.value}
-							inputProps={{ type: "text", placeholder: "Doe" }}
+							inputProps={{ type: "text" }}
 						/>
 					)}
 				</form.AppField>
 				<form.AppForm>
 					<form.SubmitButton variants={{ variant: "default" }}>
-						Register
+						{content.register.value}
 					</form.SubmitButton>
 				</form.AppForm>
 			</form>

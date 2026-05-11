@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { HotelComputed } from "@zanadeal/api/features/hotel";
 import { cn } from "@zanadeal/ui";
 import { ChevronRight, X } from "lucide-react";
+import { useIntlayer } from "react-intlayer";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -27,6 +28,8 @@ export default function HotelMarkerPreviewCard({
 	className,
 	hotel,
 }: Props) {
+	const t = useIntlayer("hotel-marker-preview");
+
 	return (
 		<HotelProvider hotel={hotel}>
 			<Card className={cn("w-64 gap-1 rounded-xl", className)}>
@@ -49,7 +52,7 @@ export default function HotelMarkerPreviewCard({
 						className="w-full"
 					>
 						<Button className="w-full" type="button">
-							View hotel <ChevronRight className="size-4" />
+							{t.viewHotel.value} <ChevronRight className="size-4" />
 						</Button>
 					</Link>
 				</CardFooter>

@@ -1,10 +1,9 @@
 import { Calendar, cn } from "@zanadeal/ui";
+import { currency } from "@zanadeal/utils";
 import { eachDayOfInterval, format } from "date-fns";
 import { Square } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { DateRange, DayButtonProps } from "react-day-picker";
-
-const _GOOD_PRICE_THRESHOLD = 100;
 
 export type CalendarPrices = {
 	startDate: Date;
@@ -131,18 +130,20 @@ function DayButton({ pricesInfo, ...props }: DayButtonInterfaceProps) {
 									: "text-muted-foreground group-data-[selected]:text-primary-foreground/70",
 							)}
 						>
-							${priceInfo.price}
+							{currency(priceInfo.price, { compact: true })}
 						</p>
-						<p
-							className={cn(
-								"font-medium text-[10px]",
-								isGoodPrice
-									? "text-orange-500"
-									: "text-muted-foreground group-data-[selected]:text-primary-foreground/70",
-							)}
-						>
-							${priceInfo.promoPrice}
-						</p>
+						{priceInfo.promoPrice ? (
+							<p
+								className={cn(
+									"font-medium text-[10px]",
+									isGoodPrice
+										? "text-orange-500"
+										: "text-muted-foreground group-data-[selected]:text-primary-foreground/70",
+								)}
+							>
+								{currency(priceInfo.promoPrice, { compact: true })}
+							</p>
+						) : null}
 					</>
 				)}
 			</span>

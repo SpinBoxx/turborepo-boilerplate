@@ -27,7 +27,7 @@ interface BookingState {
 
 	// Booking details
 	checkInDate: string;
-	checkOutDate: string;
+	checkOutDate: string | null;
 	roomId: string | null;
 
 	// Actions for guest count
@@ -39,7 +39,7 @@ interface BookingState {
 	// Actions for booking details
 	getNights: () => number;
 	setCheckInDate: (date: Date) => void;
-	setCheckOutDate: (date: Date) => void;
+	setCheckOutDate: (date: Date | null) => void;
 	setRoomId: (roomId: string | null) => void;
 
 	// Utility actions
@@ -91,14 +91,15 @@ export const useBookingStore = create<BookingState>()(
 			setCheckInDate: (date: Date) => {
 				set({ checkInDate: dateToString(date) });
 			},
-			setCheckOutDate: (date: Date) => {
-				set({ checkOutDate: dateToString(date) });
+			setCheckOutDate: (date: Date | null) => {
+				set({ checkOutDate: date ? dateToString(date) : null });
 			},
 
 			setRoomId: (roomId: string | null) => set({ roomId }),
 
 			getNights: () => {
 				const { checkInDate, checkOutDate } = get();
+				if (!checkOutDate) return 0;
 				return getNights(checkInDate, checkOutDate);
 			},
 
@@ -113,6 +114,9 @@ export const useBookingStore = create<BookingState>()(
 				}),
 			refreshBooking: () => {
 				const state = get();
+				if (!state.checkOutDate) {
+					return;
+				}
 				const currentDates = {
 					checkInDate: state.checkInDate,
 					checkOutDate: state.checkOutDate,

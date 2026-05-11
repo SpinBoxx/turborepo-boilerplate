@@ -81,6 +81,56 @@ const hotelFiltersDrawerContent = {
 			en: "Name Z -> A",
 			"mg-MG": "Anarana Z -> A",
 		}),
+		travelDates: t({
+			fr: "Dates de séjour",
+			en: "Travel dates",
+			"mg-MG": "Daty fitsangatsanganana",
+		}),
+		checkIn: t({
+			fr: "Arrivée",
+			en: "Check-in",
+			"mg-MG": "Fidirana",
+		}),
+		checkOut: t({
+			fr: "Départ",
+			en: "Check-out",
+			"mg-MG": "Fivoahana",
+		}),
+		selectDate: t({
+			fr: "Choisir une date",
+			en: "Select a date",
+			"mg-MG": "Safidio ny daty",
+		}),
+		priceRange: t({
+			fr: "Fourchette de prix",
+			en: "Price range",
+			"mg-MG": "Salan'ny vidiny",
+		}),
+		min: t({
+			fr: "Min",
+			en: "Min",
+			"mg-MG": "Kely indrindra",
+		}),
+		max: t({
+			fr: "Max",
+			en: "Max",
+			"mg-MG": "Be indrindra",
+		}),
+		filterActive: t({
+			fr: "Actif",
+			en: "On",
+			"mg-MG": "Mandeha",
+		}),
+		sortHotels: t({
+			fr: "Trier les hôtels",
+			en: "Sort hotels",
+			"mg-MG": "Alaharo ny hotely",
+		}),
+		hotelSearch: t({
+			fr: "Rechercher un hôtel",
+			en: "Hotel search",
+			"mg-MG": "Fikarohan'ny hotely",
+		}),
 	},
 } satisfies Dictionary;
 

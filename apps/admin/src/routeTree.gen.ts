@@ -10,20 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteRouteImport } from './routes/login/route'
+import { Route as HotelReviewerRouteRouteImport } from './routes/hotel-reviewer/route'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardUsersIndexRouteImport } from './routes/dashboard/users/index'
 import { Route as DashboardTermsIndexRouteImport } from './routes/dashboard/terms/index'
 import { Route as DashboardRoomsIndexRouteImport } from './routes/dashboard/rooms/index'
 import { Route as DashboardHotelsIndexRouteImport } from './routes/dashboard/hotels/index'
+import { Route as DashboardContactMessagesIndexRouteImport } from './routes/dashboard/contact-messages/index'
 import { Route as DashboardAmenitiesIndexRouteImport } from './routes/dashboard/amenities/index'
 import { Route as DashboardTermsCreateTermRouteImport } from './routes/dashboard/terms/create-term'
+import { Route as HotelReviewerBookingsRequestsRejectRouteImport } from './routes/hotel-reviewer/bookings/requests/reject'
+import { Route as HotelReviewerBookingsRequestsApproveRouteImport } from './routes/hotel-reviewer/bookings/requests/approve'
 import { Route as DashboardTermsIdUpdateTermRouteImport } from './routes/dashboard/terms/$id.update-term'
 
 const LoginRouteRoute = LoginRouteRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HotelReviewerRouteRoute = HotelReviewerRouteRouteImport.update({
+  id: '/hotel-reviewer',
+  path: '/hotel-reviewer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
@@ -46,6 +56,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardUsersIndexRoute = DashboardUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardTermsIndexRoute = DashboardTermsIndexRouteImport.update({
   id: '/terms/',
   path: '/terms/',
@@ -61,6 +76,12 @@ const DashboardHotelsIndexRoute = DashboardHotelsIndexRouteImport.update({
   path: '/hotels/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardContactMessagesIndexRoute =
+  DashboardContactMessagesIndexRouteImport.update({
+    id: '/contact-messages/',
+    path: '/contact-messages/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardAmenitiesIndexRoute = DashboardAmenitiesIndexRouteImport.update({
   id: '/amenities/',
   path: '/amenities/',
@@ -72,6 +93,18 @@ const DashboardTermsCreateTermRoute =
     path: '/terms/create-term',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const HotelReviewerBookingsRequestsRejectRoute =
+  HotelReviewerBookingsRequestsRejectRouteImport.update({
+    id: '/bookings/requests/reject',
+    path: '/bookings/requests/reject',
+    getParentRoute: () => HotelReviewerRouteRoute,
+  } as any)
+const HotelReviewerBookingsRequestsApproveRoute =
+  HotelReviewerBookingsRequestsApproveRouteImport.update({
+    id: '/bookings/requests/approve',
+    path: '/bookings/requests/approve',
+    getParentRoute: () => HotelReviewerRouteRoute,
+  } as any)
 const DashboardTermsIdUpdateTermRoute =
   DashboardTermsIdUpdateTermRouteImport.update({
     id: '/terms/$id/update-term',
@@ -82,84 +115,115 @@ const DashboardTermsIdUpdateTermRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/hotel-reviewer': typeof HotelReviewerRouteRouteWithChildren
   '/login': typeof LoginRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/dashboard/terms/create-term': typeof DashboardTermsCreateTermRoute
   '/dashboard/amenities/': typeof DashboardAmenitiesIndexRoute
+  '/dashboard/contact-messages/': typeof DashboardContactMessagesIndexRoute
   '/dashboard/hotels/': typeof DashboardHotelsIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
   '/dashboard/terms/': typeof DashboardTermsIndexRoute
+  '/dashboard/users/': typeof DashboardUsersIndexRoute
   '/dashboard/terms/$id/update-term': typeof DashboardTermsIdUpdateTermRoute
+  '/hotel-reviewer/bookings/requests/approve': typeof HotelReviewerBookingsRequestsApproveRoute
+  '/hotel-reviewer/bookings/requests/reject': typeof HotelReviewerBookingsRequestsRejectRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/hotel-reviewer': typeof HotelReviewerRouteRouteWithChildren
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/dashboard/terms/create-term': typeof DashboardTermsCreateTermRoute
   '/dashboard/amenities': typeof DashboardAmenitiesIndexRoute
+  '/dashboard/contact-messages': typeof DashboardContactMessagesIndexRoute
   '/dashboard/hotels': typeof DashboardHotelsIndexRoute
   '/dashboard/rooms': typeof DashboardRoomsIndexRoute
   '/dashboard/terms': typeof DashboardTermsIndexRoute
+  '/dashboard/users': typeof DashboardUsersIndexRoute
   '/dashboard/terms/$id/update-term': typeof DashboardTermsIdUpdateTermRoute
+  '/hotel-reviewer/bookings/requests/approve': typeof HotelReviewerBookingsRequestsApproveRoute
+  '/hotel-reviewer/bookings/requests/reject': typeof HotelReviewerBookingsRequestsRejectRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/hotel-reviewer': typeof HotelReviewerRouteRouteWithChildren
   '/login': typeof LoginRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/dashboard/terms/create-term': typeof DashboardTermsCreateTermRoute
   '/dashboard/amenities/': typeof DashboardAmenitiesIndexRoute
+  '/dashboard/contact-messages/': typeof DashboardContactMessagesIndexRoute
   '/dashboard/hotels/': typeof DashboardHotelsIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
   '/dashboard/terms/': typeof DashboardTermsIndexRoute
+  '/dashboard/users/': typeof DashboardUsersIndexRoute
   '/dashboard/terms/$id/update-term': typeof DashboardTermsIdUpdateTermRoute
+  '/hotel-reviewer/bookings/requests/approve': typeof HotelReviewerBookingsRequestsApproveRoute
+  '/hotel-reviewer/bookings/requests/reject': typeof HotelReviewerBookingsRequestsRejectRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/hotel-reviewer'
     | '/login'
     | '/dashboard/'
     | '/login/'
     | '/dashboard/terms/create-term'
     | '/dashboard/amenities/'
+    | '/dashboard/contact-messages/'
     | '/dashboard/hotels/'
     | '/dashboard/rooms/'
     | '/dashboard/terms/'
+    | '/dashboard/users/'
     | '/dashboard/terms/$id/update-term'
+    | '/hotel-reviewer/bookings/requests/approve'
+    | '/hotel-reviewer/bookings/requests/reject'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/hotel-reviewer'
     | '/dashboard'
     | '/login'
     | '/dashboard/terms/create-term'
     | '/dashboard/amenities'
+    | '/dashboard/contact-messages'
     | '/dashboard/hotels'
     | '/dashboard/rooms'
     | '/dashboard/terms'
+    | '/dashboard/users'
     | '/dashboard/terms/$id/update-term'
+    | '/hotel-reviewer/bookings/requests/approve'
+    | '/hotel-reviewer/bookings/requests/reject'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/hotel-reviewer'
     | '/login'
     | '/dashboard/'
     | '/login/'
     | '/dashboard/terms/create-term'
     | '/dashboard/amenities/'
+    | '/dashboard/contact-messages/'
     | '/dashboard/hotels/'
     | '/dashboard/rooms/'
     | '/dashboard/terms/'
+    | '/dashboard/users/'
     | '/dashboard/terms/$id/update-term'
+    | '/hotel-reviewer/bookings/requests/approve'
+    | '/hotel-reviewer/bookings/requests/reject'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  HotelReviewerRouteRoute: typeof HotelReviewerRouteRouteWithChildren
   LoginRouteRoute: typeof LoginRouteRouteWithChildren
 }
 
@@ -170,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hotel-reviewer': {
+      id: '/hotel-reviewer'
+      path: '/hotel-reviewer'
+      fullPath: '/hotel-reviewer'
+      preLoaderRoute: typeof HotelReviewerRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -200,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/users/': {
+      id: '/dashboard/users/'
+      path: '/users'
+      fullPath: '/dashboard/users/'
+      preLoaderRoute: typeof DashboardUsersIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/terms/': {
       id: '/dashboard/terms/'
       path: '/terms'
@@ -221,6 +299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardHotelsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/contact-messages/': {
+      id: '/dashboard/contact-messages/'
+      path: '/contact-messages'
+      fullPath: '/dashboard/contact-messages/'
+      preLoaderRoute: typeof DashboardContactMessagesIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/amenities/': {
       id: '/dashboard/amenities/'
       path: '/amenities'
@@ -234,6 +319,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/terms/create-term'
       preLoaderRoute: typeof DashboardTermsCreateTermRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/hotel-reviewer/bookings/requests/reject': {
+      id: '/hotel-reviewer/bookings/requests/reject'
+      path: '/bookings/requests/reject'
+      fullPath: '/hotel-reviewer/bookings/requests/reject'
+      preLoaderRoute: typeof HotelReviewerBookingsRequestsRejectRouteImport
+      parentRoute: typeof HotelReviewerRouteRoute
+    }
+    '/hotel-reviewer/bookings/requests/approve': {
+      id: '/hotel-reviewer/bookings/requests/approve'
+      path: '/bookings/requests/approve'
+      fullPath: '/hotel-reviewer/bookings/requests/approve'
+      preLoaderRoute: typeof HotelReviewerBookingsRequestsApproveRouteImport
+      parentRoute: typeof HotelReviewerRouteRoute
     }
     '/dashboard/terms/$id/update-term': {
       id: '/dashboard/terms/$id/update-term'
@@ -249,9 +348,11 @@ interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardTermsCreateTermRoute: typeof DashboardTermsCreateTermRoute
   DashboardAmenitiesIndexRoute: typeof DashboardAmenitiesIndexRoute
+  DashboardContactMessagesIndexRoute: typeof DashboardContactMessagesIndexRoute
   DashboardHotelsIndexRoute: typeof DashboardHotelsIndexRoute
   DashboardRoomsIndexRoute: typeof DashboardRoomsIndexRoute
   DashboardTermsIndexRoute: typeof DashboardTermsIndexRoute
+  DashboardUsersIndexRoute: typeof DashboardUsersIndexRoute
   DashboardTermsIdUpdateTermRoute: typeof DashboardTermsIdUpdateTermRoute
 }
 
@@ -259,15 +360,32 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardTermsCreateTermRoute: DashboardTermsCreateTermRoute,
   DashboardAmenitiesIndexRoute: DashboardAmenitiesIndexRoute,
+  DashboardContactMessagesIndexRoute: DashboardContactMessagesIndexRoute,
   DashboardHotelsIndexRoute: DashboardHotelsIndexRoute,
   DashboardRoomsIndexRoute: DashboardRoomsIndexRoute,
   DashboardTermsIndexRoute: DashboardTermsIndexRoute,
+  DashboardUsersIndexRoute: DashboardUsersIndexRoute,
   DashboardTermsIdUpdateTermRoute: DashboardTermsIdUpdateTermRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
 )
+
+interface HotelReviewerRouteRouteChildren {
+  HotelReviewerBookingsRequestsApproveRoute: typeof HotelReviewerBookingsRequestsApproveRoute
+  HotelReviewerBookingsRequestsRejectRoute: typeof HotelReviewerBookingsRequestsRejectRoute
+}
+
+const HotelReviewerRouteRouteChildren: HotelReviewerRouteRouteChildren = {
+  HotelReviewerBookingsRequestsApproveRoute:
+    HotelReviewerBookingsRequestsApproveRoute,
+  HotelReviewerBookingsRequestsRejectRoute:
+    HotelReviewerBookingsRequestsRejectRoute,
+}
+
+const HotelReviewerRouteRouteWithChildren =
+  HotelReviewerRouteRoute._addFileChildren(HotelReviewerRouteRouteChildren)
 
 interface LoginRouteRouteChildren {
   LoginIndexRoute: typeof LoginIndexRoute
@@ -284,6 +402,7 @@ const LoginRouteRouteWithChildren = LoginRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
+  HotelReviewerRouteRoute: HotelReviewerRouteRouteWithChildren,
   LoginRouteRoute: LoginRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport

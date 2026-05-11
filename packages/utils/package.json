@@ -10,9 +10,13 @@
 			"default": "./src/*.ts"
 		}
 	},
+	"scripts": {
+		"test": "vitest run"
+	},
 	"devDependencies": {
 		"@zanadeal/config": "*",
-		"typescript": "^5"
+		"typescript": "^5",
+		"vitest": "^3.2.4"
 	},
 	"dependencies": {
 		"uuid": "^13.0.0"

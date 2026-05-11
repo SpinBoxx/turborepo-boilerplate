@@ -5,7 +5,7 @@ import type {
 import { orpc } from "@/lib/orpc";
 
 export async function getHotelById(input: GetHotelInput) {
-	return orpc.hotel.get({ id: input.id });
+	return orpc.hotel.get(input);
 }
 
 export async function listHotels(input: ListHotelsInput) {

@@ -63,6 +63,15 @@ const HotelInformationsStep = withForm({
 						/>
 					)}
 				</form.AppField>
+				<form.AppField name="isPopular">
+					{(field) => (
+						<field.SwitchContainer
+							label="hotel-popular"
+							title="Hôtel populaire"
+							description="Activez ce statut pour les hôtels avec un contrat prioritaire à mettre en avant."
+						/>
+					)}
+				</form.AppField>
 				<form.AppField name="email">
 					{(field) => (
 						<field.TextField

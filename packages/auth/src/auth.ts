@@ -1,6 +1,6 @@
 import prisma from "@zanadeal/db";
 import { mailService } from "@zanadeal/mailer";
-import { verifyLocale } from "@zanadeal/mailer/resend";
+import { verifyLocale } from "@zanadeal/mailer/mail-locales";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import type { User } from "../../db/prisma/generated/client";
@@ -13,20 +13,37 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 		requireEmailVerification: true,
-	},
+		resetPasswordTokenExpiresIn: 60 * 60,
+		revokeSessionsOnPasswordReset: true,
+		sendResetPassword: async ({ url, user }, request) => {
+			const localeFromHeaders = request?.headers.get("content-language");
+			const locale = verifyLocale(localeFromHeaders);
+			const userName = (user as User).firstName || user.email;
 
+			await mailService.sendForgotPasswordMail({
+				locale,
+				to: user.email,
+				variables: {
+					userName,
+					resetUrl: url,
+				},
+			});
+		},
+	},
+	baseURL: process.env.API_URL,
 	emailVerification: {
 		sendVerificationEmail: async ({ url, user }, request) => {
 			const parsedUrl = new URL(url);
+			const requestedCallbackUrl = parsedUrl.searchParams.get("callbackURL");
 			parsedUrl.searchParams.set(
 				"callbackURL",
-				`${process.env.CLIENT_URL}/email-verified`,
+				requestedCallbackUrl || `${process.env.CLIENT_URL}/email-verified`,
 			);
 			const localeFromHeaders = request?.headers.get("content-language");
 
 			const locale = verifyLocale(localeFromHeaders);
 
-			const mail = await mailService.sendVerifyAccountMail({
+			void mailService.sendVerifyAccountMail({
 				locale,
 				to: user.email,
 				variables: {
@@ -36,12 +53,25 @@ export const auth = betterAuth({
 				},
 				subject: "Veuillez vérifier votre compte",
 			});
-
-			console.log(mail);
 		},
 		expiresIn: 60 * 60, // 1 hour
-
 		sendOnSignUp: false,
+	},
+	rateLimit: {
+		enabled: true,
+		window: 60, // 1 minute window
+		max: 10, // 10 requests max per 1 minute
+		customRules: {
+			"/verify-email": {
+				window: 300, // 5 hours
+				max: 3, // 3 call max
+			},
+			// Reset password
+			"/request-password-reset": {
+				window: 3600, // 1 hour
+				max: 3, // 3 call max
+			},
+		},
 	},
 	user: {
 		additionalFields: {
@@ -72,6 +102,12 @@ export const auth = betterAuth({
 				returned: true,
 				input: false,
 				type: "string[]",
+			},
+			disabledAt: {
+				required: false,
+				returned: true,
+				input: false,
+				type: "date",
 			},
 		},
 		deleteUser: {

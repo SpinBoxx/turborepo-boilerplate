@@ -9,14 +9,14 @@ const bookingSearchBarMobileContent = {
 			mg: "Rahoviana ianao no handeha?",
 		}),
 		selectTravelDates: t({
-			fr: "Sélectionnez vos dates de voyage",
-			en: "Select your travel dates",
-			mg: "Safidio ny daty fitsangatsanganana",
+			fr: "Dates de voyage",
+			en: "Ttravel dates",
+			mg: "Daty dia",
 		}),
-		selectYourTravelDates: t({
-			fr: "Sélectionnez vos dates de voyage",
-			en: "Select your travel dates",
-			mg: "Safidio ny daty fitsangatsanganana",
+		choose: t({
+			fr: "Choisir",
+			en: "Choose",
+			mg: "Mifidiana",
 		}),
 		next: t({
 			fr: "Suivant",

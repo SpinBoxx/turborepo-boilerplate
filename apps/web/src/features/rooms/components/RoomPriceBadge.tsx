@@ -1,4 +1,4 @@
-import { formatPrice } from "@zanadeal/utils";
+import { currency } from "@zanadeal/utils";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 import { useRoomContext } from "./RoomProvider";
@@ -12,7 +12,6 @@ export default function RoomPriceBadge({ className, price, ...props }: Props) {
 	const resolvedPrice =
 		price ?? (room.promoPrice > 0 ? room.promoPrice : room.price);
 
-	console.log("RoomPriceBadge rendered with price:", room);
 	return (
 		<span
 			className={cn(
@@ -21,7 +20,7 @@ export default function RoomPriceBadge({ className, price, ...props }: Props) {
 			)}
 			{...props}
 		>
-			{formatPrice(resolvedPrice)}
+			{currency(resolvedPrice)}
 		</span>
 	);
 }

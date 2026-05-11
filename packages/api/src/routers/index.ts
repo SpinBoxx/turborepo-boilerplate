@@ -1,8 +1,13 @@
 import type { RouterClient } from "@orpc/server";
 import { amenityRouter } from "../features/amenity/amenity.router";
+import { bookingQuoteRouter } from "../features/booking-quote/booking-quote.router";
+import { bookingStatsRouter } from "../features/booking-stats/booking-stats.router";
+import { contactMessageRouter } from "../features/contact-message/contact-message.router";
 import { hotelRouter } from "../features/hotel/hotel.router";
+import { paymentRouter } from "../features/payment/payment.router";
 import { roomRouter } from "../features/room/room.router";
 import { termsRouter } from "../features/terms/terms.router";
+import { userRouter } from "../features/user/user.router";
 import { protectedProcedure, publicProcedure } from "../index";
 
 export const appRouter = {
@@ -26,6 +31,11 @@ export const appRouter = {
 	amenity: amenityRouter,
 	terms: termsRouter,
 	room: roomRouter,
+	bookingQuote: bookingQuoteRouter,
+	bookingStats: bookingStatsRouter,
+	contactMessage: contactMessageRouter,
+	payment: paymentRouter,
+	user: userRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

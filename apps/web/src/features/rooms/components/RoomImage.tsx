@@ -1,4 +1,3 @@
-import { BedDouble } from "lucide-react";
 import type { ComponentProps } from "react";
 import { buildCloudinaryImage, type CloudinaryVariant } from "@/lib/cloudinary";
 import { useRoomContext } from "./RoomProvider";
@@ -33,7 +32,7 @@ export default function RoomPreviewImage({
 			{...props}
 			src={src}
 			srcSet={srcSet}
-			alt={`${room.type} room`}
+			alt={room.title || room.type}
 		/>
 	);
 }

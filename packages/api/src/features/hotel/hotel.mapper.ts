@@ -12,6 +12,7 @@ export type HotelDb = {
 	address: string;
 	mapLink: string;
 	isArchived: boolean;
+	isPopular: boolean;
 	latitude: string;
 	longitude: string;
 	bankAccount?: {
@@ -52,6 +53,7 @@ function createHotelDraft(source: HotelDb): Hotel {
 		address: source.address,
 		mapLink: source.mapLink,
 		isArchived: source.isArchived,
+		isPopular: source.isPopular,
 		latitude: source.latitude,
 		longitude: source.longitude,
 		bankAccount: source.bankAccount ?? null,

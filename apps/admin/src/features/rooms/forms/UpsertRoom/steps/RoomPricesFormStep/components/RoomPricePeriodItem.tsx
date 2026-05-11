@@ -1,11 +1,12 @@
-import type { CreateRoomPriceInput } from "@zanadeal/api/features/room/room.schemas";
+import type { UpsertRoomPriceInput } from "@zanadeal/api/features/room";
 import { cn } from "@zanadeal/ui";
+import { currency } from "@zanadeal/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon, Pen, Trash2 } from "lucide-react";
 
 interface RoomPricePeriodItemProps {
-	period: CreateRoomPriceInput;
+	period: UpsertRoomPriceInput;
 	onEdit?: () => void;
 	onDelete?: () => void;
 	className?: string;
@@ -60,16 +61,17 @@ export default function RoomPricePeriodItem({
 
 			<div className="flex items-center gap-3">
 				<div className="text-right">
-					<div className="font-semibold">{period.price}€</div>
+					<div className="font-semibold">{currency(period.price)}</div>
 					{period.promoPrice > 0 && period.promoPrice < period.price && (
 						<div className="text-green-500 text-xs">
-							Promo: {period.promoPrice}€
+							Promo: {currency(period.promoPrice)}
 						</div>
 					)}
 				</div>
 				<div className="flex flex-col">
 					{onEdit && (
 						<button
+							aria-label="Modifier la période de prix"
 							type="button"
 							onClick={onEdit}
 							className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-blue-600/10 hover:text-blue-500"
@@ -79,6 +81,7 @@ export default function RoomPricePeriodItem({
 					)}
 					{onDelete && (
 						<button
+							aria-label="Supprimer la période de prix"
 							type="button"
 							onClick={onDelete}
 							className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"

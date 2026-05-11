@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/client";
-
 import { uploadBase64Image } from "../../../cloudinary/cloudinary.upload.service";
+import { toStoredMoneyAmount } from "../../../money";
 import type {
 	UpsertRoomComputedInput,
 	UpsertRoomInput,
@@ -53,6 +53,25 @@ const computedStringToNumbers = (input: Partial<UpsertRoomInput>) => {
 	};
 };
 
+const computeRoomPrices = (prices: UpsertRoomInput["prices"] | undefined) => {
+	return prices?.map((price) => ({
+		...price,
+		price: toStoredMoneyAmount(price.price),
+		promoPrice: toStoredMoneyAmount(price.promoPrice),
+	}));
+};
+
+const computeRoomDescriptionTranslations = (
+	descriptionTranslations: UpsertRoomInput["descriptionTranslations"],
+): UpsertRoomComputedInput["descriptionTranslations"] => {
+	return Object.fromEntries(
+		descriptionTranslations.map(({ locale, ...translation }) => [
+			locale,
+			translation,
+		]),
+	) as UpsertRoomComputedInput["descriptionTranslations"];
+};
+
 // Create: tous les champs requis → retour complet
 export async function computeUpsertRoomInput(
 	input: UpsertRoomInput,
@@ -68,11 +87,21 @@ export async function computeUpsertRoomInput(
 ): Promise<
 	UpsertRoomComputedInput | (Partial<UpsertRoomComputedInput> & { id: string })
 > {
-	const { images, ...roomData } = input;
+	const { descriptionTranslations, images, ...roomData } = input;
 
 	const result: Record<string, unknown> = {
 		...computedStringToNumbers(roomData),
 	};
+
+	if (descriptionTranslations !== undefined) {
+		result.descriptionTranslations = computeRoomDescriptionTranslations(
+			descriptionTranslations,
+		);
+	}
+
+	if (roomData.prices !== undefined) {
+		result.prices = computeRoomPrices(roomData.prices);
+	}
 
 	// Ne compute les images que si elles sont fournies dans l'input
 	if (images !== undefined) {

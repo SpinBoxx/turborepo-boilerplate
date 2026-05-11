@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/features/booking/hooks/useBookingHook";
 import { BookingInfoDrawer } from "@/features/booking/ui/BookingInfoDrawer";
 import { containerClassName } from "@/routes/__root";
-import HotelPricePerNight from "../components/HotelPricePerNight";
+import HotelAvailabilityPrice from "../components/HotelAvailabilityPrice";
 
 interface Props extends ComponentProps<"div"> {}
 
@@ -26,10 +26,7 @@ const HotelDetailFixedFooter = ({ className, ...props }: Props) => {
 			{...props}
 		>
 			<div className="flex items-center justify-between">
-				<div className="flex flex-col gap-0">
-					<span className="text-muted-foreground text-sm">{t.from.value}</span>
-					<HotelPricePerNight />
-				</div>
+				<HotelAvailabilityPrice variant="compact" />
 				{hasAllInfo() ? (
 					<Link
 						to={"/$hotelId/rooms"}
@@ -37,11 +34,11 @@ const HotelDetailFixedFooter = ({ className, ...props }: Props) => {
 							hotelId,
 						}}
 					>
-						<Button size="xl">{t.selectRooms.value}</Button>
+						<Button size="sm">{t.selectRooms.value}</Button>
 					</Link>
 				) : (
 					<BookingInfoDrawer>
-						<Button size="xl">{t.selectDates.value}</Button>
+						<Button size="sm">{t.selectDates.value}</Button>
 					</BookingInfoDrawer>
 				)}
 			</div>

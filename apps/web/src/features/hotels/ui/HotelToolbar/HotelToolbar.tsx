@@ -36,7 +36,7 @@ export default function HotelToolbar() {
 
 			<div className="flex flex-col gap-3">
 				{/* FOR MOBILE */}
-				<Group aria-label="Hotel search" className="w-full">
+				<Group aria-label={t.hotelSearch.value} className="w-full">
 					<InputGroup>
 						<InputGroupAddon>
 							<Search />

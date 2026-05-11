@@ -56,7 +56,7 @@ export default function HotelSortBy() {
 
 	return (
 		<Select
-			aria-label="Trier les hotels"
+			aria-label={t.sortBy.value}
 			items={sortOptions}
 			onValueChange={(nextValue) => {
 				if (!nextValue) {
