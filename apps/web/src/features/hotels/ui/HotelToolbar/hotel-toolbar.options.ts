@@ -23,6 +23,11 @@ export interface HotelPriceRange {
 	max: number;
 }
 
+export interface HotelBookingDates {
+	checkInDate: string;
+	checkOutDate: string | null;
+}
+
 export const HOTEL_PRICE_RANGE_LIMITS: HotelPriceRange = {
 	min: 0,
 	max: 2000,
@@ -181,5 +186,26 @@ export function buildListHotelsInput(
 		skip: (search.page - 1) * search.limit,
 		checkInDate: search.checkIn || undefined,
 		checkOutDate: search.checkOut || undefined,
+	};
+}
+
+export function applyBookingDatesToHotelsSearch(
+	search: HotelsPageSearch,
+	bookingDates: HotelBookingDates,
+): HotelsPageSearch {
+	const hasSearchDates = !!(search.checkIn || search.checkOut);
+
+	if (
+		hasSearchDates ||
+		!bookingDates.checkInDate ||
+		!bookingDates.checkOutDate
+	) {
+		return search;
+	}
+
+	return {
+		...search,
+		checkIn: bookingDates.checkInDate,
+		checkOut: bookingDates.checkOutDate,
 	};
 }
